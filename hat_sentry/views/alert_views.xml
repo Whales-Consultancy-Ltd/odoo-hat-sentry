@@ -105,7 +105,7 @@
                 <filter name="filter_funding" string="Funding" domain="[('category', '=', 'funding')]"/>
                 <filter name="filter_passive_income" string="Passive Income" domain="[('category', '=', 'passive_income')]"/>
                 <separator/>
-                <group string="Group By">
+                <group>
                     <filter name="group_severity" string="Severity" context="{'group_by': 'severity'}"/>
                     <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
                     <filter name="group_category" string="Category" context="{'group_by': 'category'}"/>
