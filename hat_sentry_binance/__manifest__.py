@@ -4,7 +4,7 @@
     "category": "Hat Sentry",
     "summary": "Binance read-only connector — spot, futures, earn data collection",
     "author": "Business Solutions For Africa",
-    "website": "https://www.biz4africa.com",
+    "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
     "depends": ["hat_sentry"],
     "data": [

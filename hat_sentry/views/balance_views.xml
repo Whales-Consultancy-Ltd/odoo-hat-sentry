@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_balance_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.balance.tree</field>
+        <field name="model">hat_sentry.balance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="asset_id"/>
+                <field name="account_type"/>
+                <field name="free_amount"/>
+                <field name="total_amount"/>
+                <field name="value_usdt"/>
+                <field name="exchange"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_balance_form" model="ir.ui.view">
+        <field name="name">hat_sentry.balance.form</field>
+        <field name="model">hat_sentry.balance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="snapshot_id"/>
+                            <field name="asset_id"/>
+                            <field name="exchange"/>
+                            <field name="account_type"/>
+                        </group>
+                        <group>
+                            <field name="free_amount"/>
+                            <field name="locked_amount"/>
+                            <field name="total_amount"/>
+                            <field name="price_usdt"/>
+                            <field name="value_usdt"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_balance_search" model="ir.ui.view">
+        <field name="name">hat_sentry.balance.search</field>
+        <field name="model">hat_sentry.balance</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_spot" string="Spot" domain="[('account_type', '=', 'spot')]"/>
+                <filter name="filter_futures" string="Futures" domain="[('account_type', '=', 'futures')]"/>
+                <filter name="filter_earn" string="Earn" domain="[('account_type', '=', 'earn')]"/>
+                <separator/>
+                <filter name="filter_binance" string="Binance" domain="[('exchange', '=', 'binance')]"/>
+                <field name="asset_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_balance" model="ir.actions.act_window">
+        <field name="name">Balances</field>
+        <field name="res_model">hat_sentry.balance</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p>View your asset balances.</p>
+        </field>
+        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_earn_position_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.earn.position.tree</field>
+        <field name="model">hat_sentry.earn.position</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="asset_id"/>
+                <field name="product_type"/>
+                <field name="amount"/>
+                <field name="value_usdt"/>
+                <field name="apy"/>
+                <field name="interest_24h"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_earn_position_form" model="ir.ui.view">
+        <field name="name">hat_sentry.earn.position.form</field>
+        <field name="model">hat_sentry.earn.position</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="snapshot_id"/>
+                            <field name="asset_id"/>
+                            <field name="product_type"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="value_usdt"/>
+                            <field name="apy"/>
+                            <field name="locked_until"/>
+                            <field name="interest_24h"/>
+                            <field name="interest_30d"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_earn_position_search" model="ir.ui.view">
+        <field name="name">hat_sentry.earn.position.search</field>
+        <field name="model">hat_sentry.earn.position</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_flexible" string="Flexible" domain="[('product_type', '=', 'flexible')]"/>
+                <filter name="filter_locked" string="Locked" domain="[('product_type', '=', 'locked')]"/>
+                <field name="asset_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_earn_position" model="ir.actions.act_window">
+        <field name="name">Earn Positions</field>
+        <field name="res_model">hat_sentry.earn.position</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p>Track your earn positions.</p>
+        </field>
+        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+</odoo>

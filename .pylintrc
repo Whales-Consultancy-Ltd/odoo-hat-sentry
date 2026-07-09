@@ -1,4 +1,4 @@
-# Pylint configuration for BIZ4Africa Odoo projects
+# Pylint configuration for Business Solutions For Africa Odoo projects
 [MASTER]
 load-plugins=pylint_odoo
 score=n

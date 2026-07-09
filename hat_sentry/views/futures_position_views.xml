@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_futures_position_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.futures.position.tree</field>
+        <field name="model">hat_sentry.futures.position</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="symbol"/>
+                <field name="side" decoration-success="side == 'long'" decoration-danger="side == 'short'"/>
+                <field name="entry_price"/>
+                <field name="mark_price"/>
+                <field name="leverage"/>
+                <field name="unrealized_pnl"/>
+                <field name="state" decoration-danger="state == 'at_risk'" decoration-warning="state == 'flagged'" decoration-success="state == 'open'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_futures_position_form" model="ir.ui.view">
+        <field name="name">hat_sentry.futures.position.form</field>
+        <field name="model">hat_sentry.futures.position</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" options="{'horizontal': True}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="snapshot_id"/>
+                            <field name="symbol"/>
+                            <field name="side"/>
+                            <field name="state"/>
+                            <field name="margin_mode"/>
+                            <field name="leverage"/>
+                        </group>
+                        <group>
+                            <field name="entry_price"/>
+                            <field name="mark_price"/>
+                            <field name="liquidation_price"/>
+                            <field name="distance_to_liquidation_pct" decoration-danger="distance_to_liquidation_pct &lt; 10" decoration-warning="distance_to_liquidation_pct &gt;= 10 and distance_to_liquidation_pct &lt; 25"/>
+                            <field name="position_size"/>
+                        </group>
+                    </group>
+                    <group string="PnL &amp; Risk">
+                        <group>
+                            <field name="notional_value"/>
+                            <field name="margin"/>
+                            <field name="unrealized_pnl"/>
+                            <field name="unrealized_pnl_pct"/>
+                        </group>
+                        <group>
+                            <field name="stop_loss_price"/>
+                            <field name="has_stop_loss"/>
+                            <field name="is_stop_above_entry"/>
+                            <field name="funding_rate_current"/>
+                            <field name="next_funding_time"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_futures_position_kanban" model="ir.ui.view">
+        <field name="name">hat_sentry.futures.position.kanban</field>
+        <field name="model">hat_sentry.futures.position</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard">
+                <field name="symbol"/>
+                <field name="side"/>
+                <field name="state"/>
+                <field name="unrealized_pnl"/>
+                <field name="unrealized_pnl_pct"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <field name="symbol"/>
+                                <field name="side"/>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <field name="unrealized_pnl" widget="monetary"/>
+                                <field name="unrealized_pnl_pct"/>
+                                <field name="state"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_futures_position_search" model="ir.ui.view">
+        <field name="name">hat_sentry.futures.position.search</field>
+        <field name="model">hat_sentry.futures.position</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_open" string="Open" domain="[('state', '=', 'open')]"/>
+                <filter name="filter_at_risk" string="At Risk" domain="[('state', '=', 'at_risk')]"/>
+                <filter name="filter_flagged" string="Flagged" domain="[('state', '=', 'flagged')]"/>
+                <filter name="filter_closed" string="Closed" domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <filter name="filter_long" string="Long" domain="[('side', '=', 'long')]"/>
+                <filter name="filter_short" string="Short" domain="[('side', '=', 'short')]"/>
+                <separator/>
+                <filter name="filter_isolated" string="Isolated" domain="[('margin_mode', '=', 'isolated')]"/>
+                <filter name="filter_cross" string="Cross" domain="[('margin_mode', '=', 'cross')]"/>
+                <field name="symbol"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_futures_position" model="ir.actions.act_window">
+        <field name="name">Futures Positions</field>
+        <field name="res_model">hat_sentry.futures.position</field>
+        <field name="view_mode">tree,form,kanban,search</field>
+        <field name="help" type="html">
+            <p>Monitor your futures positions.</p>
+        </field>
+        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+</odoo>

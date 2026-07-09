@@ -8,7 +8,7 @@
         This core module provides the base models, security groups, and shared infrastructure.
     """,
     "author": "Business Solutions For Africa",
-    "website": "https://www.biz4africa.com",
+    "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
     "depends": ["base", "mail", "digest", "board", "base_automation"],
     "data": [
@@ -16,6 +16,13 @@
         "security/hat_sentry_security.xml",
         "security/ir.model.access.csv",
         "data/crypto_currencies.xml",
+        "views/asset_views.xml",
+        "views/portfolio_snapshot_views.xml",
+        "views/balance_views.xml",
+        "views/futures_position_views.xml",
+        "views/funding_event_views.xml",
+        "views/earn_position_views.xml",
+        "views/menus.xml",
     ],
     "demo": [],
     "assets": {

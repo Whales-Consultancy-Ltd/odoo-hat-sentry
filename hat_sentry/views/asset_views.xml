@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_asset_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.asset.tree</field>
+        <field name="model">hat_sentry.asset</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="symbol"/>
+                <field name="name"/>
+                <field name="asset_type"/>
+                <field name="bucket"/>
+                <field name="is_stablecoin"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_asset_form" model="ir.ui.view">
+        <field name="name">hat_sentry.asset.form</field>
+        <field name="model">hat_sentry.asset</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="symbol"/>
+                            <field name="name"/>
+                            <field name="asset_type"/>
+                            <field name="bucket"/>
+                        </group>
+                        <group>
+                            <field name="is_stablecoin"/>
+                            <field name="is_core_asset"/>
+                            <field name="currency_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_asset_search" model="ir.ui.view">
+        <field name="name">hat_sentry.asset.search</field>
+        <field name="model">hat_sentry.asset</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_crypto" string="Crypto" domain="[('asset_type', '=', 'crypto')]"/>
+                <filter name="filter_stablecoin" string="Stablecoins" domain="[('asset_type', '=', 'stablecoin')]"/>
+                <filter name="filter_fiat" string="Fiat" domain="[('asset_type', '=', 'fiat')]"/>
+                <separator/>
+                <filter name="filter_core" string="Core" domain="[('bucket', '=', 'core')]"/>
+                <filter name="filter_stable_reserve" string="Stable Reserve" domain="[('bucket', '=', 'stable_reserve')]"/>
+                <filter name="filter_passive_income" string="Passive Income" domain="[('bucket', '=', 'passive_income')]"/>
+                <filter name="filter_trading" string="Trading" domain="[('bucket', '=', 'trading')]"/>
+                <filter name="filter_futures" string="Futures" domain="[('bucket', '=', 'futures')]"/>
+                <filter name="filter_experimental" string="Experimental" domain="[('bucket', '=', 'experimental')]"/>
+                <separator/>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">hat_sentry.asset</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p>Configure your crypto assets here.</p>
+        </field>
+        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+</odoo>
