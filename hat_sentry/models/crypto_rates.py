@@ -11,8 +11,8 @@ class HatSentryCryptoRates(models.AbstractModel):
     _description = "Crypto Rates Manager"
 
     def _get_crypto_currencies(self):
-        currency_names = ["BTC", "ETH", "USDT", "BNB", "SOL", "ADA", "XRP", "USDC"]
-        return self.env["res.currency"].search([("name", "in", currency_names)])
+        """Get all active res.currency records."""
+        return self.env["res.currency"].search([("active", "=", True)])
 
     def _update_rate(self, currency, price_usdt):
         rate = 1.0 / price_usdt if price_usdt > 0 else 0.0
@@ -37,16 +37,13 @@ class HatSentryCryptoRates(models.AbstractModel):
     def cron_update_crypto_rates(self):
         currencies = self._get_crypto_currencies()
         if not currencies:
-            _logger.warning("No crypto currencies found - run module update")
+            _logger.warning("No active currencies found")
             return
 
         credential = self.env["hat_sentry.credential"].search(
-            [
-                ("active", "=", True),
-            ],
+            [("active", "=", True)],
             limit=1,
         )
-
         if not credential:
             _logger.warning("No active Binance credentials - cannot update crypto rates")
             return
@@ -54,33 +51,42 @@ class HatSentryCryptoRates(models.AbstractModel):
         api = self.env["hat_sentry_binance.api"]
         for currency in currencies:
             try:
-                symbol_map = {
-                    "USDT": "USDTUSDT",
-                    "USDC": "USDCUSDT",
-                }
-                if currency.name in symbol_map:
-                    symbol = symbol_map[currency.name]
-                else:
-                    symbol = f"{currency.name}USDT"
-
-                if currency.name == "USDT":
-                    price = 1.0
-                else:
-                    price = api.get_price_ticker(credential, symbol)
-
-                if price > 0:
-                    self._update_rate(currency, price)
-                    _logger.info(
-                        "Updated rate for %s: 1 USD = %.8f %s (price: %.2f USD)",
-                        currency.name,
-                        1 / price,
-                        currency.name,
-                        price,
-                    )
-                else:
-                    _logger.warning("Price for %s is 0, skipping", currency.name)
+                self._update_single_rate(currency, api, credential)
             except Exception as e:
-                _logger.error("Failed to update rate for %s: %s", currency.name, str(e))
+                _logger.warning("Failed to update rate for %s: %s", currency.name, str(e))
+
+    def _update_single_rate(self, currency, api, credential):
+        """Update rate for a single currency. Skips gracefully if price unavailable."""
+        symbol_map = {
+            "USDT": "USDTUSDT",
+            "USDC": "USDCUSDT",
+        }
+        if currency.name in ("USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD"):
+            return  # Skip standard fiat currencies
+
+        if currency.name in symbol_map:
+            symbol = symbol_map[currency.name]
+        else:
+            symbol = f"{currency.name}USDT"
+
+        if currency.name == "USDT":
+            price = 1.0
+        else:
+            try:
+                price = api.get_price_ticker(credential, symbol)
+            except Exception:
+                _logger.debug("No price for %s (%s), skipping", currency.name, symbol)
+                return
+
+        if price and price > 0:
+            self._update_rate(currency, price)
+            _logger.info(
+                "Updated rate for %s: 1 USD = %.8f %s (price: %.2f USD)",
+                currency.name,
+                1 / price,
+                currency.name,
+                price,
+            )
 
     def cron_update_crypto_rates_safe(self):
         try:

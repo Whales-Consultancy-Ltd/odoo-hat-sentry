@@ -1,4 +1,8 @@
+import logging
+
 from odoo import _, api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class HatSentryAsset(models.Model):
@@ -40,10 +44,6 @@ class HatSentryAsset(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         string="Reference Currency",
-        domain=(
-            "[('name', 'in', ('BTC', 'ETH', 'USDT', 'BNB', 'SOL', 'ADA', 'XRP',"
-            " 'DOT', 'AVAX', 'MATIC', 'LINK', 'UNI', 'ATOM', 'LTC', 'BCH'))]"
-        ),
         help="Linked pseudo-currency for this asset",
     )
     active = fields.Boolean(string="Active", default=True)
@@ -80,3 +80,20 @@ class HatSentryAsset(models.Model):
         for record in self:
             if record.bucket not in dict(self._fields["bucket"].selection):
                 raise models.ValidationError(_("Invalid bucket: %s") % record.bucket)
+
+    @api.model
+    def _ensure_currency(self, symbol):
+        """Ensure a res.currency exists for the given symbol. Auto-create if missing."""
+        currency = self.env["res.currency"].search([("name", "=", symbol)], limit=1)
+        if not currency:
+            currency = self.env["res.currency"].create(
+                {
+                    "name": symbol,
+                    "symbol": symbol,
+                    "rounding": 0.01,
+                    "active": True,
+                    "position": "after",
+                }
+            )
+            _logger.info("Auto-created res.currency for %s", symbol)
+        return currency
