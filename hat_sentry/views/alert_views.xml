@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_alert_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.alert.tree</field>
+        <field name="model">hat_sentry.alert</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="severity" widget="badge"
+                       decoration-info="severity == 'info'"
+                       decoration-warning="severity == 'warning'"
+                       decoration-danger="severity in ('critical', 'emergency')"/>
+                <field name="title"/>
+                <field name="category"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-warning="state == 'sent'"
+                       decoration-success="state == 'acknowledged'"
+                       decoration-muted="state in ('resolved', 'ignored')"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_alert_form" model="ir.ui.view">
+        <field name="name">hat_sentry.alert.form</field>
+        <field name="model">hat_sentry.alert</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,sent,acknowledged,resolved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="title"/>
+                            <field name="severity" widget="badge"
+                                   decoration-info="severity == 'info'"
+                                   decoration-warning="severity == 'warning'"
+                                   decoration-danger="severity in ('critical', 'emergency')"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="related_position_id"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="message" colspan="2"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="recommended_action" colspan="2"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_alert_kanban" model="ir.ui.view">
+        <field name="name">hat_sentry.alert.kanban</field>
+        <field name="model">hat_sentry.alert</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="severity">
+                <field name="severity"/>
+                <field name="title"/>
+                <field name="category"/>
+                <field name="state"/>
+                <field name="recommended_action"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="title" class="fw-bold"/>
+                        <field name="category"/>
+                        <field name="state" widget="badge"
+                               decoration-info="state == 'new'"
+                               decoration-warning="state == 'sent'"
+                               decoration-success="state == 'acknowledged'"/>
+                        <field name="recommended_action" class="text-truncate"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_alert_search" model="ir.ui.view">
+        <field name="name">hat_sentry.alert.search</field>
+        <field name="model">hat_sentry.alert</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_info" string="Info" domain="[('severity', '=', 'info')]"/>
+                <filter name="filter_warning" string="Warning" domain="[('severity', '=', 'warning')]"/>
+                <filter name="filter_critical" string="Critical" domain="[('severity', '=', 'critical')]"/>
+                <filter name="filter_emergency" string="Emergency" domain="[('severity', '=', 'emergency')]"/>
+                <separator/>
+                <filter name="filter_new" string="New" domain="[('state', '=', 'new')]"/>
+                <filter name="filter_sent" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <filter name="filter_acknowledged" string="Acknowledged" domain="[('state', '=', 'acknowledged')]"/>
+                <filter name="filter_resolved" string="Resolved" domain="[('state', '=', 'resolved')]"/>
+                <filter name="filter_ignored" string="Ignored" domain="[('state', '=', 'ignored')]"/>
+                <separator/>
+                <filter name="filter_portfolio" string="Portfolio" domain="[('category', '=', 'portfolio')]"/>
+                <filter name="filter_futures" string="Futures" domain="[('category', '=', 'futures')]"/>
+                <filter name="filter_funding" string="Funding" domain="[('category', '=', 'funding')]"/>
+                <filter name="filter_passive_income" string="Passive Income" domain="[('category', '=', 'passive_income')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_severity" string="Severity" context="{'group_by': 'severity'}"/>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_alert" model="ir.actions.act_window">
+        <field name="name">Alerts</field>
+        <field name="res_model">hat_sentry.alert</field>
+        <field name="view_mode">kanban,tree,form,search</field>
+        <field name="context">{'search_default_group_severity': 1}</field>
+        <field name="help" type="html">
+            <p>No alerts yet. Alerts will be created automatically by the system.</p>
+        </field>
+        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+</odoo>

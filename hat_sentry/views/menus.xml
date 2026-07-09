@@ -18,4 +18,12 @@
     <menuitem id="menu_hat_sentry_passive" name="Passive Income" parent="menu_hat_sentry_root" sequence="30"/>
     <menuitem id="menu_hat_sentry_earn_position" name="Earn Positions" parent="menu_hat_sentry_passive"
               action="action_hat_sentry_earn_position" sequence="10"/>
+
+    <menuitem id="menu_hat_sentry_alerts" name="Alerts" parent="menu_hat_sentry_root" sequence="40"/>
+    <menuitem id="menu_hat_sentry_alert" name="All Alerts" parent="menu_hat_sentry_alerts"
+              action="action_hat_sentry_alert" sequence="10"/>
+
+    <menuitem id="menu_hat_sentry_config" name="Configuration" parent="menu_hat_sentry_root" sequence="99"/>
+    <menuitem id="menu_hat_sentry_mistake_tag" name="Mistake Tags" parent="menu_hat_sentry_config"
+              action="action_hat_sentry_mistake_tag" sequence="10"/>
 </odoo>
