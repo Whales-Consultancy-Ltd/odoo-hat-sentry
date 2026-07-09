@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Create a default digest for Hat Sentry -->
+    <record id="digest_hat_sentry_daily" model="digest.digest">
+        <field name="name">Hat Sentry — Daily Brief</field>
+        <field name="periodicity">daily</field>
+        <field name="kpi_hat_portfolio_value" eval="True"/>
+        <field name="kpi_hat_futures_exposure" eval="True"/>
+        <field name="kpi_hat_health_score" eval="True"/>
+        <field name="kpi_hat_alerts_open" eval="True"/>
+        <field name="kpi_hat_stablecoin_reserve" eval="True"/>
+        <field name="state">activated</field>
+    </record>
+
+    <!-- Digest tips: Discipline Rules -->
+    <record id="tip_rule_no_futures_without_stop" model="digest.tip">
+        <field name="tip_description">
+            <![CDATA[
+                <p><strong>Rule #3:</strong> Never open a futures trade without a stop-loss.</p>
+                <p>A stop-loss is your insurance. If you wouldn't drive without insurance, don't trade without one.</p>
+            ]]>
+        </field>
+        <field name="user_ids" eval="[(5)]"/>
+    </record>
+
+    <record id="tip_rule_stablecoin_reserve" model="digest.tip">
+        <field name="tip_description">
+            <![CDATA[
+                <p><strong>Rule #2:</strong> Maintain at least 10% of portfolio in stablecoins.</p>
+                <p>Stablecoins are your dry powder for opportunities and your buffer against volatility.</p>
+            ]]>
+        </field>
+        <field name="user_ids" eval="[(5)]"/>
+    </record>
+
+    <record id="tip_rule_futures_exposure" model="digest.tip">
+        <field name="tip_description">
+            <![CDATA[
+                <p><strong>Rule #1:</strong> Futures must not exceed 5% of total portfolio.</p>
+                <p>Leverage amplifies both gains AND losses. Keep it small, keep it controlled.</p>
+            ]]>
+        </field>
+        <field name="user_ids" eval="[(5)]"/>
+    </record>
+
+    <record id="tip_rule_protect_gains" model="digest.tip">
+        <field name="tip_description">
+            <![CDATA[
+                <p><strong>Rule #4-5:</strong> At +10% gain, verify your stop. At +20%, stop must be positive.</p>
+                <p>Green trades turn red when you don't protect them. Move your stop up.</p>
+            ]]>
+        </field>
+        <field name="user_ids" eval="[(5)]"/>
+    </record>
+
+    <record id="tip_rule_reinvest_profit" model="digest.tip">
+        <field name="tip_description">
+            <![CDATA[
+                <p><strong>Rule #6:</strong> Never re-inject 100% of realized profit.</p>
+                <p>Take profits off the table. Send some to your wallet, not back into the casino.</p>
+            ]]>
+        </field>
+        <field name="user_ids" eval="[(5)]"/>
+    </record>
+
+    <record id="tip_rule_know_funding" model="digest.tip">
+        <field name="tip_description">
+            <![CDATA[
+                <p><strong>Rule #8:</strong> Know the funding rate before holding a futures position >24h.</p>
+                <p>Funding can eat your PnL silently. Check it before you hold overnight.</p>
+            ]]>
+        </field>
+        <field name="user_ids" eval="[(5)]"/>
+    </record>
+</odoo>

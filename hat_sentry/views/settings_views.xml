@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_hat_sentry" model="ir.ui.view">
+        <field name="name">Hat Sentry settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Apply" type="object" name="execute" class="btn-primary"/>
+                    <button string="Cancel" type="object" name="cancel" class="btn-default"/>
+                </header>
+                <sheet>
+                    <div class="o_settings_container">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left"/>
+                                <div class="o_setting_right">
+                                    <label string="Telegram Notifications"/>
+                                    <div class="text-muted">
+                                        Configure Telegram bot for critical alert notifications.
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row">
+                                            <field name="hat_sentry_telegram_bot_token" class="oe_inline"/>
+                                            <field name="hat_sentry_telegram_chat_id" class="oe_inline"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

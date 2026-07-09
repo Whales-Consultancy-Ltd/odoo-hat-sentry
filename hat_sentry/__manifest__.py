@@ -18,6 +18,8 @@
         "data/crypto_currencies.xml",
         "data/crypto_rates_cron.xml",
         "data/automated_actions.xml",
+        "data/digest_data.xml",
+        "views/settings_views.xml",
         "views/asset_views.xml",
         "views/portfolio_snapshot_views.xml",
         "views/balance_views.xml",
