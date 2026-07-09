@@ -21,6 +21,16 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_hat_sentry_futures_position)d" type="action"
+                                class="oe_stat_button" icon="fa-line-chart"
+                                context="{'search_default_symbol': symbol}">
+                            <div class="o_stat_info">
+                                <field name="open_position_count" widget="statinfo"/>
+                                <span class="o_stat_text">Positions</span>
+                            </div>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="symbol"/>

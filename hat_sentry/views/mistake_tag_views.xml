@@ -26,10 +26,23 @@
         </field>
     </record>
 
+    <record id="view_hat_sentry_mistake_tag_search" model="ir.ui.view">
+        <field name="name">hat_sentry.mistake.tag.search</field>
+        <field name="model">hat_sentry.mistake.tag</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
     <record id="action_hat_sentry_mistake_tag" model="ir.actions.act_window">
         <field name="name">Mistake Tags</field>
         <field name="res_model">hat_sentry.mistake.tag</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p>Define tags for trading mistakes.</p>
+        </field>
         <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
     </record>
 </odoo>

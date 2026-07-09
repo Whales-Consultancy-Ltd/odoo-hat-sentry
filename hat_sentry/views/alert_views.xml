@@ -70,21 +70,23 @@
         <field name="name">hat_sentry.alert.kanban</field>
         <field name="model">hat_sentry.alert</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="severity">
+            <kanban class="o_kanban_mobile" default_group_by="severity">
                 <field name="severity"/>
-                <field name="title"/>
-                <field name="category"/>
                 <field name="state"/>
+                <field name="title"/>
                 <field name="recommended_action"/>
                 <templates>
-                    <t t-name="card">
-                        <field name="title" class="fw-bold"/>
-                        <field name="category"/>
-                        <field name="state" widget="badge"
-                               decoration-info="state == 'new'"
-                               decoration-warning="state == 'sent'"
-                               decoration-success="state == 'acknowledged'"/>
-                        <field name="recommended_action" class="text-truncate"/>
+                    <t t-name="kanban-box">
+                        <div t-att-class="severity_color_class(record.severity.raw_value) + ' oe_kanban_global_click'">
+                            <div class="o_kanban_card_header">
+                                <field name="severity" widget="badge"/>
+                                <field name="state" widget="badge"/>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <field name="title"/>
+                                <field name="recommended_action"/>
+                            </div>
+                        </div>
                     </t>
                 </templates>
             </kanban>

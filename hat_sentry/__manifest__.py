@@ -20,6 +20,7 @@
         "data/automated_actions.xml",
         "data/digest_data.xml",
         "views/settings_views.xml",
+        "views/dashboard_views.xml",
         "views/asset_views.xml",
         "views/portfolio_snapshot_views.xml",
         "views/balance_views.xml",

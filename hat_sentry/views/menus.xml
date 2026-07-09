@@ -3,27 +3,44 @@
     <menuitem id="menu_hat_sentry_root" name="Hat Sentry" web_icon="hat_sentry,static/description/icon.png"
               groups="hat_sentry.group_hat_sentry_user,hat_sentry.group_hat_sentry_trader,hat_sentry.group_hat_sentry_manager"/>
 
+    <!-- Dashboard -->
+    <menuitem id="menu_hat_sentry_dashboard" name="Dashboard" parent="menu_hat_sentry_root" sequence="0"/>
+    <menuitem id="menu_hat_sentry_portfolio_overview" name="Portfolio Overview" parent="menu_hat_sentry_dashboard"
+              action="action_hat_sentry_dashboard" sequence="10"/>
+
+    <!-- Portfolio -->
     <menuitem id="menu_hat_sentry_portfolio" name="Portfolio" parent="menu_hat_sentry_root" sequence="10"/>
     <menuitem id="menu_hat_sentry_portfolio_snapshot" name="Snapshots" parent="menu_hat_sentry_portfolio"
               action="action_hat_sentry_portfolio_snapshot" sequence="10"/>
     <menuitem id="menu_hat_sentry_asset" name="Assets" parent="menu_hat_sentry_portfolio"
               action="action_hat_sentry_asset" sequence="20"/>
+    <menuitem id="menu_hat_sentry_balance" name="Balances" parent="menu_hat_sentry_portfolio"
+              action="action_hat_sentry_balance" sequence="30"/>
 
+    <!-- Trading -->
     <menuitem id="menu_hat_sentry_trading" name="Trading" parent="menu_hat_sentry_root" sequence="20"/>
     <menuitem id="menu_hat_sentry_futures_position" name="Futures Positions" parent="menu_hat_sentry_trading"
               action="action_hat_sentry_futures_position" sequence="10"/>
     <menuitem id="menu_hat_sentry_funding_event" name="Funding Events" parent="menu_hat_sentry_trading"
               action="action_hat_sentry_funding_event" sequence="20"/>
+    <menuitem id="menu_hat_sentry_trading_journal" name="Trading Journal" parent="menu_hat_sentry_trading"
+              sequence="99"/>
 
+    <!-- Passive Income -->
     <menuitem id="menu_hat_sentry_passive" name="Passive Income" parent="menu_hat_sentry_root" sequence="30"/>
     <menuitem id="menu_hat_sentry_earn_position" name="Earn Positions" parent="menu_hat_sentry_passive"
               action="action_hat_sentry_earn_position" sequence="10"/>
 
+    <!-- Alerts -->
     <menuitem id="menu_hat_sentry_alerts" name="Alerts" parent="menu_hat_sentry_root" sequence="40"/>
     <menuitem id="menu_hat_sentry_alert" name="All Alerts" parent="menu_hat_sentry_alerts"
               action="action_hat_sentry_alert" sequence="10"/>
 
+    <!-- Configuration -->
     <menuitem id="menu_hat_sentry_config" name="Configuration" parent="menu_hat_sentry_root" sequence="99"/>
     <menuitem id="menu_hat_sentry_mistake_tag" name="Mistake Tags" parent="menu_hat_sentry_config"
               action="action_hat_sentry_mistake_tag" sequence="10"/>
+    <menuitem id="menu_hat_sentry_credential" name="Credentials" parent="menu_hat_sentry_config"
+              action="action_hat_sentry_credential" sequence="20"
+              groups="hat_sentry.group_hat_sentry_manager"/>
 </odoo>

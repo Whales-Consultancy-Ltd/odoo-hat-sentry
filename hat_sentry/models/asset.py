@@ -47,6 +47,10 @@ class HatSentryAsset(models.Model):
         help="Linked pseudo-currency for this asset",
     )
     active = fields.Boolean(string="Active", default=True)
+    open_position_count = fields.Integer(
+        string="Open Positions",
+        compute="_compute_open_position_count",
+    )
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
     )
@@ -60,6 +64,16 @@ class HatSentryAsset(models.Model):
     def _compute_is_core_asset(self):
         for record in self:
             record.is_core_asset = record.bucket == "core"
+
+    @api.depends
+    def _compute_open_position_count(self):
+        for record in self:
+            record.open_position_count = self.env["hat_sentry.futures.position"].search_count(
+                [
+                    ("symbol", "=", record.symbol),
+                    ("state", "=", "open"),
+                ]
+            )
 
     @api.constrains("bucket")
     def _check_bucket_consistency(self):

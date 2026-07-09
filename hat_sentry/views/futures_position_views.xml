@@ -72,17 +72,41 @@
                 <field name="state"/>
                 <field name="unrealized_pnl"/>
                 <field name="unrealized_pnl_pct"/>
+                <field name="position_size"/>
+                <field name="entry_price"/>
+                <field name="mark_price"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_card_header">
-                                <field name="symbol"/>
-                                <field name="side"/>
+                            <div class="o_kanban_card_header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i t-attf-class="fa {{ record.side.raw_value == 'long' ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger' }} me-1"/>
+                                    <field name="symbol" class="fw-bold"/>
+                                </div>
+                                <field name="state" widget="badge"/>
                             </div>
                             <div class="o_kanban_card_content">
-                                <field name="unrealized_pnl" widget="monetary"/>
-                                <field name="unrealized_pnl_pct"/>
-                                <field name="state"/>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="text-muted small">Size</div>
+                                        <field name="position_size"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-muted small">Entry</div>
+                                        <field name="entry_price"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="text-muted small">Unrealized PnL</div>
+                                        <div>
+                                            <span t-att-class="record.unrealized_pnl.raw_value > 0 and 'text-success' or record.unrealized_pnl.raw_value &lt; 0 and 'text-danger' or ''">
+                                                <field name="unrealized_pnl" widget="monetary"/>
+                                                <field name="unrealized_pnl_pct"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -114,7 +138,7 @@
     <record id="action_hat_sentry_futures_position" model="ir.actions.act_window">
         <field name="name">Futures Positions</field>
         <field name="res_model">hat_sentry.futures.position</field>
-        <field name="view_mode">tree,form,kanban,search</field>
+        <field name="view_mode">kanban,tree,form,search</field>
         <field name="help" type="html">
             <p>Monitor your futures positions.</p>
         </field>
