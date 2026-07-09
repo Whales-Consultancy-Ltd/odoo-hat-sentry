@@ -9,7 +9,7 @@
         <field name="interval_type">minutes</field>
 
         <field name="active" eval="False"/>
-        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_manager'))]"/>
+
     </record>
 
     <record id="cron_collect_funding" model="ir.cron">
@@ -21,6 +21,6 @@
         <field name="interval_type">minutes</field>
 
         <field name="active" eval="False"/>
-        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_manager'))]"/>
+
     </record>
 </odoo>

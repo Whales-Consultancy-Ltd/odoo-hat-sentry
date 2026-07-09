@@ -8,6 +8,5 @@
         <field name="interval_number">60</field>
         <field name="interval_type">minutes</field>
         <field name="active" eval="False"/>
-        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_manager'))]"/>
     </record>
 </odoo>
