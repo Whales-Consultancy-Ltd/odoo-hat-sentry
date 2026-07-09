@@ -19,7 +19,7 @@ instance.
 ## Dependencies
 
 - **Odoo 19.0** with: `base`, `mail`, `digest`, `board`, `base_automation`
-- Python packages: `python-binance` (Binance Connector)
+- Python packages: `requests` (Binance Connector uses raw HTTP + HMAC signing)
 
 ## License
 

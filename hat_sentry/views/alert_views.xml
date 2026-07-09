@@ -8,14 +8,14 @@
                 <field name="severity" widget="badge"
                        decoration-info="severity == 'info'"
                        decoration-warning="severity == 'warning'"
-                       decoration-danger="severity in ('critical', 'emergency')"/>
+                       decoration-danger="severity == 'critical' or severity == 'emergency'"/>
                 <field name="title"/>
                 <field name="category"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'new'"
                        decoration-warning="state == 'sent'"
                        decoration-success="state == 'acknowledged'"
-                       decoration-muted="state in ('resolved', 'ignored')"/>
+                       decoration-muted="state == 'resolved' or state == 'ignored'"/>
                 <field name="create_date"/>
             </list>
         </field>
@@ -37,7 +37,7 @@
                             <field name="severity" widget="badge"
                                    decoration-info="severity == 'info'"
                                    decoration-warning="severity == 'warning'"
-                                   decoration-danger="severity in ('critical', 'emergency')"/>
+                                   decoration-danger="severity == 'critical' or severity == 'emergency'"/>
                             <field name="category"/>
                         </group>
                         <group>
@@ -75,7 +75,7 @@
                 <field name="recommended_action"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-att-class="severity_color_class(record.severity.raw_value) + ' oe_kanban_global_click'">
+                        <div class="oe_kanban_global_click">
                             <div class="o_kanban_card_header">
                                 <field name="severity" widget="badge"/>
                                 <field name="state" widget="badge"/>

@@ -48,7 +48,11 @@ class HatSentryCryptoRates(models.AbstractModel):
             _logger.warning("No active Binance credentials - cannot update crypto rates")
             return
 
-        api = self.env["hat_sentry_binance.api"]
+        try:
+            api = self.env["hat_sentry_binance.api"]
+        except Exception:
+            _logger.warning("hat_sentry_binance not installed, skipping crypto rate update")
+            return
         for currency in currencies:
             try:
                 self._update_single_rate(currency, api, credential)
@@ -61,10 +65,7 @@ class HatSentryCryptoRates(models.AbstractModel):
         Stablecoin symbols (USDT, USDC) are mapped to USD — no rate update needed.
         """
         # Skip fiat currencies
-        if currency.name in ("USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD"):
-            return
-        # Skip stablecoins mapped to USD
-        if currency.id == self.env.ref("base.USD", raise_if_not_found=False).id:
+        if currency.name in ("USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD", "ZAR", "KES", "NGN", "GHS", "XOF", "XAF"):
             return
 
         symbol = f"{currency.symbol or currency.name}USDT"

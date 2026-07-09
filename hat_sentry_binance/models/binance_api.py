@@ -1,7 +1,9 @@
 import hashlib
 import hmac
+import json
 import logging
 import time
+from datetime import datetime, timedelta
 
 import requests
 from odoo import models
@@ -48,7 +50,7 @@ class BinanceAPI(models.AbstractModel):
             response.raise_for_status()
             _logger.info("Binance API call: %s (status %s)", endpoint, response.status_code)
             return response.json()
-        except requests.exceptions.RequestException as e:
+        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
             _logger.error("Binance API error: %s - %s", endpoint, str(e))
             raise
 
@@ -141,13 +143,21 @@ class BinanceAPI(models.AbstractModel):
                         "type": "locked",
                         "amount": float(pos.get("amount", 0)),
                         "apy": float(pos.get("annualPercentageRate", 0)),
-                        "lock_until": pos.get("lockPeriod"),  # will be parsed as date
+                        "lock_until": (
+                            (datetime.now() + timedelta(days=int(pos.get("lockPeriod", 0)))).date()
+                            if pos.get("lockPeriod")
+                            else False
+                        ),
                     }
                 )
         except Exception as e:
             _logger.warning("Earn locked API error: %s", str(e))
 
         return earn_positions
+
+    def get_all_prices(self, credential):
+        """Get all prices in a single API call."""
+        return self._call_api(credential, "/api/v3/ticker/price")
 
     def get_price_ticker(self, credential, symbol):
         """Get current price for a symbol."""

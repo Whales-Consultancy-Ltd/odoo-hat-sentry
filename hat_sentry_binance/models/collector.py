@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 
-from odoo import models
+from odoo import fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class HatSentryCollector(models.AbstractModel):
         total_value = sum(b.get("value_usdt", 0) for b in balances_data if "value_usdt" in b)
 
         snapshot_vals = {
-            "snapshot_datetime": datetime.now(),
+            "snapshot_datetime": fields.Datetime.now(),
             "total_value": total_value,
             "spot_value": sum(b.get("value_usdt", 0) for b in balances_data if b.get("account_type") == "spot"),
             "company_id": credential.company_id.id,
@@ -100,12 +100,25 @@ class HatSentryCollector(models.AbstractModel):
 
         balances = []
 
+        # Batch fetch all prices
+        all_prices = {}
+        try:
+            price_data = api.get_all_prices(credential)
+            if isinstance(price_data, list):
+                for item in price_data:
+                    all_prices[item["symbol"]] = float(item["price"])
+        except Exception as e:
+            _logger.warning("Failed to batch-fetch prices: %s", e)
+
         # 1. Spot balances
         try:
             spot_data = api.get_spot_balances(credential)
             for bal in spot_data:
                 symbol = bal["asset"]
-                price = 1.0 if symbol == "USDT" else api.get_price_ticker(credential, f"{symbol}USDT")
+                if symbol == "USDT":
+                    price = 1.0
+                else:
+                    price = all_prices.get(f"{symbol}USDT", 0.0)
                 balances.append(
                     {
                         "asset_symbol": symbol,
@@ -167,7 +180,21 @@ class HatSentryCollector(models.AbstractModel):
             for rate in rates_data:
                 symbol = rate.get("symbol", "")
                 funding_rate = float(rate.get("fundingRate", 0))
-                funding_time = datetime.fromtimestamp(int(rate.get("fundingTime", 0)) / 1000)
+                funding_time_ts = int(rate.get("fundingTime", 0))
+                if funding_time_ts <= 0:
+                    continue  # Skip invalid funding time
+                funding_time = datetime.fromtimestamp(funding_time_ts / 1000)
+
+                # Check for existing event
+                existing = self.env["hat_sentry.funding.event"].search(
+                    [
+                        ("symbol", "=", symbol),
+                        ("event_datetime", "=", funding_time),
+                    ],
+                    limit=1,
+                )
+                if existing:
+                    continue  # Skip duplicate
 
                 # Find related position if snapshot exists
                 position = False
@@ -185,7 +212,7 @@ class HatSentryCollector(models.AbstractModel):
                         "position_id": position.id if position else False,
                         "symbol": symbol,
                         "funding_rate": funding_rate * 100,  # convert to percentage
-                        "funding_direction": "paid" if funding_rate > 0 else "received",
+                        "funding_direction": "paid" if funding_rate > 0 else ("received" if funding_rate < 0 else "neutral"),
                         "event_datetime": funding_time,
                     }
                 )

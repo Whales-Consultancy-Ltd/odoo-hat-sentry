@@ -18,7 +18,10 @@ class HatSentryEmailNotification(models.AbstractModel):
             return False
 
         # Find the user to notify (Manager)
-        manager_group = self.env.ref("hat_sentry.group_hat_sentry_manager")
+        manager_group = self.env.ref("hat_sentry.group_hat_sentry_manager", raise_if_not_found=False)
+        if not manager_group:
+            _logger.error("hat_sentry.group_hat_sentry_manager XML ID not found")
+            return False
         users = manager_group.users if manager_group else []
 
         for user in users:
@@ -42,7 +45,11 @@ class HatSentryEmailNotification(models.AbstractModel):
                 </div>
             """,
             "email_to": user.email,
-            "email_from": self.env.company.email or self.env.user.email,
+            "email_from": self.env.company.email or self.env.user.email or "noreply@example.com",
         }
-        mail = self.env["mail.mail"].sudo().create(mail_values)
-        mail.send()
+        try:
+            mail = self.env["mail.mail"].sudo().create(mail_values)
+            mail.send()
+            _logger.info("Alert email sent for alert %s", alert.id)
+        except Exception as e:
+            _logger.error("Failed to send alert email for alert %s: %s", alert.id, str(e))

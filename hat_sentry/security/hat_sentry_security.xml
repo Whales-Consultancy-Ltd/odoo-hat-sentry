@@ -40,4 +40,40 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
+
+    <!-- Multi-company rules for child models -->
+    <record id="rule_hat_sentry_balance_company" model="ir.rule">
+        <field name="name">Hat Sentry Balance: Company</field>
+        <field name="model_id" ref="model_hat_sentry_balance"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+
+    <record id="rule_hat_sentry_futures_position_company" model="ir.rule">
+        <field name="name">Hat Sentry Futures Position: Company</field>
+        <field name="model_id" ref="model_hat_sentry_futures_position"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+
+    <record id="rule_hat_sentry_funding_event_company" model="ir.rule">
+        <field name="name">Hat Sentry Funding Event: Company</field>
+        <field name="model_id" ref="model_hat_sentry_funding_event"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+
+    <record id="rule_hat_sentry_earn_position_company" model="ir.rule">
+        <field name="name">Hat Sentry Earn Position: Company</field>
+        <field name="model_id" ref="model_hat_sentry_earn_position"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
+
+    <record id="rule_hat_sentry_mistake_tag_company" model="ir.rule">
+        <field name="name">Hat Sentry Mistake Tag: Company</field>
+        <field name="model_id" ref="model_hat_sentry_mistake_tag"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
+    </record>
 </odoo>

@@ -30,7 +30,8 @@ class HatSentryCredential(models.Model):
     @api.depends("exchange", "api_key")
     def _compute_display_name(self):
         for record in self:
-            record.display_name = f"{record.exchange} ({record.api_key[:8]}...)"
+            key_display = (record.api_key[:8] + "...") if record.api_key and len(record.api_key) > 8 else (record.api_key or "???")
+            record.display_name = f"{record.exchange} ({key_display})"
 
     @api.constrains("permissions")
     def _check_read_only(self):

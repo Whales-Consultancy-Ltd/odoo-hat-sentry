@@ -40,31 +40,45 @@ class HatSentryTelegram(models.AbstractModel):
             "critical": "🚨",
             "emergency": "🆘",
         }
-        icon = severity_icons.get(alert.severity, "🔔")
+        icon = severity_icons.get(alert.severity or "", "🔔")
         return (
             f"{icon} *Hat Sentry Alert*\n"
-            f"*{alert.title}*\n\n"
-            f"Severity: {alert.severity.upper()}\n"
-            f"Category: {alert.category}\n\n"
-            f"_{alert.recommended_action}_"
+            f"*{alert.title or 'No title'}*\n\n"
+            f"Severity: {(alert.severity or 'unknown').upper()}\n"
+            f"Category: {alert.category or 'N/A'}\n\n"
+            f"_{alert.recommended_action or 'No action recommended'}_"
         )
 
     def _send_message(self, bot_token, chat_id, message):
-        """Send a message to Telegram via Bot API."""
+        """Send a message to Telegram via Bot API with retry."""
+        import time
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-        try:
-            response = requests.post(
-                url,
-                json={
-                    "chat_id": chat_id,
-                    "text": message,
-                    "parse_mode": "Markdown",
-                },
-                timeout=10,
-            )
-            response.raise_for_status()
-            _logger.info("Telegram notification sent: %s", message[:50])
-            return True
-        except requests.exceptions.RequestException as e:
-            _logger.error("Telegram API error: %s", str(e))
-            return False
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = requests.post(
+                    url,
+                    json={
+                        "chat_id": chat_id,
+                        "text": message,
+                        "parse_mode": "Markdown",
+                    },
+                    timeout=10,
+                )
+                if response.status_code == 200:
+                    _logger.info("Telegram notification sent: %s", message[:50])
+                    return True
+                elif response.status_code == 429:
+                    retry_after = response.json().get("parameters", {}).get("retry_after", 5)
+                    _logger.warning("Telegram rate limited, retrying after %ss", retry_after)
+                    time.sleep(retry_after)
+                    continue
+                else:
+                    _logger.warning("Telegram API error %s: %s", response.status_code, response.text)
+                    return False
+            except requests.exceptions.RequestException as e:
+                _logger.warning("Telegram attempt %d/%d failed: %s", attempt + 1, max_retries, str(e))
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+        _logger.error("Telegram message failed after %d attempts", max_retries)
+        return False

@@ -48,7 +48,7 @@ class HatSentryFuturesPosition(models.Model):
         "res.currency", related="snapshot_id.currency_id", string="Currency", readonly=True, store=False
     )
     company_id = fields.Many2one(
-        "res.company", related="snapshot_id.company_id", string="Company", readonly=True, store=False
+        "res.company", related="snapshot_id.company_id", string="Company", readonly=True, store=True
     )
     display_name = fields.Char(string="Display Name", compute="_compute_display_name")
 
