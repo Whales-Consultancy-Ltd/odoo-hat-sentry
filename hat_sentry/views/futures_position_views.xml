@@ -138,7 +138,7 @@
     <record id="action_hat_sentry_futures_position" model="ir.actions.act_window">
         <field name="name">Futures Positions</field>
         <field name="res_model">hat_sentry.futures.position</field>
-        <field name="view_mode">kanban,list,form,search</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p>Monitor your futures positions.</p>
         </field>
