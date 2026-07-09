@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Automated actions will be populated in subsequent issues -->
+    <!--
+    Automated Actions for Hat Sentry Discipline Rules.
+
+    These rules should be configured manually in:
+    Settings > Technical > Automated Actions
+
+    == Rule 1: Futures Exposure > 5% ==
+    Model: hat_sentry.futures.position
+    Trigger: After Creation or Update
+    Condition: [('snapshot_id.futures_notional_value', '>', 0.05 * snapshot_id.total_value)]
+    Action: Create hat_sentry.alert record
+      - severity: critical
+      - category: futures
+      - title: "Futures exposure exceeded 5%"
+      - recommended_action: "Reduce futures position to bring exposure below 5%"
+      - company_id: record.snapshot_id.company_id
+    Then: Create mail.activity
+      - activity_type_id: mail.mail_activity_data_todo
+      - user_id: responsible user
+      - summary: "Futures exposure > 5% — review and reduce"
+
+    == Rule 2: Stablecoins < 10% ==
+    Model: hat_sentry.portfolio.snapshot
+    Trigger: After Creation
+    Condition: [('stablecoin_value', '<', 0.10 * total_value)]
+    Action: Create hat_sentry.alert record
+      - severity: warning
+      - category: portfolio
+      - title: "Stablecoin reserve below 10%"
+      - recommended_action: "Consider converting some assets to stablecoins"
+
+    == Rule 3: Unprotected Futures Gain (+10% without stop) ==
+    Model: hat_sentry.futures.position
+    Trigger: After Creation or Update
+    Condition: [('unrealized_pnl_pct', '>=', 10), ('has_stop_loss', '=', False)]
+    Action: Create hat_sentry.alert record
+      - severity: critical
+      - category: futures
+      - title: "Futures gain +10% without stop-loss"
+      - recommended_action: "Set a stop-loss order to protect this gain"
+    -->
 </odoo>

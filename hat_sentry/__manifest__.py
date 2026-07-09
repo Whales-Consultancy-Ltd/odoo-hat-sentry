@@ -16,6 +16,8 @@
         "security/hat_sentry_security.xml",
         "security/ir.model.access.csv",
         "data/crypto_currencies.xml",
+        "data/crypto_rates_cron.xml",
+        "data/automated_actions.xml",
         "views/asset_views.xml",
         "views/portfolio_snapshot_views.xml",
         "views/balance_views.xml",

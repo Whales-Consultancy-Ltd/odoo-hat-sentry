@@ -1,4 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <!-- Crypto currencies data will be populated in subsequent issues -->
+<odoo noupdate="1">
+    <record id="crypto_btc" model="res.currency">
+        <field name="name">BTC</field>
+        <field name="symbol">₿</field>
+        <field name="rounding" eval="0.00000001"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
+
+    <record id="crypto_eth" model="res.currency">
+        <field name="name">ETH</field>
+        <field name="symbol">Ξ</field>
+        <field name="rounding" eval="0.00000001"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
+
+    <record id="crypto_usdt" model="res.currency">
+        <field name="name">USDT</field>
+        <field name="symbol">₮</field>
+        <field name="rounding" eval="0.01"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
+
+    <record id="crypto_bnb" model="res.currency">
+        <field name="name">BNB</field>
+        <field name="symbol">BNB</field>
+        <field name="rounding" eval="0.00000001"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
+
+    <record id="crypto_sol" model="res.currency">
+        <field name="name">SOL</field>
+        <field name="symbol">SOL</field>
+        <field name="rounding" eval="0.00000001"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
+
+    <record id="crypto_ada" model="res.currency">
+        <field name="name">ADA</field>
+        <field name="symbol">ADA</field>
+        <field name="rounding" eval="0.000001"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
+
+    <record id="crypto_xrp" model="res.currency">
+        <field name="name">XRP</field>
+        <field name="symbol">XRP</field>
+        <field name="rounding" eval="0.000001"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
+
+    <record id="crypto_usdc" model="res.currency">
+        <field name="name">USDC</field>
+        <field name="symbol">USDC</field>
+        <field name="rounding" eval="0.01"/>
+        <field name="active" eval="True"/>
+        <field name="position">after</field>
+    </record>
 </odoo>
