@@ -20,7 +20,7 @@ This core module provides the base models, security groups, and shared infrastru
         "data/automated_actions.xml",
         "data/digest_data.xml",
         "views/settings_views.xml",
-        "views/asset_views.xml",
+        # action-defining files first (no %(xml_id)d deps)
         "views/portfolio_snapshot_views.xml",
         "views/balance_views.xml",
         "views/futures_position_views.xml",
@@ -29,7 +29,10 @@ This core module provides the base models, security groups, and shared infrastru
         "views/alert_views.xml",
         "views/credential_views.xml",
         "views/mistake_tag_views.xml",
+        # files that reference actions via %(xml_id)d — must come after
+        "views/asset_views.xml",
         "views/dashboard_views.xml",
+        # menus last (action="xml_id" resolves at runtime)
         "views/menus.xml",
     ],
     "demo": [],
