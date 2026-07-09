@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+    <!--
+    Crypto pseudo-currencies for Hat Sentry.
+
+    NOTE: name field has size=3 (ISO 4217), so 4-char tickers like USDT/USDC are NOT stored as res.currency.
+    They link to USD instead (stablecoins at 1:1 peg).
+    -->
     <record id="crypto_btc" model="res.currency">
         <field name="name">BTC</field>
         <field name="symbol">₿</field>
@@ -12,14 +18,6 @@
         <field name="name">ETH</field>
         <field name="symbol">Ξ</field>
         <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
-
-    <record id="crypto_usdt" model="res.currency">
-        <field name="name">USDT</field>
-        <field name="symbol">₮</field>
-        <field name="rounding" eval="0.01"/>
         <field name="active" eval="True"/>
         <field name="position">after</field>
     </record>
@@ -52,14 +50,6 @@
         <field name="name">XRP</field>
         <field name="symbol">XRP</field>
         <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
-
-    <record id="crypto_usdc" model="res.currency">
-        <field name="name">USDC</field>
-        <field name="symbol">USDC</field>
-        <field name="rounding" eval="0.01"/>
         <field name="active" eval="True"/>
         <field name="position">after</field>
     </record>

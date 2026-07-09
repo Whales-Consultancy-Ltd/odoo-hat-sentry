@@ -56,27 +56,23 @@ class HatSentryCryptoRates(models.AbstractModel):
                 _logger.warning("Failed to update rate for %s: %s", currency.name, str(e))
 
     def _update_single_rate(self, currency, api, credential):
-        """Update rate for a single currency. Skips gracefully if price unavailable."""
-        symbol_map = {
-            "USDT": "USDTUSDT",
-            "USDC": "USDCUSDT",
-        }
+        """Update rate for a single currency. Skips gracefully if price unavailable.
+
+        Stablecoin symbols (USDT, USDC) are mapped to USD — no rate update needed.
+        """
+        # Skip fiat currencies
         if currency.name in ("USD", "EUR", "GBP", "CHF", "JPY", "CAD", "AUD"):
-            return  # Skip standard fiat currencies
+            return
+        # Skip stablecoins mapped to USD
+        if currency.id == self.env.ref("base.USD", raise_if_not_found=False).id:
+            return
 
-        if currency.name in symbol_map:
-            symbol = symbol_map[currency.name]
-        else:
-            symbol = f"{currency.name}USDT"
-
-        if currency.name == "USDT":
-            price = 1.0
-        else:
-            try:
-                price = api.get_price_ticker(credential, symbol)
-            except Exception:
-                _logger.debug("No price for %s (%s), skipping", currency.name, symbol)
-                return
+        symbol = f"{currency.symbol or currency.name}USDT"
+        try:
+            price = api.get_price_ticker(credential, symbol)
+        except Exception:
+            _logger.debug("No price for %s (%s), skipping", currency.name, symbol)
+            return
 
         if price and price > 0:
             self._update_rate(currency, price)

@@ -83,17 +83,28 @@ class HatSentryAsset(models.Model):
 
     @api.model
     def _ensure_currency(self, symbol):
-        """Ensure a res.currency exists for the given symbol. Auto-create if missing."""
+        """Ensure a res.currency exists for the given symbol. Auto-create if missing.
+
+        Note: res.currency.name has size=3 (ISO 4217). Symbols longer than 3 chars
+        are truncated. USDT/USDC are mapped to USD (stablecoins at 1:1 peg).
+        """
+        # Stablecoins map to USD
+        if symbol in ("USDT", "USDC"):
+            return self.env.ref("base.USD", raise_if_not_found=False) or self.env["res.currency"].search(
+                [("name", "=", "USD")], limit=1
+            )
+
         currency = self.env["res.currency"].search([("name", "=", symbol)], limit=1)
         if not currency:
+            name = symbol[:3] if len(symbol) > 3 else symbol
             currency = self.env["res.currency"].create(
                 {
-                    "name": symbol,
+                    "name": name,
                     "symbol": symbol,
                     "rounding": 0.01,
                     "active": True,
                     "position": "after",
                 }
             )
-            _logger.info("Auto-created res.currency for %s", symbol)
+            _logger.info("Auto-created res.currency for %s (name=%s)", symbol, name)
         return currency
