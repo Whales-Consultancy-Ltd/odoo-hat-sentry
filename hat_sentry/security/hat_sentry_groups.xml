@@ -3,23 +3,18 @@
     <!-- Hat Sentry / User — read-only -->
     <record id="group_hat_sentry_user" model="res.groups">
         <field name="name">User</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-        <field name="comment">Read-only access to snapshots, positions, alerts, reports</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <!-- Hat Sentry / Trader — can acknowledge alerts, write journal -->
     <record id="group_hat_sentry_trader" model="res.groups">
         <field name="name">Trader</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
         <field name="implied_ids" eval="[(4, ref('group_hat_sentry_user'))]"/>
-        <field name="comment">Can update trading journal, acknowledge/resolve alerts</field>
     </record>
 
     <!-- Hat Sentry / Manager — full access -->
     <record id="group_hat_sentry_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
         <field name="implied_ids" eval="[(4, ref('group_hat_sentry_trader'))]"/>
-        <field name="comment">Full access: credentials, rule engine, cron activation</field>
     </record>
 </odoo>
