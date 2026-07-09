@@ -4,14 +4,14 @@
         <field name="name">hat_sentry.balance.tree</field>
         <field name="model">hat_sentry.balance</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="asset_id"/>
                 <field name="account_type"/>
                 <field name="free_amount"/>
                 <field name="total_amount"/>
                 <field name="value_usdt"/>
                 <field name="exchange"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -59,7 +59,7 @@
     <record id="action_hat_sentry_balance" model="ir.actions.act_window">
         <field name="name">Balances</field>
         <field name="res_model">hat_sentry.balance</field>
-        <field name="view_mode">tree,form,search</field>
+        <field name="view_mode">list,form,search</field>
         <field name="help" type="html">
             <p>View your asset balances.</p>
         </field>

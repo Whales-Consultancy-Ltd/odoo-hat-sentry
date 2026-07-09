@@ -4,12 +4,12 @@
         <field name="name">hat_sentry.portfolio.snapshot.tree</field>
         <field name="model">hat_sentry.portfolio.snapshot</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="snapshot_datetime"/>
                 <field name="total_value"/>
                 <field name="health_score" decoration-danger="health_score &lt; 40" decoration-warning="health_score &gt;= 40 and health_score &lt; 70" decoration-success="health_score &gt;= 70"/>
                 <field name="currency_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -18,9 +18,6 @@
         <field name="model">hat_sentry.portfolio.snapshot</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <field name="health_score" widget="statusbar" options="{'horizontal': True}"/>
-                </header>
                 <sheet>
                     <group>
                         <group>
@@ -101,7 +98,7 @@
     <record id="action_hat_sentry_portfolio_snapshot" model="ir.actions.act_window">
         <field name="name">Snapshots</field>
         <field name="res_model">hat_sentry.portfolio.snapshot</field>
-        <field name="view_mode">tree,form,graph,pivot,search</field>
+        <field name="view_mode">list,form,graph,pivot,search</field>
         <field name="help" type="html">
             <p>View your portfolio snapshots.</p>
         </field>

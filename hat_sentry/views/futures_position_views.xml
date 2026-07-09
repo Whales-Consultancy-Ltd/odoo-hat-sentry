@@ -4,7 +4,7 @@
         <field name="name">hat_sentry.futures.position.tree</field>
         <field name="model">hat_sentry.futures.position</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="symbol"/>
                 <field name="side" decoration-success="side == 'long'" decoration-danger="side == 'short'"/>
                 <field name="entry_price"/>
@@ -12,7 +12,7 @@
                 <field name="leverage"/>
                 <field name="unrealized_pnl"/>
                 <field name="state" decoration-danger="state == 'at_risk'" decoration-warning="state == 'flagged'" decoration-success="state == 'open'"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -138,7 +138,7 @@
     <record id="action_hat_sentry_futures_position" model="ir.actions.act_window">
         <field name="name">Futures Positions</field>
         <field name="res_model">hat_sentry.futures.position</field>
-        <field name="view_mode">kanban,tree,form,search</field>
+        <field name="view_mode">kanban,list,form,search</field>
         <field name="help" type="html">
             <p>Monitor your futures positions.</p>
         </field>

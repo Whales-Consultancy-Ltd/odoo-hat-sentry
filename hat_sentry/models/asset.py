@@ -1,6 +1,7 @@
 import logging
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ class HatSentryAsset(models.Model):
         for record in self:
             record.is_core_asset = record.bucket == "core"
 
-    @api.depends
+    @api.depends()
     def _compute_open_position_count(self):
         for record in self:
             record.open_position_count = self.env["hat_sentry.futures.position"].search_count(
@@ -79,7 +80,7 @@ class HatSentryAsset(models.Model):
     def _check_bucket_consistency(self):
         for record in self:
             if record.bucket not in dict(self._fields["bucket"].selection):
-                raise models.ValidationError(_("Invalid bucket: %s") % record.bucket)
+                raise ValidationError(_("Invalid bucket: %s") % record.bucket)
 
     @api.model
     def _ensure_currency(self, symbol):

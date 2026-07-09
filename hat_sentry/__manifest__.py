@@ -33,11 +33,7 @@
         "views/menus.xml",
     ],
     "demo": [],
-    "assets": {
-        "web.assets_backend": [
-            "hat_sentry/static/src/js/tours/**/*",
-        ],
-    },
+    "assets": {},
     "installable": True,
     "application": True,
     "auto_install": False,

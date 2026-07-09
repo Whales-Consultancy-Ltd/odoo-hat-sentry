@@ -4,7 +4,7 @@
         <field name="name">hat_sentry.alert.tree</field>
         <field name="model">hat_sentry.alert</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="severity" widget="badge"
                        decoration-info="severity == 'info'"
                        decoration-warning="severity == 'warning'"
@@ -17,7 +17,7 @@
                        decoration-success="state == 'acknowledged'"
                        decoration-muted="state in ('resolved', 'ignored')"/>
                 <field name="create_date"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -46,10 +46,8 @@
                             <field name="create_date"/>
                         </group>
                     </group>
-                    <group>
-                        <group>
-                            <field name="message" colspan="2"/>
-                        </group>
+                    <group string="Message">
+                        <field name="message" nolabel="1"/>
                     </group>
                     <group>
                         <group>
@@ -126,7 +124,7 @@
     <record id="action_hat_sentry_alert" model="ir.actions.act_window">
         <field name="name">Alerts</field>
         <field name="res_model">hat_sentry.alert</field>
-        <field name="view_mode">kanban,tree,form,search</field>
+        <field name="view_mode">kanban,list,form,search</field>
         <field name="context">{'search_default_group_severity': 1}</field>
         <field name="help" type="html">
             <p>No alerts yet. Alerts will be created automatically by the system.</p>

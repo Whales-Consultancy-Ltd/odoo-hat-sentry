@@ -4,10 +4,10 @@
         <field name="name">hat_sentry.mistake.tag.tree</field>
         <field name="model">hat_sentry.mistake.tag</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="color" widget="color_picker"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -39,7 +39,7 @@
     <record id="action_hat_sentry_mistake_tag" model="ir.actions.act_window">
         <field name="name">Mistake Tags</field>
         <field name="res_model">hat_sentry.mistake.tag</field>
-        <field name="view_mode">tree,form,search</field>
+        <field name="view_mode">list,form,search</field>
         <field name="help" type="html">
             <p>Define tags for trading mistakes.</p>
         </field>

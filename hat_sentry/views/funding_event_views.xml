@@ -4,13 +4,13 @@
         <field name="name">hat_sentry.funding.event.tree</field>
         <field name="model">hat_sentry.funding.event</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="symbol"/>
                 <field name="funding_rate"/>
                 <field name="funding_amount"/>
                 <field name="funding_direction" decoration-success="funding_direction == 'received'" decoration-danger="funding_direction == 'paid'"/>
                 <field name="event_datetime"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -52,7 +52,7 @@
     <record id="action_hat_sentry_funding_event" model="ir.actions.act_window">
         <field name="name">Funding Events</field>
         <field name="res_model">hat_sentry.funding.event</field>
-        <field name="view_mode">tree,form,search</field>
+        <field name="view_mode">list,form,search</field>
         <field name="help" type="html">
             <p>Track funding rate events.</p>
         </field>

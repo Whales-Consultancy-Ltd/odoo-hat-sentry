@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HatSentryCredential(models.Model):
@@ -35,7 +36,7 @@ class HatSentryCredential(models.Model):
     def _check_read_only(self):
         for record in self:
             if record.permissions != "read_only":
-                raise models.ValidationError(
+                raise ValidationError(
                     _(
                         "Only read-only API keys are allowed in Hat Sentry. "
                         "Trading/withdrawal permissions are not supported."

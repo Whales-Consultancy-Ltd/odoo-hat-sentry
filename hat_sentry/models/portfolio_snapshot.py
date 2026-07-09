@@ -19,7 +19,14 @@ class HatSentryPortfolioSnapshot(models.Model):
     core_value = fields.Monetary(string="Core Holdings", currency_field="currency_id")
     passive_income_value = fields.Monetary(string="Passive Income Value", currency_field="currency_id")
     experimental_value = fields.Monetary(string="Experimental Value", currency_field="currency_id")
-    health_score = fields.Integer(string="Health Score", default=50, help="Composite health score 0-100", tracking=True)
+    health_score = fields.Integer(
+        string="Health Score",
+        default=50,
+        help="Composite health score 0-100",
+        tracking=True,
+        compute="_compute_health_score",
+        store=True,
+    )
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",
