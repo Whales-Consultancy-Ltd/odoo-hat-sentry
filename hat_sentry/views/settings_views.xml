@@ -14,7 +14,6 @@
                     <div class="o_settings_container">
                         <div class="row">
                             <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left"/>
                                 <div class="o_setting_right">
                                     <span class="o_form_label">Telegram Notifications</span>
                                     <div class="text-muted">

@@ -38,7 +38,7 @@
                             <field name="entry_price"/>
                             <field name="mark_price"/>
                             <field name="liquidation_price"/>
-                            <field name="distance_to_liquidation_pct" decoration-danger="distance_to_liquidation_pct &lt; 10" decoration-warning="distance_to_liquidation_pct &gt;= 10 and distance_to_liquidation_pct &lt; 25"/>
+                            <field name="distance_to_liquidation_pct"/>
                             <field name="position_size"/>
                         </group>
                     </group>
