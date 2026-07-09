@@ -1,0 +1,12 @@
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "UP", "S"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", "envs", "sources"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
