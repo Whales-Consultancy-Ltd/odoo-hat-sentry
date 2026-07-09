@@ -11,13 +11,13 @@ This core module provides the base models, security groups, and shared infrastru
     "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
     "depends": ["base", "mail", "digest", "board", "base_automation"],
+    "external_dependencies": {"python": ["requests"]},
     "data": [
         "security/hat_sentry_groups.xml",
         "security/hat_sentry_security.xml",
         "security/ir.model.access.csv",
         "data/crypto_currencies.xml",
         "data/crypto_rates_cron.xml",
-        "data/automated_actions.xml",
         "data/digest_data.xml",
         "views/settings_views.xml",
         # action-defining files first (no %(xml_id)d deps)
@@ -36,7 +36,6 @@ This core module provides the base models, security groups, and shared infrastru
         "views/menus.xml",
     ],
     "demo": [],
-    "assets": {},
     "installable": True,
     "application": True,
     "auto_install": False,

@@ -69,6 +69,7 @@ class HatSentryFuturesPosition(models.Model):
         for record in self:
             record.has_stop_loss = bool(record.stop_loss_price and record.stop_loss_price > 0)
 
+    @api.depends("symbol", "side")
     def _compute_display_name(self):
         for record in self:
             record.display_name = f"{record.symbol} ({record.side})"

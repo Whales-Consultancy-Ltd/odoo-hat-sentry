@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HatSentryEarnPosition(models.Model):
@@ -34,6 +34,7 @@ class HatSentryEarnPosition(models.Model):
     )
     display_name = fields.Char(string="Display Name", compute="_compute_display_name")
 
+    @api.depends("asset_id", "product_type")
     def _compute_display_name(self):
         for record in self:
             asset = record.asset_id.symbol if record.asset_id else "?"

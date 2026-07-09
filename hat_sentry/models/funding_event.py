@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HatSentryFundingEvent(models.Model):
@@ -28,6 +28,7 @@ class HatSentryFundingEvent(models.Model):
     )
     display_name = fields.Char(string="Display Name", compute="_compute_display_name")
 
+    @api.depends("symbol", "funding_direction", "funding_rate")
     def _compute_display_name(self):
         for record in self:
             sym = record.symbol or "?"

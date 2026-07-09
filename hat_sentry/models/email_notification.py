@@ -1,5 +1,7 @@
 import logging
 
+from markupsafe import escape
+
 from odoo import models
 
 _logger = logging.getLogger(__name__)
@@ -31,15 +33,16 @@ class HatSentryEmailNotification(models.AbstractModel):
             "body_html": f"""
                 <div style="font-family: Arial, sans-serif; padding: 20px;">
                     <h2 style="color: #cc0000;">🚨 Hat Sentry Alert</h2>
-                    <p><strong>{alert.title}</strong></p>
+                    <p><strong>{escape(alert.title)}</strong></p>
                     <table>
-                        <tr><td>Severity:</td><td>{alert.severity}</td></tr>
-                        <tr><td>Category:</td><td>{alert.category}</td></tr>
+                        <tr><td>Severity:</td><td>{escape(alert.severity)}</td></tr>
+                        <tr><td>Category:</td><td>{escape(alert.category)}</td></tr>
                     </table>
-                    <p><em>{alert.recommended_action}</em></p>
+                    <p><em>{escape(alert.recommended_action)}</em></p>
                 </div>
             """,
             "email_to": user.email,
             "email_from": self.env.company.email or self.env.user.email,
         }
-        self.env["mail.mail"].sudo().create(mail_values)
+        mail = self.env["mail.mail"].sudo().create(mail_values)
+        mail.send()

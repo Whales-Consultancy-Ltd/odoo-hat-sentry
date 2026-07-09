@@ -42,6 +42,7 @@ class HatSentryBalance(models.Model):
         for record in self:
             record.total_amount = record.free_amount + record.locked_amount
 
+    @api.depends("asset_id", "snapshot_id", "account_type")
     def _compute_display_name(self):
         for record in self:
             asset_name = record.asset_id.symbol if record.asset_id else "?"

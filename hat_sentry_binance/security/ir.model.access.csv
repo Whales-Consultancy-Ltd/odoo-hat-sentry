@@ -1,3 +1,1 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hat_sentry_binance_api_manager,hat_sentry.binance.api.manager,model_hat_sentry_binance_api,hat_sentry.group_hat_sentry_manager,1,0,0,0
-access_hat_sentry_binance_collector_manager,hat_sentry.binance.collector.manager,model_hat_sentry_binance_collector,hat_sentry.group_hat_sentry_manager,1,0,0,0
