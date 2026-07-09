@@ -3,15 +3,14 @@
     "version": "19.0.1.0.0",
     "category": "Hat Sentry",
     "summary": "Crypto portfolio control tower — core models, security, base infrastructure",
-    "description": """
-Hat Sentry is a personal crypto control tower built as a native Odoo app.
-This core module provides the base models, security groups, and shared infrastructure.
-    """,
+    "description": "Hat Sentry is a personal crypto control tower built as a native "
+                   "Odoo app. This core module provides the base models, security "
+                   "groups, and shared infrastructure.",
     "author": "Business Solutions For Africa",
     "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
     "depends": ["base", "mail", "digest", "board", "base_automation"],
-    "external_dependencies": {"python": ["requests"]},
+    "external_dependencies": {"python": ["requests", "markupsafe"]},
     "data": [
         "security/hat_sentry_groups.xml",
         "security/hat_sentry_security.xml",
