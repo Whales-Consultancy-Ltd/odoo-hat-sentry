@@ -20,7 +20,7 @@
                 <p>A stop-loss is your insurance. If you wouldn't drive without insurance, don't trade without one.</p>
             ]]>
         </field>
-        <field name="user_ids" eval="[(5)]"/>
+        <field name="user_ids" eval="[]"/>
     </record>
 
     <record id="tip_rule_stablecoin_reserve" model="digest.tip">
@@ -30,7 +30,7 @@
                 <p>Stablecoins are your dry powder for opportunities and your buffer against volatility.</p>
             ]]>
         </field>
-        <field name="user_ids" eval="[(5)]"/>
+        <field name="user_ids" eval="[]"/>
     </record>
 
     <record id="tip_rule_futures_exposure" model="digest.tip">
@@ -40,7 +40,7 @@
                 <p>Leverage amplifies both gains AND losses. Keep it small, keep it controlled.</p>
             ]]>
         </field>
-        <field name="user_ids" eval="[(5)]"/>
+        <field name="user_ids" eval="[]"/>
     </record>
 
     <record id="tip_rule_protect_gains" model="digest.tip">
@@ -50,7 +50,7 @@
                 <p>Green trades turn red when you don't protect them. Move your stop up.</p>
             ]]>
         </field>
-        <field name="user_ids" eval="[(5)]"/>
+        <field name="user_ids" eval="[]"/>
     </record>
 
     <record id="tip_rule_reinvest_profit" model="digest.tip">
@@ -60,7 +60,7 @@
                 <p>Take profits off the table. Send some to your wallet, not back into the casino.</p>
             ]]>
         </field>
-        <field name="user_ids" eval="[(5)]"/>
+        <field name="user_ids" eval="[]"/>
     </record>
 
     <record id="tip_rule_know_funding" model="digest.tip">
@@ -70,6 +70,6 @@
                 <p>Funding can eat your PnL silently. Check it before you hold overnight.</p>
             ]]>
         </field>
-        <field name="user_ids" eval="[(5)]"/>
+        <field name="user_ids" eval="[]"/>
     </record>
 </odoo>
