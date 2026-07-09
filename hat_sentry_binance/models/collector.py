@@ -34,20 +34,36 @@ class HatSentryCollector(models.AbstractModel):
 
         # Create balance records
         for bal_data in balances_data:
-            # Find or create asset
+            # Find or create the asset before creating the required balance link.
+            symbol = bal_data.get("asset_symbol", "")
             asset = self.env["hat_sentry.asset"].search(
                 [
-                    ("symbol", "=", bal_data.get("asset_symbol", "")),
+                    ("symbol", "=", symbol),
                     ("company_id", "=", credential.company_id.id),
                 ],
                 limit=1,
             )
+            if not asset and symbol:
+                asset = self.env["hat_sentry.asset"].create(
+                    {
+                        "symbol": symbol,
+                        "name": symbol,
+                        "asset_type": "stablecoin" if symbol in ("USDT", "USDC", "BUSD", "DAI") else "crypto",
+                        "bucket": "stable_reserve" if symbol in ("USDT", "USDC", "BUSD", "DAI") else "core",
+                        "currency_id": self.env["hat_sentry.asset"]._ensure_currency(symbol).id,
+                        "company_id": credential.company_id.id,
+                    }
+                )
+
+            if not asset:
+                _logger.warning("Skipping balance without asset symbol: %s", bal_data)
+                continue
 
             balance_vals = {
                 "snapshot_id": snapshot.id,
                 "exchange": "binance",
                 "account_type": bal_data.get("account_type", "spot"),
-                "asset_id": asset.id if asset else False,
+                "asset_id": asset.id,
                 "free_amount": bal_data.get("free", 0),
                 "locked_amount": bal_data.get("locked", 0),
                 "price_usdt": bal_data.get("price_usdt", 0),
