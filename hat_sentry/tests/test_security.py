@@ -40,12 +40,12 @@ class TestSecurity(TransactionCase):
     # --- User (read-only) ---
 
     def test_user_can_read_asset(self):
-        assets = self.Asset.sudo(self.user_user).search([("id", "=", self.asset.id)])
+        assets = self.Asset.with_user(self.user_user).search([("id", "=", self.asset.id)])
         self.assertIn(self.asset, assets)
 
     def test_user_cannot_create_asset(self):
         with self.assertRaises(AccessError):
-            self.Asset.sudo(self.user_user).create(
+            self.Asset.with_user(self.user_user).create(
                 {
                     "symbol": "ETH",
                     "asset_type": "crypto",
@@ -55,7 +55,7 @@ class TestSecurity(TransactionCase):
 
     def test_trader_cannot_create_asset(self):
         with self.assertRaises(AccessError):
-            self.Asset.sudo(self.user_trader).create(
+            self.Asset.with_user(self.user_trader).create(
                 {
                     "symbol": "ETH",
                     "asset_type": "crypto",
@@ -66,7 +66,7 @@ class TestSecurity(TransactionCase):
     # --- Manager ---
 
     def test_manager_can_create_asset(self):
-        asset = self.Asset.sudo(self.user_manager).create(
+        asset = self.Asset.with_user(self.user_manager).create(
             {
                 "symbol": "ETH",
                 "asset_type": "crypto",
@@ -76,18 +76,18 @@ class TestSecurity(TransactionCase):
         self.assertTrue(asset)
 
     def test_manager_can_edit_asset(self):
-        self.Asset.sudo(self.user_manager).browse(self.asset.id).write({"name": "Edited"})
+        self.Asset.with_user(self.user_manager).browse(self.asset.id).write({"name": "Edited"})
         self.assertEqual(self.asset.name, "Edited")
 
     def test_manager_can_delete_asset(self):
-        eth = self.Asset.sudo(self.user_manager).create(
+        eth = self.Asset.with_user(self.user_manager).create(
             {
                 "symbol": "ETH",
                 "asset_type": "crypto",
                 "bucket": "trading",
             }
         )
-        eth.sudo(self.user_manager).unlink()
+        eth.with_user(self.user_manager).unlink()
         self.assertFalse(self.Asset.search([("id", "=", eth.id)]))
 
     # --- Multi-company isolation ---
@@ -105,8 +105,8 @@ class TestSecurity(TransactionCase):
                 "company_id": company_b.id,
             }
         )
-        assets_for_b = self.Asset.sudo(user_b).search([("id", "=", asset_b.id)])
+        assets_for_b = self.Asset.with_user(user_b).search([("id", "=", asset_b.id)])
         self.assertIn(asset_b, assets_for_b)
 
-        assets_for_a = self.Asset.sudo(self.user_user).search([("id", "=", asset_b.id)])
+        assets_for_a = self.Asset.with_user(self.user_user).search([("id", "=", asset_b.id)])
         self.assertNotIn(asset_b, assets_for_a)

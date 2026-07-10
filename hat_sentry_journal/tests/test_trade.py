@@ -150,7 +150,7 @@ class TestTrade(TransactionCase):
                 "group_ids": [(4, group_trader.id)],
             }
         )
-        trade = self.Trade.sudo(user_trader).create(
+        trade = self.Trade.with_user(user_trader).create(
             {
                 "name": "Trader Trade",
                 "asset_id": self.asset.id,
@@ -171,7 +171,7 @@ class TestTrade(TransactionCase):
             }
         )
         with self.assertRaises(AccessError):
-            self.Trade.sudo(user_user).create(
+            self.Trade.with_user(user_user).create(
                 {
                     "name": "User Trade",
                     "asset_id": self.asset.id,
