@@ -6,7 +6,7 @@
         <field name="model">board.board</field>
         <field name="arch" type="xml">
             <form string="Hat Sentry Dashboard">
-                <board style="2-2-2">
+                <board style="2-2-1">
                     <column>
                         <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Portfolio Over Time" view_mode="graph"/>
                         <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Portfolio Breakdown" view_mode="pivot"/>
@@ -18,16 +18,6 @@
                     <column>
                         <action name="%(action_hat_sentry_balance)d" string="Balances" view_mode="list"/>
                         <action name="%(action_hat_sentry_earn_position)d" string="Earn Positions" view_mode="list"/>
-                    </column>
-                    <column>
-                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="P&amp;L Summary" view_mode="pivot" context="{'group_by': [], 'measures': ['total_realized_pnl', 'total_unrealized_pnl', 'total_pnl']}"/>
-                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="P&amp;L Since Last" view_mode="graph" context="{'search_default_group_by': []}"/>
-                    </column>
-                    <column>
-                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Allocation Breakdown" view_mode="pivot" context="{'group_by': [], 'measures': ['allocation_core_pct', 'allocation_stable_pct', 'allocation_trading_pct', 'allocation_passive_pct', 'allocation_futures_pct', 'allocation_experimental_pct']}"/>
-                    </column>
-                    <column>
-                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Snapshots (List)" view_mode="list"/>
                     </column>
                 </board>
             </form>
