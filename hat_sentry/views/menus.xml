@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_hat_sentry_root" name="Hat Sentry" web_icon="base,static/description/module_icon.png"
+    <menuitem id="menu_hat_sentry_root" name="Hat Sentry" web_icon="hat_sentry,static/description/icon.png"
               groups="hat_sentry.group_hat_sentry_user"/>
 
     <!-- Dashboard -->
