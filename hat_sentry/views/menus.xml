@@ -8,6 +8,15 @@
     <menuitem id="menu_hat_sentry_portfolio_overview" name="Portfolio Overview" parent="menu_hat_sentry_dashboard"
               action="action_hat_sentry_dashboard" sequence="10"/>
 
+    <!-- Actions defined here so menus can reference them -->
+    <record id="action_hat_sentry_asset_radar" model="ir.actions.act_window">
+        <field name="name">Watchlist Radar</field>
+        <field name="res_model">hat_sentry.asset</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_hat_sentry_asset_kanban"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+
     <!-- Portfolio -->
     <menuitem id="menu_hat_sentry_portfolio" name="Portfolio" parent="menu_hat_sentry_root" sequence="10"/>
     <menuitem id="menu_hat_sentry_portfolio_snapshot" name="Snapshots" parent="menu_hat_sentry_portfolio"
@@ -48,12 +57,4 @@
     <menuitem id="menu_hat_sentry_credential" name="Credentials" parent="menu_hat_sentry_config"
               action="action_hat_sentry_credential" sequence="20"
               groups="hat_sentry.group_hat_sentry_manager"/>
-
-    <record id="action_hat_sentry_asset_radar" model="ir.actions.act_window">
-        <field name="name">Watchlist Radar</field>
-        <field name="res_model">hat_sentry.asset</field>
-        <field name="view_mode">kanban,list,form</field>
-        <field name="view_id" ref="view_hat_sentry_asset_kanban"/>
-        <field name="context">{'search_default_filter_active': 1}</field>
-    </record>
 </odoo>
