@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class HatSentryRiskEvent(models.Model):
@@ -25,9 +25,9 @@ class HatSentryRiskEvent(models.Model):
     )
     state = fields.Selection(
         [
-            ("new", _("New")),
-            ("acknowledged", _("Acknowledged")),
-            ("resolved", _("Resolved")),
+            ("new", "New"),
+            ("acknowledged", "Acknowledged"),
+            ("resolved", "Resolved"),
         ],
         string="State",
         default="new",

@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class HatSentryRiskLimit(models.Model):
@@ -11,15 +11,15 @@ class HatSentryRiskLimit(models.Model):
     name = fields.Char(string="Name", required=True)
     limit_type = fields.Selection(
         [
-            ("max_daily_loss", _("Max Daily Loss")),
-            ("max_position_size", _("Max Position Size")),
-            ("max_leverage", _("Max Leverage")),
-            ("max_allocation_pct", _("Max Allocation %")),
-            ("max_speculative_pct", _("Max Speculative %")),
-            ("max_trades_per_day", _("Max Trades per Day")),
-            ("min_stablecoin_pct", _("Min Stablecoin Reserve %")),
-            ("max_futures_exposure_pct", _("Max Futures Exposure %")),
-            ("max_concentration_pct", _("Max Single Asset %")),
+            ("max_daily_loss", "Max Daily Loss"),
+            ("max_position_size", "Max Position Size"),
+            ("max_leverage", "Max Leverage"),
+            ("max_allocation_pct", "Max Allocation %"),
+            ("max_speculative_pct", "Max Speculative %"),
+            ("max_trades_per_day", "Max Trades per Day"),
+            ("min_stablecoin_pct", "Min Stablecoin Reserve %"),
+            ("max_futures_exposure_pct", "Max Futures Exposure %"),
+            ("max_concentration_pct", "Max Single Asset %"),
         ],
         string="Limit Type",
         required=True,
@@ -32,10 +32,10 @@ class HatSentryRiskLimit(models.Model):
     )
     comparison = fields.Selection(
         [
-            ("gt", _("Greater Than (>)")),
-            ("gte", _("Greater Than or Equal (>=)")),
-            ("lt", _("Less Than (<)")),
-            ("lte", _("Less Than or Equal (<=)")),
+            ("gt", "Greater Than (>)"),
+            ("gte", "Greater Than or Equal (>=)"),
+            ("lt", "Less Than (<)"),
+            ("lte", "Less Than or Equal (<=)"),
         ],
         string="Comparison",
         default="gt",
@@ -44,9 +44,9 @@ class HatSentryRiskLimit(models.Model):
     )
     severity_on_breach = fields.Selection(
         [
-            ("warning", _("Warning")),
-            ("critical", _("Critical")),
-            ("emergency", _("Emergency")),
+            ("warning", "Warning"),
+            ("critical", "Critical"),
+            ("emergency", "Emergency"),
         ],
         string="Severity on Breach",
         default="warning",
