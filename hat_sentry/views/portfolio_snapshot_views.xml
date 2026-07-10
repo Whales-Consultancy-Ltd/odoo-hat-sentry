@@ -7,6 +7,9 @@
             <list>
                 <field name="snapshot_datetime"/>
                 <field name="total_value"/>
+                <field name="total_pnl" optional="show"/>
+                <field name="pnl_since_last" optional="hide"/>
+                <field name="total_realized_pnl" optional="hide"/>
                 <field name="health_score" decoration-danger="health_score &lt; 40" decoration-warning="health_score &gt;= 40 and health_score &lt; 70" decoration-success="health_score &gt;= 70"/>
                 <field name="currency_id"/>
             </list>
@@ -40,6 +43,24 @@
                         <field name="experimental_value"/>
                     </group>
                     <notebook>
+                        <page string="P&amp;L Analysis">
+                            <group string="Profit &amp; Loss">
+                                <field name="total_realized_pnl"/>
+                                <field name="total_unrealized_pnl"/>
+                                <field name="total_pnl"/>
+                                <field name="pnl_since_last"/>
+                                <field name="pnl_pct_since_last"/>
+                                <field name="total_exposure"/>
+                            </group>
+                            <group string="Allocation Breakdown">
+                                <field name="allocation_core_pct"/>
+                                <field name="allocation_stable_pct"/>
+                                <field name="allocation_trading_pct"/>
+                                <field name="allocation_passive_pct"/>
+                                <field name="allocation_futures_pct"/>
+                                <field name="allocation_experimental_pct"/>
+                            </group>
+                        </page>
                         <page string="Balances">
                             <field name="balance_ids"/>
                         </page>
@@ -62,6 +83,22 @@
             <graph type="line">
                 <field name="snapshot_datetime" interval="day"/>
                 <field name="total_value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_portfolio_snapshot_allocation_graph" model="ir.ui.view">
+        <field name="name">hat_sentry.portfolio.snapshot.allocation.graph</field>
+        <field name="model">hat_sentry.portfolio.snapshot</field>
+        <field name="arch" type="xml">
+            <graph type="bar" stacked="True">
+                <field name="snapshot_datetime" interval="day"/>
+                <field name="allocation_core_pct" type="measure"/>
+                <field name="allocation_stable_pct" type="measure"/>
+                <field name="allocation_trading_pct" type="measure"/>
+                <field name="allocation_passive_pct" type="measure"/>
+                <field name="allocation_futures_pct" type="measure"/>
+                <field name="allocation_experimental_pct" type="measure"/>
             </graph>
         </field>
     </record>

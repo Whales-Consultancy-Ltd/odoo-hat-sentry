@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_trade_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.trade.tree</field>
+        <field name="model">hat_sentry.trade</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="direction" widget="badge"
+                       decoration-success="direction == 'buy'"
+                       decoration-danger="direction == 'sell'"/>
+                <field name="quantity"/>
+                <field name="entry_price" widget="monetary"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"
+                       decoration-warning="state == 'open'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="realized_pnl" widget="monetary"
+                       decoration-success="realized_pnl > 0"
+                       decoration-danger="realized_pnl &lt; 0"/>
+                <field name="realized_pnl_pct"
+                       decoration-success="realized_pnl_pct &gt; 0"
+                       decoration-danger="realized_pnl_pct &lt; 0"/>
+                <field name="entry_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_trade_form" model="ir.ui.view">
+        <field name="name">hat_sentry.trade.form</field>
+        <field name="model">hat_sentry.trade</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="open,closed,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Trade Info">
+                            <field name="asset_id"/>
+                            <field name="exchange"/>
+                            <field name="direction" widget="badge"/>
+                            <field name="order_type"/>
+                            <field name="quantity"/>
+                            <field name="state"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="P&amp;L">
+                            <field name="entry_price" widget="monetary"/>
+                            <field name="exit_price" widget="monetary"/>
+                            <field name="total_fees" widget="monetary"/>
+                            <field name="realized_pnl" widget="monetary"/>
+                            <field name="realized_pnl_pct"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Dates">
+                            <group>
+                                <field name="entry_date"/>
+                                <field name="exit_date"/>
+                            </group>
+                        </page>
+                        <page string="Links">
+                            <group>
+                                <field name="futures_position_id"/>
+                                <field name="snapshot_id"/>
+                                <field name="decision_log_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_trade_search" model="ir.ui.view">
+        <field name="name">hat_sentry.trade.search</field>
+        <field name="model">hat_sentry.trade</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <filter name="filter_open" string="Open" domain="[('state', '=', 'open')]"/>
+                <filter name="filter_closed" string="Closed" domain="[('state', '=', 'closed')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter name="filter_buy" string="Buy" domain="[('direction', '=', 'buy')]"/>
+                <filter name="filter_sell" string="Sell" domain="[('direction', '=', 'sell')]"/>
+                <separator/>
+                <filter name="filter_today" string="Today"
+                        date="entry_date"/>
+                <filter name="filter_this_week" string="This Week"
+                        date="entry_date"/>
+                <filter name="filter_this_month" string="This Month"
+                        date="entry_date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_asset" string="Asset" context="{'group_by': 'asset_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_direction" string="Direction" context="{'group_by': 'direction'}"/>
+                    <filter name="group_date" string="Entry Date" context="{'group_by': 'entry_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_trade_graph" model="ir.ui.view">
+        <field name="name">hat_sentry.trade.graph</field>
+        <field name="model">hat_sentry.trade</field>
+        <field name="arch" type="xml">
+            <graph type="line">
+                <field name="entry_date" interval="day"/>
+                <field name="realized_pnl" type="sum"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_trade_pivot" model="ir.ui.view">
+        <field name="name">hat_sentry.trade.pivot</field>
+        <field name="model">hat_sentry.trade</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="asset_id" type="row"/>
+                <field name="direction" type="col"/>
+                <field name="realized_pnl" type="sum"/>
+                <field name="total_fees" type="sum"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_trade" model="ir.actions.act_window">
+        <field name="name">Trades</field>
+        <field name="res_model">hat_sentry.trade</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="help" type="html">
+            <p>Track your trades here. Record entries, exits, and track P&amp;L over time.</p>
+        </field>
+        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_trader'))]"/>
+    </record>
+</odoo>

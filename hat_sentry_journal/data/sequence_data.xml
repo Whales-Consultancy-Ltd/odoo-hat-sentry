@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_hat_sentry_trade" model="ir.sequence">
+        <field name="name">Hat Sentry Trade</field>
+        <field name="code">hat_sentry.trade</field>
+        <field name="prefix">TRD</field>
+        <field name="padding" eval="5"/>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

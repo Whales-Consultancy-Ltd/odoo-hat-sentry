@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hat_sentry_trade_user,hat_sentry.trade.user,model_hat_sentry_trade,hat_sentry.group_hat_sentry_user,1,0,0,0
+access_hat_sentry_trade_trader,hat_sentry.trade.trader,model_hat_sentry_trade,hat_sentry.group_hat_sentry_trader,1,1,1,1
+access_hat_sentry_trade_manager,hat_sentry.trade.manager,model_hat_sentry_trade,hat_sentry.group_hat_sentry_manager,1,1,1,1
+access_hat_sentry_decision_log_user,hat_sentry.decision.log.user,model_hat_sentry_decision_log,hat_sentry.group_hat_sentry_user,1,0,0,0
+access_hat_sentry_decision_log_trader,hat_sentry.decision.log.trader,model_hat_sentry_decision_log,hat_sentry.group_hat_sentry_trader,1,1,1,1
+access_hat_sentry_decision_log_manager,hat_sentry.decision.log.manager,model_hat_sentry_decision_log,hat_sentry.group_hat_sentry_manager,1,1,1,1
+access_hat_sentry_journal_tag_user,hat_sentry.journal.tag.user,model_hat_sentry_journal_tag,hat_sentry.group_hat_sentry_user,1,0,0,0
+access_hat_sentry_journal_tag_trader,hat_sentry.journal.tag.trader,model_hat_sentry_journal_tag,hat_sentry.group_hat_sentry_trader,1,1,1,1
+access_hat_sentry_journal_tag_manager,hat_sentry.journal.tag.manager,model_hat_sentry_journal_tag,hat_sentry.group_hat_sentry_manager,1,1,1,1

@@ -52,6 +52,15 @@ class HatSentryAsset(models.Model):
         string="Open Positions",
         compute="_compute_open_position_count",
     )
+    trade_count = fields.Integer(
+        string="Trade Count",
+        compute="_compute_trade_stats",
+    )
+    total_trade_pnl = fields.Monetary(
+        string="Total Trade P&L",
+        currency_field="currency_id",
+        compute="_compute_trade_stats",
+    )
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
     )
@@ -75,6 +84,17 @@ class HatSentryAsset(models.Model):
                     ("state", "=", "open"),
                 ]
             )
+
+    @api.depends()
+    def _compute_trade_stats(self):
+        for record in self:
+            try:
+                trades = self.env["hat_sentry.trade"].search([("asset_id", "=", record.id)])
+                record.trade_count = len(trades)
+                record.total_trade_pnl = sum(trades.mapped("realized_pnl"))
+            except KeyError:
+                record.trade_count = 0
+                record.total_trade_pnl = 0.0
 
     @api.constrains("bucket")
     def _check_bucket_consistency(self):

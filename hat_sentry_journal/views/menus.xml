@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_hat_sentry_trading_journal" name="Trading Journal"
+              parent="hat_sentry.menu_hat_sentry_trading" sequence="10"
+              action="action_hat_sentry_trade"/>
+    <menuitem id="menu_hat_sentry_decision_log" name="Decision Logs"
+              parent="hat_sentry.menu_hat_sentry_trading" sequence="20"
+              action="action_hat_sentry_decision_log"/>
+</odoo>

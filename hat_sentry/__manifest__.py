@@ -18,6 +18,7 @@
         "data/crypto_currencies.xml",
         "data/crypto_rates_cron.xml",
         "data/digest_data.xml",
+        "data/tour_data.xml",
         "views/settings_views.xml",
         # action-defining files first (no %(xml_id)d deps)
         "views/portfolio_snapshot_views.xml",
@@ -35,6 +36,11 @@
         "views/menus.xml",
     ],
     "demo": [],
+    "assets": {
+        "web.assets_backend": [
+            "hat_sentry/static/src/js/tours/**/*",
+        ],
+    },
     "installable": True,
     "application": True,
     "auto_install": False,

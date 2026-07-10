@@ -1,7 +1,6 @@
 import logging
 
 from markupsafe import escape
-
 from odoo import models
 
 _logger = logging.getLogger(__name__)

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_decision_log_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.decision.log.tree</field>
+        <field name="model">hat_sentry.decision.log</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="decision_type" widget="badge"/>
+                <field name="emotion_level" widget="badge"/>
+                <field name="confidence_level" widget="badge"/>
+                <field name="was_plan_followed"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_decision_log_form" model="ir.ui.view">
+        <field name="name">hat_sentry.decision.log.form</field>
+        <field name="model">hat_sentry.decision.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Decision">
+                            <field name="asset_id"/>
+                            <field name="decision_type" widget="badge"/>
+                            <field name="was_plan_followed"/>
+                            <field name="trade_id"/>
+                        </group>
+                        <group string="Psychology">
+                            <field name="emotion_level" widget="badge"/>
+                            <field name="confidence_level" widget="badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Market Context">
+                            <group>
+                                <field name="market_context" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Thesis &amp; Criteria">
+                            <group>
+                                <group string="Thesis">
+                                    <field name="thesis" nolabel="1"/>
+                                </group>
+                                <group string="Intended Action">
+                                    <field name="intended_action" nolabel="1"/>
+                                </group>
+                                <group string="Entry Criteria">
+                                    <field name="entry_criteria" nolabel="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Risk Management">
+                            <group>
+                                <group string="Invalidation Level">
+                                    <field name="invalidation_level" nolabel="1"/>
+                                </group>
+                                <group string="Position Size Rationale">
+                                    <field name="position_size_rationale" nolabel="1"/>
+                                </group>
+                                <group string="Risk/Reward Estimate">
+                                    <field name="risk_reward_estimate" nolabel="1"/>
+                                </group>
+                                <group string="Guardrail Warnings">
+                                    <field name="guardrail_warnings" nolabel="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Review">
+                            <group>
+                                <group string="Outcome">
+                                    <field name="outcome" nolabel="1"/>
+                                </group>
+                                <group string="What Went Right">
+                                    <field name="what_went_right" nolabel="1"/>
+                                </group>
+                                <group string="What Went Wrong">
+                                    <field name="what_went_wrong" nolabel="1"/>
+                                </group>
+                                <group string="Lesson Learned">
+                                    <field name="lesson_learned" nolabel="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Tags">
+                            <field name="tag_ids" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_decision_log_kanban" model="ir.ui.view">
+        <field name="name">hat_sentry.decision.log.kanban</field>
+        <field name="model">hat_sentry.decision.log</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="decision_type">
+                <field name="decision_type"/>
+                <field name="emotion_level"/>
+                <field name="confidence_level"/>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <field name="decision_type" widget="badge"/>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <field name="name"/>
+                                <div class="o_kanban_tags_section">
+                                    <span>Emotion: </span>
+                                    <field name="emotion_level" widget="badge"/>
+                                    <span>Confidence: </span>
+                                    <field name="confidence_level" widget="badge"/>
+                                </div>
+                                <field name="asset_id"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_decision_log_search" model="ir.ui.view">
+        <field name="name">hat_sentry.decision.log.search</field>
+        <field name="model">hat_sentry.decision.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <filter name="filter_entry" string="Entry" domain="[('decision_type', '=', 'entry')]"/>
+                <filter name="filter_exit" string="Exit" domain="[('decision_type', '=', 'exit')]"/>
+                <filter name="filter_hold" string="Hold" domain="[('decision_type', '=', 'hold')]"/>
+                <filter name="filter_skip" string="Skip" domain="[('decision_type', '=', 'skip')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_decision_type" string="Decision Type" context="{'group_by': 'decision_type'}"/>
+                    <filter name="group_tag" string="Tag" context="{'group_by': 'tag_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_decision_log" model="ir.actions.act_window">
+        <field name="name">Decision Logs</field>
+        <field name="res_model">hat_sentry.decision.log</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p>Log your trading decisions, emotions, and analysis to improve over time.</p>
+        </field>
+        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_trader'))]"/>
+    </record>
+</odoo>

@@ -52,6 +52,7 @@ class HatSentryTelegram(models.AbstractModel):
     def _send_message(self, bot_token, chat_id, message):
         """Send a message to Telegram via Bot API with retry."""
         import time
+
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
         max_retries = 3
         for attempt in range(max_retries):
@@ -79,6 +80,6 @@ class HatSentryTelegram(models.AbstractModel):
             except requests.exceptions.RequestException as e:
                 _logger.warning("Telegram attempt %d/%d failed: %s", attempt + 1, max_retries, str(e))
                 if attempt < max_retries - 1:
-                    time.sleep(2 ** attempt)
+                    time.sleep(2**attempt)
         _logger.error("Telegram message failed after %d attempts", max_retries)
         return False

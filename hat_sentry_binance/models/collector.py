@@ -212,7 +212,9 @@ class HatSentryCollector(models.AbstractModel):
                         "position_id": position.id if position else False,
                         "symbol": symbol,
                         "funding_rate": funding_rate * 100,  # convert to percentage
-                        "funding_direction": "paid" if funding_rate > 0 else ("received" if funding_rate < 0 else "neutral"),
+                        "funding_direction": "paid"
+                        if funding_rate > 0
+                        else ("received" if funding_rate < 0 else "neutral"),
                         "event_datetime": funding_time,
                     }
                 )

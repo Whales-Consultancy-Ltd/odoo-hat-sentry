@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Trade record rules -->
+    <record id="rule_hat_sentry_trade_trader" model="ir.rule">
+        <field name="name">hat_sentry.trade: trader own records</field>
+        <field name="model_id" ref="model_hat_sentry_trade"/>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_trader'))]"/>
+        <field name="domain_force">[("create_uid", "=", user.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="rule_hat_sentry_trade_manager" model="ir.rule">
+        <field name="name">hat_sentry.trade: manager full access</field>
+        <field name="model_id" ref="model_hat_sentry_trade"/>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_manager'))]"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="rule_hat_sentry_trade_company" model="ir.rule">
+        <field name="name">hat_sentry.trade: multi-company isolation</field>
+        <field name="model_id" ref="model_hat_sentry_trade"/>
+        <field name="domain_force">["|", ("company_id", "=", False), ("company_id", "in", company_ids)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- Decision Log record rules -->
+    <record id="rule_hat_sentry_decision_log_trader" model="ir.rule">
+        <field name="name">hat_sentry.decision.log: trader own records</field>
+        <field name="model_id" ref="model_hat_sentry_decision_log"/>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_trader'))]"/>
+        <field name="domain_force">[("create_uid", "=", user.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="rule_hat_sentry_decision_log_manager" model="ir.rule">
+        <field name="name">hat_sentry.decision.log: manager full access</field>
+        <field name="model_id" ref="model_hat_sentry_decision_log"/>
+        <field name="groups" eval="[(4, ref('hat_sentry.group_hat_sentry_manager'))]"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="rule_hat_sentry_decision_log_company" model="ir.rule">
+        <field name="name">hat_sentry.decision.log: multi-company isolation</field>
+        <field name="model_id" ref="model_hat_sentry_decision_log"/>
+        <field name="domain_force">["|", ("company_id", "=", False), ("company_id", "in", company_ids)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- Journal Tag record rules -->
+    <record id="rule_hat_sentry_journal_tag_company" model="ir.rule">
+        <field name="name">hat_sentry.journal.tag: multi-company isolation</field>
+        <field name="model_id" ref="model_hat_sentry_journal_tag"/>
+        <field name="domain_force">["|", ("company_id", "=", False), ("company_id", "in", company_ids)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+</odoo>

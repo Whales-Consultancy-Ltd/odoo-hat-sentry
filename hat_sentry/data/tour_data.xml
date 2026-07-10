@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="tour_hat_sentry_installation" model="web_tour.tour">
+        <field name="name">hat_sentry_installation_tour</field>
+        <field name="sequence" eval="10"/>
+        <field name="url">/odoo</field>
+    </record>
+    <record id="tour_hat_sentry_dashboard_smoke" model="web_tour.tour">
+        <field name="name">hat_sentry_dashboard_smoke</field>
+        <field name="sequence" eval="20"/>
+        <field name="url">/web</field>
+    </record>
+    <record id="tour_hat_sentry_asset_smoke" model="web_tour.tour">
+        <field name="name">hat_sentry_asset_smoke</field>
+        <field name="sequence" eval="30"/>
+        <field name="url">/web</field>
+    </record>
+    <record id="tour_hat_sentry_snapshot_smoke" model="web_tour.tour">
+        <field name="name">hat_sentry_snapshot_smoke</field>
+        <field name="sequence" eval="40"/>
+        <field name="url">/web</field>
+    </record>
+    <record id="tour_hat_sentry_trade_smoke" model="web_tour.tour">
+        <field name="name">hat_sentry_trade_smoke</field>
+        <field name="sequence" eval="50"/>
+        <field name="url">/web</field>
+    </record>
+    <record id="tour_hat_sentry_futures_smoke" model="web_tour.tour">
+        <field name="name">hat_sentry_futures_smoke</field>
+        <field name="sequence" eval="60"/>
+        <field name="url">/web</field>
+    </record>
+</odoo>
