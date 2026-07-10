@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_hat_sentry_root" name="Hat Sentry" web_icon="hat_sentry,static/description/icon.png"
-              groups="hat_sentry.group_hat_sentry_user"/>
+    <menuitem id="menu_hat_sentry_root" name="Hat Sentry" web_icon="hat_sentry,static/description/icon.png"/>
 
     <!-- Dashboard -->
     <menuitem id="menu_hat_sentry_dashboard" name="Dashboard" parent="menu_hat_sentry_root" sequence="0"/>
