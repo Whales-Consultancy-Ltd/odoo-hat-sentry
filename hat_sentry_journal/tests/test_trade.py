@@ -142,12 +142,13 @@ class TestTrade(TransactionCase):
 
     def test_trade_security_trader_can_create(self):
         group_trader = self.env.ref("hat_sentry.group_hat_sentry_trader")
+        group_user = self.env.ref("base.group_user")
         user_trader = self.env["res.users"].create(
             {
                 "name": "Trader",
                 "login": "trader_test",
                 "password": "test123",
-                "group_ids": [(4, group_trader.id)],
+                "group_ids": [(4, group_trader.id), (4, group_user.id)],
             }
         )
         trade = self.Trade.with_user(user_trader).create(
@@ -162,12 +163,13 @@ class TestTrade(TransactionCase):
 
     def test_trade_security_user_cannot_create(self):
         group_user = self.env.ref("hat_sentry.group_hat_sentry_user")
+        base_user = self.env.ref("base.group_user")
         user_user = self.env["res.users"].create(
             {
                 "name": "User",
                 "login": "user_test",
                 "password": "test123",
-                "group_ids": [(4, group_user.id)],
+                "group_ids": [(4, group_user.id), (4, base_user.id)],
             }
         )
         with self.assertRaises(AccessError):
