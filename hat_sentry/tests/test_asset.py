@@ -1,4 +1,3 @@
-from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -104,7 +103,7 @@ class TestAsset(TransactionCase):
         self.assertFalse(asset.active)
 
     def test_invalid_bucket_raises_validation_error(self):
-        with self.assertRaises((ValidationError, ValueError)):
+        with self.assertRaises(ValueError):
             self.Asset.create(
                 {
                     "symbol": "XRP",

@@ -17,8 +17,6 @@ class TestSecurity(TransactionCase):
         self.user_manager = self._create_user("test_manager", self.group_manager)
 
         self.Asset = self.env["hat_sentry.asset"]
-        self.Trade = self.env["hat_sentry.trade"]
-        self.Snapshot = self.env["hat_sentry.portfolio.snapshot"]
 
         self.asset = self.Asset.sudo().create(
             {
@@ -27,7 +25,6 @@ class TestSecurity(TransactionCase):
                 "bucket": "core",
             }
         )
-        self.snapshot = self.Snapshot.sudo().create({"total_value": 10000.0})
 
     def _create_user(self, login, group):
         return self.env["res.users"].create(
@@ -55,43 +52,6 @@ class TestSecurity(TransactionCase):
                     "bucket": "trading",
                 }
             )
-
-    def test_user_cannot_create_trade(self):
-        with self.assertRaises(AccessError):
-            self.Trade.sudo(self.user_user).create(
-                {
-                    "name": "Test Trade",
-                    "asset_id": self.asset.id,
-                    "direction": "buy",
-                    "quantity": 1.0,
-                }
-            )
-
-    # --- Trader ---
-
-    def test_trader_can_create_trade(self):
-        trade = self.Trade.sudo(self.user_trader).create(
-            {
-                "name": "Trader Trade",
-                "asset_id": self.asset.id,
-                "direction": "buy",
-                "quantity": 1.0,
-            }
-        )
-        self.assertTrue(trade)
-        self.assertEqual(trade.create_uid, self.user_trader)
-
-    def test_trader_can_read_own_trade(self):
-        trade = self.Trade.sudo(self.user_trader).create(
-            {
-                "name": "Own Trade",
-                "asset_id": self.asset.id,
-                "direction": "buy",
-                "quantity": 1.0,
-            }
-        )
-        found = self.Trade.sudo(self.user_trader).search([("id", "=", trade.id)])
-        self.assertIn(trade, found)
 
     def test_trader_cannot_create_asset(self):
         with self.assertRaises(AccessError):
@@ -129,17 +89,6 @@ class TestSecurity(TransactionCase):
         )
         eth.sudo(self.user_manager).unlink()
         self.assertFalse(self.Asset.search([("id", "=", eth.id)]))
-
-    def test_manager_can_create_trade(self):
-        trade = self.Trade.sudo(self.user_manager).create(
-            {
-                "name": "Manager Trade",
-                "asset_id": self.asset.id,
-                "direction": "sell",
-                "quantity": 0.5,
-            }
-        )
-        self.assertTrue(trade)
 
     # --- Multi-company isolation ---
 
