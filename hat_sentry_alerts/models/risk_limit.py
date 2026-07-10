@@ -8,7 +8,7 @@ class HatSentryRiskLimit(models.Model):
     _rec_name = "name"
     _order = "limit_type, name"
 
-    name = fields.Char(string=_("Name"), required=True)
+    name = fields.Char(string="Name", required=True)
     limit_type = fields.Selection(
         [
             ("max_daily_loss", _("Max Daily Loss")),
@@ -21,14 +21,14 @@ class HatSentryRiskLimit(models.Model):
             ("max_futures_exposure_pct", _("Max Futures Exposure %")),
             ("max_concentration_pct", _("Max Single Asset %")),
         ],
-        string=_("Limit Type"),
+        string="Limit Type",
         required=True,
         index=True,
     )
     value = fields.Float(
-        string=_("Limit Value"),
+        string="Limit Value",
         required=True,
-        help=_("Threshold value for this limit"),
+        help="Threshold value for this limit",
     )
     comparison = fields.Selection(
         [
@@ -37,10 +37,10 @@ class HatSentryRiskLimit(models.Model):
             ("lt", _("Less Than (<)")),
             ("lte", _("Less Than or Equal (<=)")),
         ],
-        string=_("Comparison"),
+        string="Comparison",
         default="gt",
         required=True,
-        help=_("How actual value is compared to limit. Breach = actual comparison value is True."),
+        help="How actual value is compared to limit. Breach = actual comparison value is True.",
     )
     severity_on_breach = fields.Selection(
         [
@@ -48,15 +48,15 @@ class HatSentryRiskLimit(models.Model):
             ("critical", _("Critical")),
             ("emergency", _("Emergency")),
         ],
-        string=_("Severity on Breach"),
+        string="Severity on Breach",
         default="warning",
         required=True,
     )
-    active = fields.Boolean(string=_("Active"), default=True)
-    description = fields.Text(string=_("Description"))
+    active = fields.Boolean(string="Active", default=True)
+    description = fields.Text(string="Description")
     company_id = fields.Many2one(
         "res.company",
-        string=_("Company"),
+        string="Company",
         default=lambda self: self.env.company,
         required=True,
         index=True,

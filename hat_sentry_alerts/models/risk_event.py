@@ -8,17 +8,17 @@ class HatSentryRiskEvent(models.Model):
     _rec_name = "display_name"
     _order = "breach_datetime desc"
 
-    risk_limit_id = fields.Many2one("hat_sentry.risk.limit", string=_("Risk Limit"), required=True, index=True)
+    risk_limit_id = fields.Many2one("hat_sentry.risk.limit", string="Risk Limit", required=True, index=True)
     limit_type = fields.Selection(
-        string=_("Limit Type"),
+        string="Limit Type",
         related="risk_limit_id.limit_type",
         store=True,
         readonly=True,
     )
-    actual_value = fields.Float(string=_("Actual Value"), required=True, digits=(16, 4))
-    threshold_value = fields.Float(string=_("Threshold"), required=True, digits=(16, 4))
+    actual_value = fields.Float(string="Actual Value", required=True, digits=(16, 4))
+    threshold_value = fields.Float(string="Threshold", required=True, digits=(16, 4))
     breach_datetime = fields.Datetime(
-        string=_("Breach Time"),
+        string="Breach Time",
         default=fields.Datetime.now,
         required=True,
         index=True,
@@ -29,24 +29,24 @@ class HatSentryRiskEvent(models.Model):
             ("acknowledged", _("Acknowledged")),
             ("resolved", _("Resolved")),
         ],
-        string=_("State"),
+        string="State",
         default="new",
         tracking=True,
     )
-    alert_id = fields.Many2one("hat_sentry.alert", string=_("Related Alert"), ondelete="set null")
+    alert_id = fields.Many2one("hat_sentry.alert", string="Related Alert", ondelete="set null")
     snapshot_id = fields.Many2one(
         "hat_sentry.portfolio.snapshot",
-        string=_("Snapshot"),
+        string="Snapshot",
         ondelete="set null",
     )
     company_id = fields.Many2one(
         "res.company",
-        string=_("Company"),
+        string="Company",
         default=lambda self: self.env.company,
         required=True,
         index=True,
     )
-    display_name = fields.Char(string=_("Display Name"), compute="_compute_display_name")
+    display_name = fields.Char(string="Display Name", compute="_compute_display_name")
 
     @api.depends("risk_limit_id", "limit_type", "breach_datetime")
     def _compute_display_name(self):

@@ -8,24 +8,24 @@ class HatSentryCooldown(models.Model):
     _rec_name = "display_name"
     _order = "start_datetime desc"
 
-    start_datetime = fields.Datetime(string=_("Start"), default=fields.Datetime.now, required=True)
-    end_datetime = fields.Datetime(string=_("End"), required=True)
-    reason = fields.Text(string=_("Reason"), required=True)
-    triggered_by_event_id = fields.Many2one("hat_sentry.risk.event", string=_("Triggered By"), ondelete="set null")
+    start_datetime = fields.Datetime(string="Start", default=fields.Datetime.now, required=True)
+    end_datetime = fields.Datetime(string="End", required=True)
+    reason = fields.Text(string="Reason", required=True)
+    triggered_by_event_id = fields.Many2one("hat_sentry.risk.event", string="Triggered By", ondelete="set null")
     active = fields.Boolean(
-        string=_("Active"),
+        string="Active",
         default=True,
         compute="_compute_active",
         store=True,
     )
     company_id = fields.Many2one(
         "res.company",
-        string=_("Company"),
+        string="Company",
         default=lambda self: self.env.company,
         required=True,
         index=True,
     )
-    display_name = fields.Char(string=_("Display Name"), compute="_compute_display_name")
+    display_name = fields.Char(string="Display Name", compute="_compute_display_name")
 
     @api.depends("start_datetime", "end_datetime")
     def _compute_active(self):
