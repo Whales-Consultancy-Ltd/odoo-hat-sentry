@@ -100,8 +100,10 @@
                 <separator/>
                 <filter name="filter_active" string="Active"
                         domain="[('active', '=', True)]"/>
-                <field name="symbol"/>
-                <field name="credential_id"/>
+                <group>
+                    <field name="symbol"/>
+                    <field name="credential_id"/>
+                </group>
                 <group>
                     <filter name="group_side" string="Side"
                             context="{'group_by': 'side'}"/>

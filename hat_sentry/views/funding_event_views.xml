@@ -44,7 +44,9 @@
             <search>
                 <filter name="filter_paid" string="Paid" domain="[('funding_direction', '=', 'paid')]"/>
                 <filter name="filter_received" string="Received" domain="[('funding_direction', '=', 'received')]"/>
-                <field name="symbol"/>
+                <group>
+                    <field name="symbol"/>
+                </group>
             </search>
         </field>
     </record>

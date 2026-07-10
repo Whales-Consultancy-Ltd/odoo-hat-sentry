@@ -51,7 +51,9 @@
                 <filter name="filter_earn" string="Earn" domain="[('account_type', '=', 'earn')]"/>
                 <separator/>
                 <filter name="filter_binance" string="Binance" domain="[('exchange', '=', 'binance')]"/>
-                <field name="asset_id"/>
+                <group>
+                    <field name="asset_id"/>
+                </group>
             </search>
         </field>
     </record>

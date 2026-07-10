@@ -31,7 +31,9 @@
         <field name="model">hat_sentry.mistake.tag</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
+                <group>
+                    <field name="name"/>
+                </group>
             </search>
         </field>
     </record>

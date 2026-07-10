@@ -142,14 +142,16 @@
         <field name="model">hat_sentry.decision.log</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
-                <field name="asset_id"/>
+                <group>
+                    <field name="name"/>
+                    <field name="asset_id"/>
+                </group>
                 <filter name="filter_entry" string="Entry" domain="[('decision_type', '=', 'entry')]"/>
                 <filter name="filter_exit" string="Exit" domain="[('decision_type', '=', 'exit')]"/>
                 <filter name="filter_hold" string="Hold" domain="[('decision_type', '=', 'hold')]"/>
                 <filter name="filter_skip" string="Skip" domain="[('decision_type', '=', 'skip')]"/>
                 <separator/>
-                <group string="Group By">
+                <group>
                     <filter name="group_decision_type" string="Decision Type" context="{'group_by': 'decision_type'}"/>
                     <filter name="group_tag" string="Tag" context="{'group_by': 'tag_ids'}"/>
                 </group>

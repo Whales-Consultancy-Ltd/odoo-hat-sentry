@@ -48,7 +48,9 @@
             <search>
                 <filter name="filter_flexible" string="Flexible" domain="[('product_type', '=', 'flexible')]"/>
                 <filter name="filter_locked" string="Locked" domain="[('product_type', '=', 'locked')]"/>
-                <field name="asset_id"/>
+                <group>
+                    <field name="asset_id"/>
+                </group>
             </search>
         </field>
     </record>

@@ -84,8 +84,10 @@
         <field name="model">hat_sentry.trade</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
-                <field name="asset_id"/>
+                <group>
+                    <field name="name"/>
+                    <field name="asset_id"/>
+                </group>
                 <filter name="filter_open" string="Open" domain="[('state', '=', 'open')]"/>
                 <filter name="filter_closed" string="Closed" domain="[('state', '=', 'closed')]"/>
                 <filter name="filter_cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
@@ -100,7 +102,7 @@
                 <filter name="filter_this_month" string="This Month"
                         date="entry_date"/>
                 <separator/>
-                <group string="Group By">
+                <group>
                     <filter name="group_asset" string="Asset" context="{'group_by': 'asset_id'}"/>
                     <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
                     <filter name="group_direction" string="Direction" context="{'group_by': 'direction'}"/>

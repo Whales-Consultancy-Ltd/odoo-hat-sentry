@@ -130,7 +130,9 @@
                 <separator/>
                 <filter name="filter_isolated" string="Isolated" domain="[('margin_mode', '=', 'isolated')]"/>
                 <filter name="filter_cross" string="Cross" domain="[('margin_mode', '=', 'cross')]"/>
-                <field name="symbol"/>
+                <group>
+                    <field name="symbol"/>
+                </group>
             </search>
         </field>
     </record>
