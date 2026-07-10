@@ -20,18 +20,15 @@
                                 <div class="o_kanban_card_header_title">
                                     <strong><field name="symbol"/></strong>
                                 </div>
-                                <field name="conviction" widget="badge"
-                                       decoration-success="record.conviction.raw_value == 'high'"
-                                       decoration-warning="record.conviction.raw_value == 'medium'"
-                                       decoration-danger="record.conviction.raw_value == 'low'"/>
+                                <field name="conviction" widget="badge"/>
                             </div>
                             <div class="o_kanban_card_content">
                                 <field name="name" placeholder="No name"/>
                                 <t t-if="record.review_date.raw_value">
                                     <div class="mt-1">
-                                        <i class="fa fa-calendar"/> Review: <field name="review_date"/>
+                                        <i class="fa fa-calendar" title="Review date"/> Review: <field name="review_date"/>
                                         <t t-if="record.review_overdue.raw_value">
-                                            <i class="fa fa-exclamation-triangle text-danger"/>
+                                            <i class="fa fa-exclamation-triangle text-danger" title="Review overdue"/>
                                         </t>
                                     </div>
                                 </t>
