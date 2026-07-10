@@ -103,8 +103,9 @@ class HatSentryTrade(models.Model):
             cost_basis = record.entry_price * record.quantity
             record.realized_pnl_pct = (pnl / cost_basis * 100) if cost_basis else 0.0
 
-    @api.model
-    def create(self, vals):
-        if vals.get("name", _("New Trade")) == _("New Trade"):
-            vals["name"] = self.env["ir.sequence"].next_by_code("hat_sentry.trade") or _("New Trade")
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("name", _("New Trade")) == _("New Trade"):
+                vals["name"] = self.env["ir.sequence"].next_by_code("hat_sentry.trade") or _("New Trade")
+        return super().create(vals_list)
