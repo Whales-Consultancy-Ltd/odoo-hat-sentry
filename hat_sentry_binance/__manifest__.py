@@ -11,7 +11,7 @@ No trading orders are placed, modified, or cancelled.
     "author": "Business Solutions For Africa",
     "website": "https://www.biz4africa.com",
     "license": "LGPL-3",
-    "depends": ["hat_sentry"],
+    "depends": ["hat_sentry", "hat_sentry_journal"],
     "data": [
         "security/ir.model.access.csv",
         "data/binance_cron.xml",

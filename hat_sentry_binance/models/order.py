@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HatSentryOrder(models.Model):
@@ -7,13 +8,6 @@ class HatSentryOrder(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "display_name"
     _order = "order_datetime desc"
-    _sql_constraints = [
-        (
-            "order_id_binance_unique",
-            "unique(order_id_binance, credential_id)",
-            "Order ID must be unique per credential!",
-        ),
-    ]
 
     name = fields.Char(
         string="Reference",
@@ -127,3 +121,14 @@ class HatSentryOrder(models.Model):
             if vals.get("name", _("New Order")) == _("New Order"):
                 vals["name"] = self.env["ir.sequence"].next_by_code("hat_sentry.order") or _("New Order")
         return super().create(vals_list)
+
+    @api.constrains("order_id_binance", "credential_id")
+    def _check_order_id_binance_unique(self):
+        for record in self:
+            domain = [
+                ("order_id_binance", "=", record.order_id_binance),
+                ("credential_id", "=", record.credential_id.id),
+                ("id", "!=", record.id),
+            ]
+            if self.search_count(domain, limit=1):
+                raise ValidationError(_("Order ID must be unique per credential!"))
