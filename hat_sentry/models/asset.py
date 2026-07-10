@@ -48,6 +48,7 @@ class HatSentryAsset(models.Model):
         help="Linked pseudo-currency for this asset",
     )
     active = fields.Boolean(string="Active", default=True)
+    color = fields.Integer(string="Color Index")
     open_position_count = fields.Integer(
         string="Open Positions",
         compute="_compute_open_position_count",
