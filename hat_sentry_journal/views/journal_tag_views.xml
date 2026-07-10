@@ -35,6 +35,5 @@
         <field name="help" type="html">
             <p>Define tags to categorize your decision logs.</p>
         </field>
-        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_user'))]"/>
     </record>
 </odoo>

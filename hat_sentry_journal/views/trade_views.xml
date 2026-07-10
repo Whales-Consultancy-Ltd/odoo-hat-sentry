@@ -100,7 +100,7 @@
                 <filter name="filter_this_month" string="This Month"
                         date="entry_date"/>
                 <separator/>
-                <group expand="0" string="Group By">
+                <group string="Group By">
                     <filter name="group_asset" string="Asset" context="{'group_by': 'asset_id'}"/>
                     <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
                     <filter name="group_direction" string="Direction" context="{'group_by': 'direction'}"/>
@@ -141,6 +141,5 @@
         <field name="help" type="html">
             <p>Track your trades here. Record entries, exits, and track P&amp;L over time.</p>
         </field>
-        <field name="groups_id" eval="[(4, ref('hat_sentry.group_hat_sentry_trader'))]"/>
     </record>
 </odoo>
