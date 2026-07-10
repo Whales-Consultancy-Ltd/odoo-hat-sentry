@@ -114,7 +114,7 @@ class TestPortfolioSnapshot(TransactionCase):
         snap = self.Snapshot.create(
             {
                 "total_value": 10000.0,
-                "spot_value": 8000.0,
+                "spot_value": 8500.0,
                 "core_value": 2000.0,
                 "stablecoin_value": 1000.0,
                 "passive_income_value": 500.0,

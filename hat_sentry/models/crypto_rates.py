@@ -15,7 +15,9 @@ class HatSentryCryptoRates(models.AbstractModel):
         return self.env["res.currency"].search([("active", "=", True)])
 
     def _update_rate(self, currency, price_usdt):
-        rate = 1.0 / price_usdt if price_usdt > 0 else 0.0
+        if not price_usdt or price_usdt <= 0:
+            return
+        rate = 1.0 / price_usdt
         existing = self.env["res.currency.rate"].search(
             [
                 ("currency_id", "=", currency.id),

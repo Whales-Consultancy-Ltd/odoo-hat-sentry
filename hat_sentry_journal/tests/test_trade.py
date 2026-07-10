@@ -147,7 +147,7 @@ class TestTrade(TransactionCase):
                 "name": "Trader",
                 "login": "trader_test",
                 "password": "test123",
-                "groups_id": [(4, group_trader.id)],
+                "group_ids": [(4, group_trader.id)],
             }
         )
         trade = self.Trade.sudo(user_trader).create(
@@ -167,7 +167,7 @@ class TestTrade(TransactionCase):
                 "name": "User",
                 "login": "user_test",
                 "password": "test123",
-                "groups_id": [(4, group_user.id)],
+                "group_ids": [(4, group_user.id)],
             }
         )
         with self.assertRaises(AccessError):

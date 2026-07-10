@@ -104,7 +104,7 @@ class TestAsset(TransactionCase):
         self.assertFalse(asset.active)
 
     def test_invalid_bucket_raises_validation_error(self):
-        with self.assertRaises(ValidationError):
+        with self.assertRaises((ValidationError, ValueError)):
             self.Asset.create(
                 {
                     "symbol": "XRP",

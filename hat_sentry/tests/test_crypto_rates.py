@@ -34,7 +34,7 @@ class TestCryptoRates(TransactionCase):
         self.assertTrue(rate)
         self.assertAlmostEqual(rate.rate, 1.0 / 50000.0)
 
-    def test_update_rate_zero_price_returns_zero_rate(self):
+    def test_update_rate_zero_price_skips_update(self):
         self.CryptoRates._update_rate(self.USD, 0.0)
         rate = self.CurrencyRate.search(
             [
@@ -43,7 +43,7 @@ class TestCryptoRates(TransactionCase):
             ],
             limit=1,
         )
-        self.assertEqual(rate.rate, 0.0)
+        self.assertFalse(rate)
 
     def test_update_rate_updates_existing(self):
         self.CryptoRates._update_rate(self.USD, 1.0)

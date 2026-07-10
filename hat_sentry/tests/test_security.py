@@ -35,7 +35,7 @@ class TestSecurity(TransactionCase):
                 "name": login.title(),
                 "login": login,
                 "password": "test123",
-                "groups_id": [(4, group.id)],
+                "group_ids": [(4, group.id)],
                 "company_id": self.main_company.id,
             }
         )
