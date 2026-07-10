@@ -14,6 +14,11 @@
               action="action_hat_sentry_portfolio_snapshot" sequence="10"/>
     <menuitem id="menu_hat_sentry_asset" name="Assets" parent="menu_hat_sentry_portfolio"
               action="action_hat_sentry_asset" sequence="20"/>
+    <menuitem id="menu_hat_sentry_watchlist" name="Watchlist" parent="menu_hat_sentry_portfolio" sequence="25"/>
+    <menuitem id="menu_hat_sentry_watchlist_radar" name="Radar View" parent="menu_hat_sentry_watchlist"
+              action="action_hat_sentry_asset_radar" sequence="10"/>
+    <menuitem id="menu_hat_sentry_watchlist_group" name="Watchlist Groups" parent="menu_hat_sentry_watchlist"
+              action="action_hat_sentry_watchlist_group" sequence="20"/>
     <menuitem id="menu_hat_sentry_balance" name="Balances" parent="menu_hat_sentry_portfolio"
               action="action_hat_sentry_balance" sequence="30"/>
 
@@ -43,4 +48,12 @@
     <menuitem id="menu_hat_sentry_credential" name="Credentials" parent="menu_hat_sentry_config"
               action="action_hat_sentry_credential" sequence="20"
               groups="hat_sentry.group_hat_sentry_manager"/>
+
+    <record id="action_hat_sentry_asset_radar" model="ir.actions.act_window">
+        <field name="name">Watchlist Radar</field>
+        <field name="res_model">hat_sentry.asset</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_hat_sentry_asset_kanban"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
 </odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_asset_kanban" model="ir.ui.view">
+        <field name="name">hat_sentry.asset.kanban.radar</field>
+        <field name="model">hat_sentry.asset</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="symbol"/>
+                <field name="name"/>
+                <field name="conviction"/>
+                <field name="watchlist_group_id"/>
+                <field name="review_date"/>
+                <field name="review_overdue"/>
+                <field name="watchlist_status"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click" t-attf-class="oe_kanban_color_#{record.color.raw_value or 0}">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <strong><field name="symbol"/></strong>
+                                </div>
+                                <field name="conviction" widget="badge"
+                                       decoration-success="record.conviction.raw_value == 'high'"
+                                       decoration-warning="record.conviction.raw_value == 'medium'"
+                                       decoration-danger="record.conviction.raw_value == 'low'"/>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <field name="name" placeholder="No name"/>
+                                <t t-if="record.review_date.raw_value">
+                                    <div class="mt-1">
+                                        <i class="fa fa-calendar"/> Review: <field name="review_date"/>
+                                        <t t-if="record.review_overdue.raw_value">
+                                            <i class="fa fa-exclamation-triangle text-danger"/>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

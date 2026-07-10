@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_cooldown_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.cooldown.list</field>
+        <field name="model">hat_sentry.cooldown</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="reason"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="triggered_by_event_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_cooldown_form" model="ir.ui.view">
+        <field name="name">hat_sentry.cooldown.form</field>
+        <field name="model">hat_sentry.cooldown</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="triggered_by_event_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Reason">
+                        <field name="reason" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_cooldown" model="ir.actions.act_window">
+        <field name="name">Cooldowns</field>
+        <field name="res_model">hat_sentry.cooldown</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p>No cooldowns active. Cooldowns are triggered automatically on emergency breaches.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_hat_sentry_orders" name="Orders"
+              parent="hat_sentry.menu_hat_sentry_trading" sequence="5"
+              action="action_hat_sentry_order"/>
+</odoo>

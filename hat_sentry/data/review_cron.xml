@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cron_check_reviews" model="ir.cron">
+        <field name="name">Hat Sentry: Check Overdue Reviews</field>
+        <field name="model_id" ref="model_hat_sentry_asset"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_reviews()</field>
+        <field name="interval_number">24</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="False"/>
+        <field name="company_ids" eval="[]"/>
+    </record>
+</odoo>

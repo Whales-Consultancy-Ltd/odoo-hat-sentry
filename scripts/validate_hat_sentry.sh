@@ -46,15 +46,15 @@ echo ""
 echo "3. Record rules ↔ model fields cross-validation..."
 for xml_file in hat_sentry/security/hat_sentry_security.xml; do
     if [ ! -f "$xml_file" ]; then continue; fi
-    
+
     # Extract domain_force fields
     domains=$(grep -oP "domain_force.*?\[.*?\]" "$xml_file" 2>/dev/null || true)
-    
+
     # For each rule, check if the model has the referenced fields
     while IFS= read -r line; do
         # Extract field names from domain like ('company_id', 'in', ...)
         fields=$(echo "$line" | grep -oP "'\K[^']+(?=',)" | head -5 || true)
-        
+
         for field in $fields; do
             # Skip common Odoo fields
             if [[ "$field" == "company_id" || "$field" == "id" || "$field" == "create_date" || "$field" == "write_date" ]]; then
@@ -81,7 +81,7 @@ echo ""
 echo "4. XML ID cross-validation..."
 for xml_file in hat_sentry/security/hat_sentry_security.xml; do
     if [ ! -f "$xml_file" ]; then continue; fi
-    
+
     # Extract ref="model_*" references
     refs=$(grep -oP 'ref="\K[^"]+' "$xml_file" | grep "^model_" || true)
     for ref in $refs; do
@@ -102,7 +102,7 @@ echo "5. Manifest data files validation..."
 for manifest in hat_sentry/__manifest__.py hat_sentry_binance/__manifest__.py; do
     if [ ! -f "$manifest" ]; then continue; fi
     module_dir=$(dirname "$manifest")
-    
+
     # Extract data files
     data_files=$(grep -oP '"data":\s*\[\K[^\]]+' "$manifest" | tr ',' '\n' | tr -d '"' | tr -d "'" | tr -d ' ' || true)
     while IFS= read -r f; do
@@ -122,7 +122,7 @@ echo ""
 echo "6. Access CSV ↔ model validation..."
 for csv_file in hat_sentry/security/ir.model.access.csv hat_sentry_binance/security/ir.model.access.csv; do
     if [ ! -f "$csv_file" ]; then continue; fi
-    
+
     # Extract model names from CSV (field 3 = model_id:id like "model_hat_sentry_asset")
     models=$(tail -n +2 "$csv_file" | cut -d',' -f3 | sed 's/^model_//' | sed 's/_/./g' | sort -u || true)
     while IFS= read -r model; do

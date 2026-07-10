@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hat_sentry_order_user,hat_sentry.order.user,model_hat_sentry_order,hat_sentry.group_hat_sentry_user,1,0,0,0
+access_hat_sentry_order_trader,hat_sentry.order.trader,model_hat_sentry_order,hat_sentry.group_hat_sentry_trader,1,0,0,0
+access_hat_sentry_order_manager,hat_sentry.order.manager,model_hat_sentry_order,hat_sentry.group_hat_sentry_manager,1,1,1,1

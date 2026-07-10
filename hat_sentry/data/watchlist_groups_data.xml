@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="watchlist_group_core" model="hat_sentry.watchlist.group">
+        <field name="name">Core Holdings</field>
+        <field name="sequence">10</field>
+        <field name="color">5</field>
+    </record>
+    <record id="watchlist_group_speculative" model="hat_sentry.watchlist.group">
+        <field name="name">Speculative</field>
+        <field name="sequence">20</field>
+        <field name="color">2</field>
+    </record>
+    <record id="watchlist_group_income" model="hat_sentry.watchlist.group">
+        <field name="name">Income</field>
+        <field name="sequence">30</field>
+        <field name="color">3</field>
+    </record>
+    <record id="watchlist_group_research" model="hat_sentry.watchlist.group">
+        <field name="name">Research</field>
+        <field name="sequence">40</field>
+        <field name="color">7</field>
+    </record>
+    <record id="watchlist_group_avoid" model="hat_sentry.watchlist.group">
+        <field name="name">Avoid</field>
+        <field name="sequence">50</field>
+        <field name="color">1</field>
+    </record>
+</odoo>

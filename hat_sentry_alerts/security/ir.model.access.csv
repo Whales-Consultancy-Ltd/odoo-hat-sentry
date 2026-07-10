@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hat_sentry_risk_limit_user,hat_sentry.risk.limit.user,model_hat_sentry_risk_limit,hat_sentry.group_hat_sentry_user,1,0,0,0
+access_hat_sentry_risk_limit_trader,hat_sentry.risk.limit.trader,model_hat_sentry_risk_limit,hat_sentry.group_hat_sentry_trader,1,0,0,0
+access_hat_sentry_risk_limit_manager,hat_sentry.risk.limit.manager,model_hat_sentry_risk_limit,hat_sentry.group_hat_sentry_manager,1,1,1,1
+access_hat_sentry_risk_event_user,hat_sentry.risk.event.user,model_hat_sentry_risk_event,hat_sentry.group_hat_sentry_user,1,0,0,0
+access_hat_sentry_risk_event_trader,hat_sentry.risk.event.trader,model_hat_sentry_risk_event,hat_sentry.group_hat_sentry_trader,1,1,0,0
+access_hat_sentry_risk_event_manager,hat_sentry.risk.event.manager,model_hat_sentry_risk_event,hat_sentry.group_hat_sentry_manager,1,1,1,1
+access_hat_sentry_cooldown_user,hat_sentry.cooldown.user,model_hat_sentry_cooldown,hat_sentry.group_hat_sentry_user,1,0,0,0
+access_hat_sentry_cooldown_trader,hat_sentry.cooldown.trader,model_hat_sentry_cooldown,hat_sentry.group_hat_sentry_trader,1,0,0,0
+access_hat_sentry_cooldown_manager,hat_sentry.cooldown.manager,model_hat_sentry_cooldown,hat_sentry.group_hat_sentry_manager,1,1,1,1

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_risk_limit_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.risk.limit.list</field>
+        <field name="model">hat_sentry.risk.limit</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="limit_type"/>
+                <field name="value"/>
+                <field name="comparison"/>
+                <field name="severity_on_breach" widget="badge"
+                       decoration-warning="severity_on_breach == 'warning'"
+                       decoration-danger="severity_on_breach == 'critical' or severity_on_breach == 'emergency'"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_risk_limit_form" model="ir.ui.view">
+        <field name="name">hat_sentry.risk.limit.form</field>
+        <field name="model">hat_sentry.risk.limit</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="limit_type"/>
+                            <field name="value"/>
+                        </group>
+                        <group>
+                            <field name="comparison"/>
+                            <field name="severity_on_breach"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_risk_limit_search" model="ir.ui.view">
+        <field name="name">hat_sentry.risk.limit.search</field>
+        <field name="model">hat_sentry.risk.limit</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="filter_max_daily_loss" string="Max Daily Loss" domain="[('limit_type', '=', 'max_daily_loss')]"/>
+                <filter name="filter_max_position_size" string="Max Position Size" domain="[('limit_type', '=', 'max_position_size')]"/>
+                <filter name="filter_max_leverage" string="Max Leverage" domain="[('limit_type', '=', 'max_leverage')]"/>
+                <separator/>
+                <group>
+                    <filter name="group_limit_type" string="Limit Type" context="{'group_by': 'limit_type'}"/>
+                    <filter name="group_severity" string="Severity" context="{'group_by': 'severity_on_breach'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_risk_limit" model="ir.actions.act_window">
+        <field name="name">Risk Limits</field>
+        <field name="res_model">hat_sentry.risk.limit</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p>No risk limits configured. Create limits to monitor your portfolio risk.</p>
+        </field>
+    </record>
+</odoo>

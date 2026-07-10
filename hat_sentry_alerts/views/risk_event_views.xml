@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_risk_event_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.risk.event.list</field>
+        <field name="model">hat_sentry.risk.event</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="limit_type"/>
+                <field name="risk_limit_id"/>
+                <field name="actual_value" digits="(16, 4)"/>
+                <field name="threshold_value" digits="(16, 4)"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-warning="state == 'acknowledged'"
+                       decoration-success="state == 'resolved'"/>
+                <field name="breach_datetime"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_risk_event_form" model="ir.ui.view">
+        <field name="name">hat_sentry.risk.event.form</field>
+        <field name="model">hat_sentry.risk.event</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,acknowledged,resolved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="risk_limit_id"/>
+                            <field name="limit_type"/>
+                            <field name="actual_value" digits="(16, 4)"/>
+                            <field name="threshold_value" digits="(16, 4)"/>
+                        </group>
+                        <group>
+                            <field name="breach_datetime"/>
+                            <field name="alert_id"/>
+                            <field name="snapshot_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_risk_event_search" model="ir.ui.view">
+        <field name="name">hat_sentry.risk.event.search</field>
+        <field name="model">hat_sentry.risk.event</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_new" string="New" domain="[('state', '=', 'new')]"/>
+                <filter name="filter_acknowledged" string="Acknowledged" domain="[('state', '=', 'acknowledged')]"/>
+                <filter name="filter_resolved" string="Resolved" domain="[('state', '=', 'resolved')]"/>
+                <separator/>
+                <filter name="filter_limit_type" string="Limit Type" domain="[('limit_type', '!=', False)]"/>
+                <separator/>
+                <group>
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_limit_type" string="Limit Type" context="{'group_by': 'limit_type'}"/>
+                    <filter name="group_breach_date" string="Breach Date" context="{'group_by': 'breach_datetime'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_risk_event" model="ir.actions.act_window">
+        <field name="name">Risk Events</field>
+        <field name="res_model">hat_sentry.risk.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_new': 1}</field>
+        <field name="help" type="html">
+            <p>No risk events yet. Events are created automatically when limits are breached.</p>
+        </field>
+    </record>
+</odoo>

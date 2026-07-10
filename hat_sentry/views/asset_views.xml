@@ -9,6 +9,10 @@
                 <field name="name"/>
                 <field name="asset_type"/>
                 <field name="bucket"/>
+                <field name="conviction" widget="badge"/>
+                <field name="watchlist_status" widget="badge"/>
+                <field name="review_date"/>
+                <field name="review_overdue"/>
                 <field name="is_stablecoin"/>
                 <field name="active"/>
             </list>
@@ -45,6 +49,37 @@
                             <field name="active"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page name="watchlist" string="Watchlist">
+                            <group>
+                                <group>
+                                    <field name="watchlist_group_id"/>
+                                    <field name="conviction"/>
+                                    <field name="watchlist_status"/>
+                                    <field name="review_date"/>
+                                    <field name="review_overdue"/>
+                                </group>
+                                <group>
+                                    <field name="thesis"/>
+                                    <field name="invalidation_level"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="entry_price_target"/>
+                                <field name="exit_price_target"/>
+                                <field name="max_allocation_pct"/>
+                            </group>
+                            <field name="notes"/>
+                            <div class="oe_button_box" name="review_buttons">
+                                <button name="action_mark_reviewed" type="object"
+                                        class="oe_stat_button" icon="fa-check">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Mark Reviewed</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -68,6 +103,20 @@
                 <separator/>
                 <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
                 <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="filter_active_watchlist" string="Active Watchlist"
+                        domain="[('watchlist_status', 'in', ['active', 'watching'])]"/>
+                <filter name="filter_overdue_review" string="Overdue Review"
+                        domain="[('review_overdue', '=', True)]"/>
+                <filter name="filter_conviction_high" string="High Conviction"
+                        domain="[('conviction', '=', 'high')]"/>
+                <separator/>
+                <filter name="group_watchlist_group" string="Watchlist Group"
+                        context="{'group_by': 'watchlist_group_id'}"/>
+                <filter name="group_conviction" string="Conviction"
+                        context="{'group_by': 'conviction'}"/>
+                <filter name="group_watchlist_status" string="Status"
+                        context="{'group_by': 'watchlist_status'}"/>
             </search>
         </field>
     </record>

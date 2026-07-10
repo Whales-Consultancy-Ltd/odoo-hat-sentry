@@ -13,7 +13,11 @@ No trading orders are placed, modified, or cancelled.
     "license": "LGPL-3",
     "depends": ["hat_sentry"],
     "data": [
+        "security/ir.model.access.csv",
         "data/binance_cron.xml",
+        "data/order_cron.xml",
+        "views/order_views.xml",
+        "views/menus.xml",
     ],
     "installable": True,
     "application": False,

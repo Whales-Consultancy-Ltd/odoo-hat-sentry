@@ -221,6 +221,145 @@ class HatSentryCollector(models.AbstractModel):
         except Exception as e:
             _logger.error("Funding collection failed: %s", str(e))
 
+    def sync_orders(self, credential, days_back=7):
+        """Sync recent orders from Binance for all tracked symbols."""
+        api = self.env["hat_sentry_binance.api"]
+
+        assets = self.env["hat_sentry.asset"].search([("company_id", "=", credential.company_id.id)])
+        symbols = [a.symbol + "USDT" if not a.symbol.endswith("USDT") else a.symbol for a in assets]
+
+        positions = self.env["hat_sentry.futures.position"].search(
+            [
+                ("state", "=", "open"),
+                ("company_id", "=", credential.company_id.id),
+            ]
+        )
+        for pos in positions:
+            sym = pos.symbol
+            if sym not in symbols:
+                symbols.append(sym)
+
+        symbols = list(set(symbols))
+
+        created_count = 0
+        for symbol in symbols:
+            try:
+                try:
+                    orders_data = api.get_all_orders(credential, symbol, limit=50)
+                    for order_data in orders_data:
+                        if self._create_or_update_order(credential, order_data, "spot"):
+                            created_count += 1
+                except Exception as e:
+                    _logger.debug("No spot orders for %s: %s", symbol, str(e))
+
+                try:
+                    futures_orders = api.get_futures_all_orders(credential, symbol, limit=50)
+                    for order_data in futures_orders:
+                        if self._create_or_update_order(credential, order_data, "futures"):
+                            created_count += 1
+                except Exception as e:
+                    _logger.debug("No futures orders for %s: %s", symbol, str(e))
+
+            except Exception as e:
+                _logger.error("Order sync failed for %s: %s", symbol, str(e))
+
+        _logger.info(
+            "Order sync complete: %d new/updated orders for %s",
+            created_count,
+            credential.name,
+        )
+        return created_count
+
+    def _create_or_update_order(self, credential, order_data, market_type="spot"):
+        """Create or update an order record from Binance API data."""
+        order_id = str(order_data.get("orderId", order_data.get("orderId", "")))
+        if not order_id:
+            return False
+
+        existing = self.env["hat_sentry.order"].search(
+            [
+                ("order_id_binance", "=", order_id),
+                ("credential_id", "=", credential.id),
+            ],
+            limit=1,
+        )
+
+        if existing:
+            existing.write(
+                {
+                    "status": order_data.get("status", existing.status).lower(),
+                    "executed_qty": float(order_data.get("executedQty", existing.executed_qty)),
+                    "cummulative_quote_qty": float(
+                        order_data.get(
+                            "cummulativeQuoteQty",
+                            existing.cummulative_quote_qty or 0,
+                        )
+                    ),
+                    "update_datetime": fields.Datetime.now(),
+                }
+            )
+            return False
+
+        status = order_data.get("status", "new").lower()
+        order_time = order_data.get("time", 0) or order_data.get("transactTime", 0)
+        order_datetime = fields.Datetime.fromtimestamp(order_time / 1000) if order_time > 0 else fields.Datetime.now()
+
+        self.env["hat_sentry.order"].create(
+            {
+                "order_id_binance": order_id,
+                "symbol": order_data.get("symbol", ""),
+                "side": order_data.get("side", "buy").lower(),
+                "order_type": self._map_binance_type(order_data.get("type", "market")),
+                "price": float(order_data.get("price", 0)),
+                "stop_price": float(order_data.get("stopPrice", 0)),
+                "orig_qty": float(order_data.get("origQty", 0)),
+                "executed_qty": float(order_data.get("executedQty", 0)),
+                "cummulative_quote_qty": float(order_data.get("cummulativeQuoteQty", 0)),
+                "status": status,
+                "time_in_force": order_data.get("timeInForce", ""),
+                "order_datetime": order_datetime,
+                "update_datetime": fields.Datetime.now(),
+                "credential_id": credential.id,
+            }
+        )
+        return True
+
+    def _map_binance_type(self, binance_type):
+        """Map Binance order type to internal selection."""
+        mapping = {
+            "MARKET": "market",
+            "LIMIT": "limit",
+            "STOP_LOSS": "stop_loss",
+            "STOP_LOSS_LIMIT": "stop_loss",
+            "TAKE_PROFIT": "take_profit",
+            "TAKE_PROFIT_LIMIT": "take_profit",
+            "STOP_MARKET": "stop_market",
+            "TAKE_PROFIT_MARKET": "take_profit",
+        }
+        return mapping.get(binance_type.upper(), "market")
+
+    def cron_sync_orders(self):
+        """Scheduled: sync orders for all companies."""
+        companies = self.env["res.company"].search([])
+        for company in companies:
+            credential = (
+                self.env["hat_sentry.credential"]
+                .with_company(company)
+                .search(
+                    [("active", "=", True)],
+                    limit=1,
+                )
+            )
+            if credential:
+                try:
+                    self.with_company(company).sync_orders(credential)
+                except Exception as e:
+                    _logger.error(
+                        "Order sync failed for company %s: %s",
+                        company.name,
+                        str(e),
+                    )
+
     def _create_alert(self, credential, message, severity="warning"):
         """Create an alert for a collection issue."""
         self.env["hat_sentry.alert"].create(

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_order_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.order.tree</field>
+        <field name="model">hat_sentry.order</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="order_id_binance"/>
+                <field name="symbol"/>
+                <field name="side" widget="badge"
+                       decoration-success="side == 'buy'"
+                       decoration-danger="side == 'sell'"/>
+                <field name="order_type"/>
+                <field name="price"/>
+                <field name="orig_qty"/>
+                <field name="executed_qty"/>
+                <field name="cummulative_quote_qty"/>
+                <field name="status" widget="badge"
+                       decoration-info="status == 'new'"
+                       decoration-warning="status == 'partially_filled'"
+                       decoration-success="status == 'filled'"
+                       decoration-danger="status == 'cancelled' or status == 'rejected'"
+                       decoration-muted="status == 'expired'"/>
+                <field name="order_datetime"/>
+                <field name="credential_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_order_form" model="ir.ui.view">
+        <field name="name">hat_sentry.order.form</field>
+        <field name="model">hat_sentry.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="new,partially_filled,filled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <label for="order_id_binance"/>
+                            <field name="order_id_binance"/>
+                            <field name="symbol"/>
+                            <field name="side"/>
+                            <field name="order_type"/>
+                            <field name="time_in_force"/>
+                        </group>
+                        <group>
+                            <field name="order_datetime"/>
+                            <field name="update_datetime"/>
+                            <field name="credential_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Execution Details">
+                        <group>
+                            <field name="price"/>
+                            <field name="stop_price"/>
+                            <field name="orig_qty"/>
+                        </group>
+                        <group>
+                            <field name="executed_qty"/>
+                            <field name="cummulative_quote_qty"/>
+                        </group>
+                    </group>
+                    <group string="Links">
+                        <group>
+                            <field name="trade_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_order_search" model="ir.ui.view">
+        <field name="name">hat_sentry.order.search</field>
+        <field name="model">hat_sentry.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_new" string="New"
+                        domain="[('status', '=', 'new')]"/>
+                <filter name="filter_partially_filled" string="Partially Filled"
+                        domain="[('status', '=', 'partially_filled')]"/>
+                <filter name="filter_filled" string="Filled"
+                        domain="[('status', '=', 'filled')]"/>
+                <filter name="filter_cancelled" string="Cancelled"
+                        domain="[('status', '=', 'cancelled')]"/>
+                <filter name="filter_rejected" string="Rejected"
+                        domain="[('status', '=', 'rejected')]"/>
+                <filter name="filter_expired" string="Expired"
+                        domain="[('status', '=', 'expired')]"/>
+                <separator/>
+                <filter name="filter_buy" string="Buy"
+                        domain="[('side', '=', 'buy')]"/>
+                <filter name="filter_sell" string="Sell"
+                        domain="[('side', '=', 'sell')]"/>
+                <separator/>
+                <filter name="filter_active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <field name="symbol"/>
+                <field name="credential_id"/>
+                <group>
+                    <filter name="group_side" string="Side"
+                            context="{'group_by': 'side'}"/>
+                    <filter name="group_status" string="Status"
+                            context="{'group_by': 'status'}"/>
+                    <filter name="group_symbol" string="Symbol"
+                            context="{'group_by': 'symbol'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hat_sentry_order" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="res_model">hat_sentry.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p>Orders synced from Binance. They are created automatically
+               by the order sync cron job.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_hat_sentry_risk_limits" name="Risk Limits"
+              parent="hat_sentry.menu_hat_sentry_config" sequence="15"
+              action="action_hat_sentry_risk_limit"/>
+    <menuitem id="menu_hat_sentry_risk_events" name="Risk Events"
+              parent="hat_sentry.menu_hat_sentry_alerts" sequence="20"
+              action="action_hat_sentry_risk_event"/>
+    <menuitem id="menu_hat_sentry_cooldown" name="Cooldowns"
+              parent="hat_sentry.menu_hat_sentry_config" sequence="25"
+              action="action_hat_sentry_cooldown"
+              groups="hat_sentry.group_hat_sentry_manager"/>
+</odoo>

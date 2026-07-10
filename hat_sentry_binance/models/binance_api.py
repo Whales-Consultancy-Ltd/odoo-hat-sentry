@@ -164,6 +164,40 @@ class BinanceAPI(models.AbstractModel):
         data = self._call_api(credential, "/api/v3/ticker/price", params={"symbol": symbol})
         return float(data.get("price", 0))
 
+    def get_all_orders(self, credential, symbol, limit=50):
+        """Get all spot orders for a symbol."""
+        params = {"symbol": symbol, "limit": limit}
+        return self._call_api(credential, "/api/v3/allOrders", params=params)
+
+    def get_open_orders(self, credential, symbol=None):
+        """Get open spot orders."""
+        params = {}
+        if symbol:
+            params["symbol"] = symbol
+        return self._call_api(credential, "/api/v3/openOrders", params=params)
+
+    def get_futures_all_orders(self, credential, symbol, limit=50):
+        """Get all futures orders for a symbol."""
+        params = {"symbol": symbol, "limit": limit}
+        return self._call_api(
+            credential,
+            "/fapi/v1/allOrders",
+            params=params,
+            base_url=self.FUTURES_URL,
+        )
+
+    def get_futures_open_orders(self, credential, symbol=None):
+        """Get open futures orders."""
+        params = {}
+        if symbol:
+            params["symbol"] = symbol
+        return self._call_api(
+            credential,
+            "/fapi/v1/openOrders",
+            params=params,
+            base_url=self.FUTURES_URL,
+        )
+
     def validate_credentials(self, credential):
         """Test if credentials are valid and read-only."""
         try:

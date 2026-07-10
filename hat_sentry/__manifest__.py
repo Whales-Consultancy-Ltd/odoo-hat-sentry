@@ -4,8 +4,8 @@
     "category": "Hat Sentry",
     "summary": "Crypto portfolio control tower — core models, security, base infrastructure",
     "description": "Hat Sentry is a personal crypto control tower built as a native "
-                   "Odoo app. This core module provides the base models, security "
-                   "groups, and shared infrastructure.",
+    "Odoo app. This core module provides the base models, security "
+    "groups, and shared infrastructure.",
     "author": "Business Solutions For Africa",
     "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
@@ -19,6 +19,8 @@
         "data/crypto_rates_cron.xml",
         "data/digest_data.xml",
         "data/tour_data.xml",
+        "data/watchlist_groups_data.xml",
+        "data/review_cron.xml",
         "views/settings_views.xml",
         # action-defining files first (no %(xml_id)d deps)
         "views/portfolio_snapshot_views.xml",
@@ -31,6 +33,8 @@
         "views/mistake_tag_views.xml",
         # files that reference actions via %(xml_id)d — must come after
         "views/asset_views.xml",
+        "views/asset_kanban_views.xml",
+        "views/watchlist_group_views.xml",
         "views/dashboard_views.xml",
         # menus last (action="xml_id" resolves at runtime)
         "views/menus.xml",

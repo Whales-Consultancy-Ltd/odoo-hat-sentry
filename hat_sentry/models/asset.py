@@ -11,7 +11,7 @@ class HatSentryAsset(models.Model):
     _description = "Crypto Asset"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "symbol"
-    _order = "symbol"
+    _order = "watchlist_status, conviction desc, symbol"
 
     symbol = fields.Char(string="Symbol", required=True, index=True, tracking=True)
     name = fields.Char(string="Name", tracking=True)
@@ -63,6 +63,52 @@ class HatSentryAsset(models.Model):
     )
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
+    )
+
+    # Watchlist fields
+    watchlist_group_id = fields.Many2one(
+        "hat_sentry.watchlist.group",
+        string="Watchlist Group",
+        index=True,
+        tracking=True,
+    )
+    thesis = fields.Text(string="Investment Thesis", help="Why this asset is in your portfolio")
+    invalidation_level = fields.Text(string="Invalidation Level", help="Conditions that would trigger an exit")
+    review_date = fields.Date(string="Next Review Date", tracking=True, index=True)
+    last_reviewed_at = fields.Datetime(string="Last Reviewed")
+    conviction = fields.Selection(
+        [
+            ("low", "Low"),
+            ("medium", "Medium"),
+            ("high", "High"),
+        ],
+        string="Conviction",
+        default="medium",
+        tracking=True,
+    )
+    watchlist_status = fields.Selection(
+        [
+            ("active", "Active"),
+            ("watching", "Watching"),
+            ("paused", "Paused"),
+            ("archived", "Archived"),
+        ],
+        string="Watchlist Status",
+        default="active",
+        index=True,
+        tracking=True,
+    )
+    max_allocation_pct = fields.Float(
+        string="Max Allocation %", digits=(16, 2), help="Maximum % of portfolio for this asset"
+    )
+    entry_price_target = fields.Monetary(string="Target Entry Price", currency_field="currency_id")
+    exit_price_target = fields.Monetary(string="Target Exit Price", currency_field="currency_id")
+    notes = fields.Text(string="Notes")
+    review_overdue = fields.Boolean(
+        string="Review Overdue",
+        compute="_compute_review_overdue",
+        store=True,
+        help="True when review_date is past due",
     )
 
     @api.depends("asset_type")
@@ -129,3 +175,43 @@ class HatSentryAsset(models.Model):
             )
             _logger.info("Auto-created res.currency for %s (name=%s)", symbol, name)
         return currency
+
+    @api.depends("review_date")
+    def _compute_review_overdue(self):
+        today = fields.Date.today()
+        for record in self:
+            record.review_overdue = bool(record.review_date and record.review_date < today)
+
+    def action_mark_reviewed(self):
+        """Mark this asset as reviewed today."""
+        self.write(
+            {
+                "last_reviewed_at": fields.Datetime.now(),
+                "review_date": False,
+            }
+        )
+
+    @api.model
+    def _cron_check_reviews(self):
+        """Check for overdue reviews and create alerts."""
+        today = fields.Date.today()
+        overdue = self.search(
+            [
+                ("review_date", "<", today),
+                ("review_date", "!=", False),
+                ("watchlist_status", "in", ["active", "watching"]),
+            ]
+        )
+        for asset in overdue:
+            self.env["hat_sentry.alert"].create(
+                {
+                    "severity": "warning",
+                    "category": "portfolio",
+                    "title": _("Review Overdue: %s") % asset.symbol,
+                    "message": _("Review date was %s. Please update your thesis and invalidation levels.")
+                    % asset.review_date,
+                    "recommended_action": _("Review the asset and set a new review date"),
+                    "company_id": asset.company_id.id,
+                }
+            )
+        return len(overdue)

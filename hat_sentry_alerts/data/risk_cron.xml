@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="cron_evaluate_risk_limits" model="ir.cron">
+        <field name="name">Hat Sentry: Evaluate Risk Limits</field>
+        <field name="model_id" ref="model_hat_sentry_risk_engine"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_evaluate_all()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>
