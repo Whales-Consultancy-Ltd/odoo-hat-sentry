@@ -14,6 +14,7 @@
         "views/journal_tag_views.xml",
         "views/decision_log_views.xml",
         "views/trade_views.xml",
+        "views/asset_extension_views.xml",
         "views/menus.xml",
     ],
     "installable": True,

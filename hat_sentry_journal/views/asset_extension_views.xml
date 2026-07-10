@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_asset_form_journal" model="ir.ui.view">
+        <field name="name">hat_sentry.asset.form.journal</field>
+        <field name="model">hat_sentry.asset</field>
+        <field name="inherit_id" ref="hat_sentry.view_hat_sentry_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(hat_sentry_journal.action_hat_sentry_trade)d" type="action"
+                        class="oe_stat_button" icon="fa-book"
+                        context="{'default_asset_id': active_id}">
+                    <div class="o_stat_info">
+                        <field name="trade_count" widget="statinfo"/>
+                        <span class="o_stat_text">Trades</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
