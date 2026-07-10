@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- View definition for the dashboard board -->
+    <!-- View definition for the dashboard board — board.board is AbstractModel in Odoo 19 (no data record needed) -->
     <record id="board_hat_sentry_dashboard_form" model="ir.ui.view">
         <field name="name">hat_sentry.dashboard.form</field>
         <field name="model">board.board</field>
