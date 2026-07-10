@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Module category for Hat Sentry -->
+    <record model="ir.module.category" id="module_category_hat_sentry">
+        <field name="name">Hat Sentry</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <!-- Privilege group for Hat Sentry -->
+    <record model="res.groups.privilege" id="res_groups_privilege_hat_sentry">
+        <field name="name">Hat Sentry</field>
+        <field name="category_id" ref="module_category_hat_sentry"/>
+    </record>
+
     <!-- Hat Sentry / User — read-only -->
     <record id="group_hat_sentry_user" model="res.groups">
         <field name="name">User</field>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_hat_sentry"/>
     </record>
 
     <!-- Hat Sentry / Trader — can acknowledge alerts, write journal -->
     <record id="group_hat_sentry_trader" model="res.groups">
         <field name="name">Trader</field>
-        <field name="implied_ids" eval="[(4, ref('group_hat_sentry_user'))]"/>
+        <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('group_hat_sentry_user'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_hat_sentry"/>
     </record>
 
     <!-- Hat Sentry / Manager — full access -->
     <record id="group_hat_sentry_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="implied_ids" eval="[(4, ref('group_hat_sentry_trader'))]"/>
+        <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('group_hat_sentry_trader'))]"/>
+        <field name="privilege_id" ref="res_groups_privilege_hat_sentry"/>
     </record>
 </odoo>
