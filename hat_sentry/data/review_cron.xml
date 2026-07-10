@@ -7,7 +7,7 @@
         <field name="code">model._cron_check_reviews()</field>
         <field name="interval_number">24</field>
         <field name="interval_type">hours</field>
-        <field name="active" eval="False"/>
+        <field name="active" eval="True"/>
         <field name="company_ids" eval="[]"/>
     </record>
 </odoo>
