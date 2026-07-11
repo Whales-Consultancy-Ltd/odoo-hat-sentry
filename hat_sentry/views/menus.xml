@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_hat_sentry_root" name="Hat Sentry" web_icon="hat_sentry,static/description/icon.png"/>
+    <menuitem id="menu_hat_sentry_root" name="Hat Sentry" web_icon="hat_sentry,static/description/icon.png" groups="hat_sentry.group_hat_sentry_user"/>
 
     <!-- Dashboard -->
     <menuitem id="menu_hat_sentry_dashboard" name="Dashboard" parent="menu_hat_sentry_root" sequence="0"/>
@@ -50,7 +50,7 @@
               action="action_hat_sentry_alert" sequence="10"/>
 
     <!-- Configuration -->
-    <menuitem id="menu_hat_sentry_config" name="Configuration" parent="menu_hat_sentry_root" sequence="99"/>
+    <menuitem id="menu_hat_sentry_config" name="Configuration" parent="menu_hat_sentry_root" sequence="99" groups="hat_sentry.group_hat_sentry_manager"/>
     <menuitem id="menu_hat_sentry_mistake_tag" name="Mistake Tags" parent="menu_hat_sentry_config"
               action="action_hat_sentry_mistake_tag" sequence="10"/>
     <menuitem id="menu_hat_sentry_credential" name="Credentials" parent="menu_hat_sentry_config"
