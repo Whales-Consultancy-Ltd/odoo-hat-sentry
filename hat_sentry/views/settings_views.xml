@@ -27,6 +27,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_right">
+                                    <span class="o_form_label">Intervals</span>
+                                    <div class="text-muted">
+                                        Configure how often snapshots and risk checks are performed.
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row">
+                                            <field name="hat_sentry_snapshot_interval" class="oe_inline"/>
+                                            <field name="hat_sentry_risk_check_interval" class="oe_inline"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </sheet>

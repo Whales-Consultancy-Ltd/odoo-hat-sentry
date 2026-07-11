@@ -37,16 +37,10 @@
                     </div>
                     <group>
                         <group>
-                            <field name="symbol"/>
-                            <field name="name"/>
-                            <field name="asset_type"/>
-                            <field name="bucket"/>
-                        </group>
-                        <group>
                             <field name="is_stablecoin"/>
                             <field name="is_core_asset"/>
-                            <field name="currency_id"/>
-                            <field name="active"/>
+                            <field name="currency_id" groups="hat_sentry.group_hat_sentry_manager"/>
+                            <field name="active" groups="hat_sentry.group_hat_sentry_manager"/>
                         </group>
                     </group>
                     <notebook>

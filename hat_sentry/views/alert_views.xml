@@ -27,6 +27,15 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_acknowledge" type="object" string="Acknowledge"
+                            invisible="state not in ('new', 'sent')"
+                            class="btn-primary"/>
+                    <button name="action_resolve" type="object" string="Resolve"
+                            invisible="state in ('resolved', 'ignored')"
+                            class="btn-success"/>
+                    <button name="action_ignore" type="object" string="Ignore"
+                            invisible="state in ('resolved', 'ignored')"
+                            class="btn-secondary"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="new,sent,acknowledged,resolved"/>
                 </header>

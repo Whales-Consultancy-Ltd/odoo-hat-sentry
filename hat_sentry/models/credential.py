@@ -38,6 +38,15 @@ class HatSentryCredential(models.Model):
         default="never",
     )
     last_validation_message = fields.Text(string="Validation Message")
+    environment = fields.Selection(
+        [
+            ("production", "Production"),
+            ("testnet", "Testnet"),
+        ],
+        string="Environment",
+        default="production",
+    )
+    last_successful_sync_at = fields.Datetime(string="Last Successful Sync")
 
     @api.depends("exchange")
     def _compute_display_name(self):

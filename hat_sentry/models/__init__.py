@@ -14,6 +14,7 @@ from . import (
     mistake_tag,  # noqa: F401
     portfolio_snapshot,  # noqa: F401
     res_config_settings,  # noqa: F401
+    res_users,  # noqa: F401
     telegram_notification,  # noqa: F401
     watchlist_group,  # noqa: F401
 )

@@ -14,3 +14,13 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="hat_sentry.telegram_chat_id",
         help="Chat ID where notifications will be sent",
     )
+    hat_sentry_snapshot_interval = fields.Integer(
+        string="Snapshot Interval (minutes)",
+        default=5,
+        config_parameter="hat_sentry.snapshot_interval",
+    )
+    hat_sentry_risk_check_interval = fields.Integer(
+        string="Risk Check Interval (minutes)",
+        default=5,
+        config_parameter="hat_sentry.risk_check_interval",
+    )

@@ -54,3 +54,18 @@ class HatSentryAlert(models.Model):
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True,
         check_company=True,
     )
+
+    def action_acknowledge(self):
+        for rec in self:
+            if rec.state in ("new", "sent"):
+                rec.state = "acknowledged"
+
+    def action_resolve(self):
+        for rec in self:
+            if rec.state in ("new", "sent", "acknowledged"):
+                rec.state = "resolved"
+
+    def action_ignore(self):
+        for rec in self:
+            if rec.state in ("new", "sent", "acknowledged"):
+                rec.state = "ignored"
