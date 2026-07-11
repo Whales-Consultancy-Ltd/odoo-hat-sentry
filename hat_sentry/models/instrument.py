@@ -15,4 +15,4 @@ class HatSentryInstrument(models.Model):
         ('futures_coinm', 'COIN-M Futures'),
     ], string='Market Type', required=True, default='spot')
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company, check_company=True)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)

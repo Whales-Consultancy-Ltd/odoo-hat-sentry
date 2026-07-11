@@ -52,7 +52,6 @@ class HatSentryAlert(models.Model):
 
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True,
-        check_company=True,
     )
 
     def action_acknowledge(self):

@@ -11,7 +11,7 @@ class HatSentryMarketPrice(models.Model):
     price = fields.Float(string='Price', required=True)
     source = fields.Char(string='Source', default='binance')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.ref('base.USD'))
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company, check_company=True)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
 
     _unique_price = models.Constraint(
         'unique(instrument_id, date, source)',

@@ -24,7 +24,6 @@ class HatSentryCredential(models.Model):
     active = fields.Boolean(string="Active", default=True)
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True,
-        check_company=True,
     )
     display_name = fields.Char(string="Display Name", compute="_compute_display_name")
     last_validation_at = fields.Datetime(string="Last Validation")
