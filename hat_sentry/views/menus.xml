@@ -51,6 +51,9 @@
 
     <!-- Configuration -->
     <menuitem id="menu_hat_sentry_config" name="Configuration" parent="menu_hat_sentry_root" sequence="99" groups="hat_sentry.group_hat_sentry_manager"/>
+    <menuitem id="menu_hat_sentry_setup" name="Setup Wizard" parent="menu_hat_sentry_config"
+              action="action_hat_sentry_setup_wizard" sequence="0"
+              groups="hat_sentry.group_hat_sentry_manager"/>
     <menuitem id="menu_hat_sentry_mistake_tag" name="Mistake Tags" parent="menu_hat_sentry_config"
               action="action_hat_sentry_mistake_tag" sequence="10"/>
     <menuitem id="menu_hat_sentry_credential" name="Credentials" parent="menu_hat_sentry_config"
