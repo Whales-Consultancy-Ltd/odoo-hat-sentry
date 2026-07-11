@@ -130,6 +130,18 @@ class BinanceAPI(models.AbstractModel):
 
         return earn_positions
 
+    def get_futures_account_summary(self, credential):
+        """Get futures account wallet-level balances."""
+        client = self._get_client(credential)
+        account = client.futures_account()
+        return {
+            "total_wallet_balance": float(account.get("totalWalletBalance", 0)),
+            "total_unrealized_profit": float(account.get("totalUnrealizedProfit", 0)),
+            "total_margin_balance": float(account.get("totalMarginBalance", 0)),
+            "available_balance": float(account.get("availableBalance", 0)),
+            "total_cross_wallet_balance": float(account.get("totalCrossWalletBalance", 0)),
+        }
+
     def get_all_prices(self, credential):
         """Get all prices in a single API call."""
         client = self._get_client(credential)

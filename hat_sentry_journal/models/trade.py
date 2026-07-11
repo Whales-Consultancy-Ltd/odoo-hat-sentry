@@ -88,10 +88,34 @@ class HatSentryTrade(models.Model):
     )
     active = fields.Boolean(default=True)
 
-    @api.depends("entry_price", "exit_price", "quantity", "direction", "total_fees", "state")
+    flow_type = fields.Selection(
+        [
+            ("trade", "Trade"),
+            ("deposit", "Deposit"),
+            ("withdrawal", "Withdrawal"),
+            ("transfer", "Internal Transfer"),
+            ("funding", "Funding Fee"),
+            ("commission", "Commission"),
+        ],
+        string="Flow Type",
+        default="trade",
+        required=True,
+    )
+    funding_amount = fields.Monetary(
+        string="Funding Amount",
+        currency_field="currency_id",
+        help="Funding fee paid or received",
+    )
+    commission_amount = fields.Monetary(
+        string="Commission",
+        currency_field="currency_id",
+        help="Trading commission paid",
+    )
+
+    @api.depends("entry_price", "exit_price", "quantity", "direction", "total_fees", "state", "flow_type")
     def _compute_pnl(self):
         for record in self:
-            if record.state != "closed" or not record.exit_price or not record.entry_price:
+            if record.flow_type != "trade" or record.state != "closed" or not record.exit_price or not record.entry_price:
                 record.realized_pnl = 0.0
                 record.realized_pnl_pct = 0.0
                 continue
