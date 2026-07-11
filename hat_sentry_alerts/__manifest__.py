@@ -11,6 +11,7 @@
         "security/hat_sentry_risk_security.xml",
         "security/ir.model.access.csv",
         "data/risk_cron.xml",
+        "data/automated_actions.xml",
         "views/risk_limit_views.xml",
         "views/risk_event_views.xml",
         "views/cooldown_views.xml",

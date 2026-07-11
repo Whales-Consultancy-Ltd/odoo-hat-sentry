@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="action_futures_exposure" model="base.automation">
+        <field name="name">Futures > 5% Portfolio</field>
+        <field name="model_id" ref="hat_sentry.model_hat_sentry_futures_position"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="state">code</field>
+        <field name="code">
+if record.snapshot_id.futures_notional_value > 0.05 * record.snapshot_id.total_value:
+    env['hat_sentry.alert'].create({
+        'severity': 'critical',
+        'category': 'futures',
+        'title': 'Futures exposure exceeds 5%',
+        'message': f'Futures notional: {record.snapshot_id.futures_notional_value:.2f} ({record.snapshot_id.futures_notional_value/record.snapshot_id.total_value*100:.1f}%)',
+        'recommended_action': 'Reduce futures positions',
+        'company_id': record.company_id.id,
+    })
+        </field>
+    </record>
+</odoo>

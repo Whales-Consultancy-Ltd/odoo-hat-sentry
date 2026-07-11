@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_watchlist_radar_tree" model="ir.ui.view">
+        <field name="name">hat_sentry.watchlist.radar.tree</field>
+        <field name="model">hat_sentry.asset</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Watchlist Radar" create="false" edit="false">
+                <field name="symbol"/>
+                <field name="name"/>
+                <field name="bucket"/>
+                <field name="asset_type"/>
+                <field name="is_core_asset"/>
+                <field name="is_stablecoin"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_watchlist_radar" model="ir.actions.act_window">
+        <field name="name">Watchlist Radar</field>
+        <field name="res_model">hat_sentry.asset</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_watchlist_radar_tree"/>
+        <field name="domain">[('watchlist_group_id', '!=', False)]</field>
+    </record>
+</odoo>

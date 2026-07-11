@@ -35,6 +35,7 @@
         "views/asset_views.xml",
         "views/asset_kanban_views.xml",
         "views/watchlist_group_views.xml",
+        "views/watchlist_radar_views.xml",
         "views/dashboard_views.xml",
         "wizards/setup_wizard_views.xml",
         # menus last (action="xml_id" resolves at runtime)

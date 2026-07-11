@@ -315,3 +315,26 @@ class HatSentryPortfolioSnapshot(models.Model):
         if total and total > 0:
             return round((value or 0.0) / total * 100, 2)
         return 0.0
+
+    period_pnl = fields.Monetary(
+        string="Period P&L",
+        currency_field="currency_id",
+        compute="_compute_period_pnl",
+        store=True,
+    )
+    period_pnl_pct = fields.Float(
+        string="Period P&L %",
+        compute="_compute_period_pnl",
+        store=True,
+    )
+
+    @api.depends("total_value", "previous_snapshot_id.total_value")
+    def _compute_period_pnl(self):
+        for record in self:
+            if record.previous_snapshot_id and record.previous_snapshot_id.total_value > 0:
+                prev = record.previous_snapshot_id.total_value
+                record.period_pnl = record.total_value - prev
+                record.period_pnl_pct = ((record.total_value - prev) / prev) * 100
+            else:
+                record.period_pnl = 0
+                record.period_pnl_pct = 0
