@@ -12,18 +12,16 @@
         <field name="category_id" ref="module_category_hat_sentry"/>
     </record>
 
-    <!-- Hat Sentry / User — read-only -->
+    <!-- Hat Sentry / User — read-only (implied by base.group_user: all internal users get this) -->
     <record id="group_hat_sentry_user" model="res.groups">
         <field name="name">User</field>
-        <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_by_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_hat_sentry"/>
     </record>
 
     <!-- Hat Sentry / Trader — can acknowledge alerts, write journal -->
     <record id="group_hat_sentry_trader" model="res.groups">
         <field name="name">Trader</field>
-        <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         <field name="implied_ids" eval="[(4, ref('group_hat_sentry_user'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_hat_sentry"/>
     </record>
@@ -31,7 +29,6 @@
     <!-- Hat Sentry / Manager — full access -->
     <record id="group_hat_sentry_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         <field name="implied_ids" eval="[(4, ref('group_hat_sentry_trader'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_hat_sentry"/>
     </record>
