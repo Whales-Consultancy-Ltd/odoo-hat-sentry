@@ -122,7 +122,7 @@ class HatSentryPortfolioSnapshot(models.Model):
         "hat_sentry.portfolio.snapshot",
         string="Previous Snapshot",
         compute="_compute_previous_snapshot",
-        store=False,
+        store=True,
         help="Previous snapshot for comparison (same company/currency)",
     )
 
