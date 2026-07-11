@@ -28,11 +28,19 @@ class HatSentryRiskEvent(models.Model):
             ("new", "New"),
             ("acknowledged", "Acknowledged"),
             ("resolved", "Resolved"),
+            ("ignored", "Ignored"),
         ],
         string="State",
         default="new",
         tracking=True,
     )
+    acknowledged_by = fields.Many2one("res.users", string="Acknowledged by", readonly=True)
+    acknowledged_at = fields.Datetime(string="Acknowledged at", readonly=True)
+    resolved_by = fields.Many2one("res.users", string="Resolved by", readonly=True)
+    resolved_at = fields.Datetime(string="Resolved at", readonly=True)
+    current_value = fields.Float(string="Current Value")
+    max_observed_value = fields.Float(string="Max Observed Value")
+    occurrence_count = fields.Integer(string="Occurrences", default=1)
     alert_id = fields.Many2one("hat_sentry.alert", string="Related Alert", ondelete="set null")
     snapshot_id = fields.Many2one(
         "hat_sentry.portfolio.snapshot",
@@ -53,3 +61,20 @@ class HatSentryRiskEvent(models.Model):
         for record in self:
             type_name = dict(record._fields["limit_type"].selection).get(record.limit_type, record.limit_type)
             record.display_name = f"{type_name} Breach @ {record.breach_datetime}"
+
+    def action_acknowledge(self):
+        self.write({
+            "acknowledged_by": self.env.uid,
+            "acknowledged_at": fields.Datetime.now(),
+            "state": "acknowledged",
+        })
+
+    def action_resolve(self):
+        self.write({
+            "resolved_by": self.env.uid,
+            "resolved_at": fields.Datetime.now(),
+            "state": "resolved",
+        })
+
+    def action_ignore(self):
+        self.write({"state": "ignored"})

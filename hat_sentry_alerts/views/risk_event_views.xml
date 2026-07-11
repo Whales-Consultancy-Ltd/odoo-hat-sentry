@@ -25,6 +25,12 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="action_acknowledge" type="object" string="Acknowledge"
+                            class="oe_highlight" invisible="state not in ('new',)"/>
+                    <button name="action_resolve" type="object" string="Resolve"
+                            class="oe_highlight" invisible="state not in ('new', 'acknowledged')"/>
+                    <button name="action_ignore" type="object" string="Ignore"
+                            invisible="state in ('resolved', 'ignored')"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="new,acknowledged,resolved"/>
                 </header>
@@ -35,12 +41,19 @@
                             <field name="limit_type"/>
                             <field name="actual_value" digits="(16, 4)"/>
                             <field name="threshold_value" digits="(16, 4)"/>
+                            <field name="current_value"/>
+                            <field name="max_observed_value"/>
+                            <field name="occurrence_count"/>
                         </group>
                         <group>
                             <field name="breach_datetime"/>
                             <field name="alert_id"/>
                             <field name="snapshot_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="acknowledged_by"/>
+                            <field name="acknowledged_at"/>
+                            <field name="resolved_by"/>
+                            <field name="resolved_at"/>
                         </group>
                     </group>
                 </sheet>
