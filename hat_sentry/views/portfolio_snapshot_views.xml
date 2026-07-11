@@ -7,9 +7,7 @@
             <list>
                 <field name="snapshot_datetime"/>
                 <field name="total_value"/>
-                <field name="total_pnl" optional="show"/>
                 <field name="pnl_since_last" optional="hide"/>
-                <field name="total_realized_pnl" optional="hide"/>
                 <field name="health_score" decoration-danger="health_score &lt; 40" decoration-warning="health_score &gt;= 40 and health_score &lt; 70" decoration-success="health_score &gt;= 70"/>
                 <field name="currency_id"/>
             </list>
@@ -43,11 +41,8 @@
                         <field name="experimental_value"/>
                     </group>
                     <notebook>
-                        <page string="P&amp;L Analysis">
-                            <group string="Profit &amp; Loss">
-                                <field name="total_realized_pnl"/>
-                                <field name="total_unrealized_pnl"/>
-                                <field name="total_pnl"/>
+                        <page string="Analysis">
+                            <group string="Exposure">
                                 <field name="pnl_since_last"/>
                                 <field name="pnl_pct_since_last"/>
                                 <field name="total_exposure"/>

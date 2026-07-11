@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hat_sentry_portfolio_snapshot_tree_journal" model="ir.ui.view">
+        <field name="name">hat_sentry.portfolio.snapshot.tree.journal</field>
+        <field name="model">hat_sentry.portfolio.snapshot</field>
+        <field name="inherit_id" ref="hat_sentry.view_hat_sentry_portfolio_snapshot_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='total_value']" position="after">
+                <field name="total_pnl" optional="show"/>
+                <field name="total_realized_pnl" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_portfolio_snapshot_form_journal" model="ir.ui.view">
+        <field name="name">hat_sentry.portfolio.snapshot.form.journal</field>
+        <field name="model">hat_sentry.portfolio.snapshot</field>
+        <field name="inherit_id" ref="hat_sentry.view_hat_sentry_portfolio_snapshot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@string='Analysis']" position="attributes">
+                <attribute name="string">P&amp;L Analysis</attribute>
+            </xpath>
+            <xpath expr="//group[@string='Exposure']" position="before">
+                <group string="Profit &amp; Loss">
+                    <field name="total_realized_pnl"/>
+                    <field name="total_unrealized_pnl"/>
+                    <field name="total_pnl"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
