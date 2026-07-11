@@ -236,8 +236,22 @@ class HatSentryPortfolioSnapshot(models.Model):
                 record.pnl_since_last = 0.0
                 record.pnl_pct_since_last = 0.0
 
+    @api.depends("snapshot_datetime", "company_id")
     def _compute_previous_snapshot(self):
-        pass
+        for record in self:
+            if not record.snapshot_datetime or not record.company_id:
+                record.previous_snapshot_id = False
+                continue
+            prev = self.search(
+                [
+                    ("company_id", "=", record.company_id.id),
+                    ("snapshot_datetime", "<", record.snapshot_datetime),
+                    ("id", "!=", record.id),
+                ],
+                order="snapshot_datetime desc, id desc",
+                limit=1,
+            )
+            record.previous_snapshot_id = prev.id if prev else False
 
     @api.depends(
         "core_value",

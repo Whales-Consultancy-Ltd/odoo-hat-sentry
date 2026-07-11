@@ -10,8 +10,8 @@ class HatSentryCredential(models.Model):
     _order = "exchange"
 
     exchange = fields.Selection([("binance", "Binance")], string="Exchange", required=True, default="binance")
-    api_key = fields.Char(string="API Key", required=True)
-    api_secret = fields.Char(string="API Secret", required=True, groups="hat_sentry.group_hat_sentry_manager")
+    api_key = fields.Char(string="API Key", required=True, copy=False, groups="hat_sentry.group_hat_sentry_manager")
+    api_secret = fields.Char(string="API Secret", required=True, copy=False, groups="hat_sentry.group_hat_sentry_manager")
     permissions = fields.Selection(
         [
             ("read_only", "Read Only"),
@@ -26,16 +26,22 @@ class HatSentryCredential(models.Model):
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
     )
     display_name = fields.Char(string="Display Name", compute="_compute_display_name")
+    last_validation_at = fields.Datetime(string="Last Validation")
+    last_validation_status = fields.Selection(
+        [
+            ("success", "Success"),
+            ("failed", "Failed"),
+            ("never", "Never Validated"),
+        ],
+        string="Validation Status",
+        default="never",
+    )
+    last_validation_message = fields.Text(string="Validation Message")
 
-    @api.depends("exchange", "api_key")
+    @api.depends("exchange")
     def _compute_display_name(self):
         for record in self:
-            key_display = (
-                (record.api_key[:8] + "...")
-                if record.api_key and len(record.api_key) > 8
-                else (record.api_key or "???")
-            )
-            record.display_name = f"{record.exchange} ({key_display})"
+            record.display_name = record.exchange or "???"
 
     @api.constrains("permissions")
     def _check_read_only(self):
