@@ -1,1 +1,1 @@
-# Hat Sentry Binance tests — will be populated in subsequent issues
+from . import test_binance_api  # noqa: F401

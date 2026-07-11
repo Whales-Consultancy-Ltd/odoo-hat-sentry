@@ -7,7 +7,9 @@
     "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
     "depends": ["hat_sentry"],
-    "data": [],
+    "data": [
+        "data/report_placeholder.xml",
+    ],
     "installable": True,
     "application": False,
     "auto_install": False,

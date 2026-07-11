@@ -8,4 +8,5 @@ from . import (
     test_futures_position,
     test_portfolio_snapshot,
     test_security,
+    test_upgrade,
 )

@@ -45,6 +45,7 @@
     "assets": {
         "web.assets_backend": [
             "hat_sentry/static/src/js/tours/**/*",
+            "hat_sentry/static/tests/tours/hat_sentry_smoke.js",
         ],
     },
     "installable": True,

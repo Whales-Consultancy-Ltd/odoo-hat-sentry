@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="placeholder_report_action" model="ir.actions.report">
+        <field name="name">Portfolio Summary</field>
+        <field name="model">hat_sentry.asset</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hat_sentry_reports.report_portfolio_summary</field>
+        <field name="report_file">hat_sentry_reports.report_portfolio_summary</field>
+    </record>
+</odoo>

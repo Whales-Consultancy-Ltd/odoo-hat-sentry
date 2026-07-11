@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="placeholder_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">hat_sentry.asset</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>

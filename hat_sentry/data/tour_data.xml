@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <record id="tour_hat_sentry_smoke" model="web_tour.tour">
+        <field name="name">hat_sentry_smoke</field>
+        <field name="sequence" eval="5"/>
+        <field name="url">/web</field>
+    </record>
     <record id="tour_hat_sentry_installation" model="web_tour.tour">
         <field name="name">hat_sentry_installation_tour</field>
         <field name="sequence" eval="10"/>

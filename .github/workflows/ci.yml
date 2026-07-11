@@ -1,0 +1,37 @@
+name: Hat Sentry CI
+on:
+  push:
+    branches: [19.0]
+  pull_request:
+    branches: [19.0]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install ruff pylint-odoo bandit
+      - run: ruff check .
+      - run: pylint-odoo hat_sentry hat_sentry_binance hat_sentry_alerts hat_sentry_journal hat_sentry_dashboard hat_sentry_reports
+      - run: bandit -r hat_sentry/ hat_sentry_binance/ hat_sentry_alerts/ hat_sentry_journal/
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate XML
+        run: |
+          find . -name "*.xml" -path "*/views/*" -o -path "*/data/*" -o -path "*/security/*" | while read f; do
+            python3 -c "import xml.etree.ElementTree as ET; ET.parse('$f')" || exit 1
+          done
+      - name: Validate Python
+        run: |
+          find . -name "*.py" | while read f; do
+            python3 -c "import ast; ast.parse(open('$f').read())" || exit 1
+          done
