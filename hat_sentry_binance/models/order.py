@@ -120,11 +120,29 @@ class HatSentryOrder(models.Model):
         readonly=True,
         store=True,
     )
+    market_type = fields.Selection(
+        [
+            ("spot", "Spot"),
+            ("futures_usdm", "USD-M Futures"),
+            ("futures_coinm", "COIN-M Futures"),
+        ],
+        string="Market Type",
+        default="spot",
+        index=True,
+    )
     active = fields.Boolean(default=True)
     display_name = fields.Char(
         string="Display Name",
         compute="_compute_display_name",
     )
+
+    _sql_constraints = [
+        (
+            "unique_exchange_order",
+            "unique(credential_id, market_type, order_id_binance)",
+            "Order already exists for this exchange account and market type!",
+        ),
+    ]
 
     @api.depends("order_id_binance", "symbol")
     def _compute_display_name(self):
@@ -135,16 +153,8 @@ class HatSentryOrder(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get("name", _("New Order")) == _("New Order"):
-                vals["name"] = self.env["ir.sequence"].next_by_code("hat_sentry.order") or _("New Order")
+                vals["name"] = (
+                    self.env["ir.sequence"].next_by_code("hat_sentry.order")
+                    or _("New Order")
+                )
         return super().create(vals_list)
-
-    @api.constrains("order_id_binance", "credential_id")
-    def _check_order_id_binance_unique(self):
-        for record in self:
-            domain = [
-                ("order_id_binance", "=", record.order_id_binance),
-                ("credential_id", "=", record.credential_id.id),
-                ("id", "!=", record.id),
-            ]
-            if self.search_count(domain, limit=1):
-                raise ValidationError(_("Order ID must be unique per credential!"))

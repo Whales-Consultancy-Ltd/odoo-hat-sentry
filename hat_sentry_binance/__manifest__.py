@@ -12,6 +12,7 @@
     "depends": ["hat_sentry", "hat_sentry_journal"],
     "data": [
         "security/ir.model.access.csv",
+        "data/sequence_data.xml",
         "data/binance_cron.xml",
         "data/order_cron.xml",
         "views/order_views.xml",

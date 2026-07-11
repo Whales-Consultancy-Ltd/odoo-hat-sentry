@@ -5,6 +5,10 @@
         <field name="model">hat_sentry.order</field>
         <field name="arch" type="xml">
             <list>
+                <field name="market_type" widget="badge"
+                       decoration-info="market_type == 'spot'"
+                       decoration-warning="market_type == 'futures_usdm'"
+                       decoration-danger="market_type == 'futures_coinm'"/>
                 <field name="order_id_binance"/>
                 <field name="symbol"/>
                 <field name="side" widget="badge"
@@ -39,6 +43,7 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="market_type"/>
                             <label for="order_id_binance"/>
                             <field name="order_id_binance"/>
                             <field name="symbol"/>
@@ -98,6 +103,13 @@
                 <filter name="filter_sell" string="Sell"
                         domain="[('side', '=', 'sell')]"/>
                 <separator/>
+                <filter name="filter_spot" string="Spot"
+                        domain="[('market_type', '=', 'spot')]"/>
+                <filter name="filter_futures_usdm" string="USD-M Futures"
+                        domain="[('market_type', '=', 'futures_usdm')]"/>
+                <filter name="filter_futures_coinm" string="COIN-M Futures"
+                        domain="[('market_type', '=', 'futures_coinm')]"/>
+                <separator/>
                 <filter name="filter_active" string="Active"
                         domain="[('active', '=', True)]"/>
                 <group>
@@ -111,6 +123,8 @@
                             context="{'group_by': 'status'}"/>
                     <filter name="group_symbol" string="Symbol"
                             context="{'group_by': 'symbol'}"/>
+                    <filter name="group_market_type" string="Market Type"
+                            context="{'group_by': 'market_type'}"/>
                 </group>
             </search>
         </field>

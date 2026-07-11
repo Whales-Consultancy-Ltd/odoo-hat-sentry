@@ -141,10 +141,10 @@ class BinanceAPI(models.AbstractModel):
         data = client.get_symbol_ticker(symbol=symbol)
         return float(data.get("price", 0))
 
-    def get_all_orders(self, credential, symbol, limit=50):
+    def get_all_orders(self, credential, symbol, limit=50, offset=0):
         """Get all spot orders for a symbol."""
         client = self._get_client(credential)
-        return client.get_all_orders(symbol=symbol, limit=limit)
+        return client.get_all_orders(symbol=symbol, limit=limit, offset=offset)
 
     def get_open_orders(self, credential, symbol=None):
         """Get open spot orders."""
