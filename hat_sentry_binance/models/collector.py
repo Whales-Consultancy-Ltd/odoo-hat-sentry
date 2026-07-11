@@ -385,26 +385,13 @@ class HatSentryCollector(models.AbstractModel):
         return mapping.get(binance_type.upper(), "market")
 
     def cron_sync_orders(self):
-        """Scheduled: sync orders for all companies."""
-        companies = self.env["res.company"].search([])
-        for company in companies:
-            credential = (
-                self.env["hat_sentry.credential"]
-                .with_company(company)
-                .search(
-                    [("active", "=", True)],
-                    limit=1,
-                )
-            )
-            if credential:
-                try:
-                    self.with_company(company).sync_orders(credential)
-                except Exception as e:
-                    _logger.error(
-                        "Order sync failed for company %s: %s",
-                        company.name,
-                        str(e),
-                    )
+        """Scheduled: sync orders for all companies and accounts."""
+        credentials = self._get_active_credentials()
+        for credential in credentials:
+            try:
+                self.with_company(credential.company_id).sync_orders(credential)
+            except Exception as e:
+                _logger.error("Order sync failed for %s: %s", credential.name, str(e))
 
     def _create_alert(self, credential, message, severity="warning"):
         """Create an alert for a collection issue."""
@@ -422,44 +409,20 @@ class HatSentryCollector(models.AbstractModel):
     # ---- Cron methods ----
 
     def cron_collect_snapshot(self):
-        """Scheduled: collect snapshots for all companies."""
-        companies = self.env["res.company"].search([])
-        for company in companies:
-            credential = (
-                self.env["hat_sentry.credential"]
-                .with_company(company)
-                .search(
-                    [
-                        ("active", "=", True),
-                    ],
-                    limit=1,
-                )
-            )
-            if credential:
-                try:
-                    self.with_company(company).collect_snapshot(credential)
-                    _logger.info("Snapshot collected for company %s", company.name)
-                except Exception as e:
-                    _logger.error("Snapshot collection failed for company %s: %s", company.name, str(e))
-            else:
-                _logger.info("No active credentials for company %s, skipping", company.name)
+        """Scheduled: collect snapshots for all companies and accounts."""
+        credentials = self._get_active_credentials()
+        for credential in credentials:
+            try:
+                self.with_company(credential.company_id).collect_snapshot(credential)
+                _logger.info("Snapshot collected for %s", credential.name)
+            except Exception as e:
+                _logger.error("Snapshot collection failed for %s: %s", credential.name, str(e))
 
     def cron_collect_funding(self):
-        """Scheduled: collect funding events for all companies."""
-        companies = self.env["res.company"].search([])
-        for company in companies:
-            credential = (
-                self.env["hat_sentry.credential"]
-                .with_company(company)
-                .search(
-                    [
-                        ("active", "=", True),
-                    ],
-                    limit=1,
-                )
-            )
-            if credential:
-                try:
-                    self.with_company(company).collect_funding_events(credential)
-                except Exception as e:
-                    _logger.error("Funding collection failed for company %s: %s", company.name, str(e))
+        """Scheduled: collect funding events for all companies and accounts."""
+        credentials = self._get_active_credentials()
+        for credential in credentials:
+            try:
+                self.with_company(credential.company_id).collect_funding_events(credential)
+            except Exception as e:
+                _logger.error("Funding collection failed for %s: %s", credential.name, str(e))

@@ -9,6 +9,8 @@ from . import (
     email_notification,  # noqa: F401
     funding_event,  # noqa: F401
     futures_position,  # noqa: F401
+    instrument,  # noqa: F401
+    market_price,  # noqa: F401
     mistake_tag,  # noqa: F401
     portfolio_snapshot,  # noqa: F401
     res_config_settings,  # noqa: F401
