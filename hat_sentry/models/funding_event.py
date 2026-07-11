@@ -20,6 +20,7 @@ class HatSentryFundingEvent(models.Model):
         ],
         string="Direction",
     )
+    transaction_id = fields.Char(string="Transaction ID", index=True)
     event_datetime = fields.Datetime(string="Event Time", default=fields.Datetime.now, index=True)
     currency_id = fields.Many2one(
         "res.currency", related="position_id.snapshot_id.currency_id", string="Currency", readonly=True, store=False

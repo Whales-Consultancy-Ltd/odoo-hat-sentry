@@ -75,6 +75,18 @@ class BinanceAPI(models.AbstractModel):
         client = self._get_client(credential)
         return client.futures_funding_rate(symbol=symbol, limit=limit)
 
+    def get_funding_income(self, credential, symbol=None, limit=100, start_time=None, end_time=None):
+        """Get funding fee income history."""
+        client = self._get_client(credential)
+        params = {"incomeType": "FUNDING_FEE", "limit": limit}
+        if symbol:
+            params["symbol"] = symbol
+        if start_time:
+            params["startTime"] = start_time
+        if end_time:
+            params["endTime"] = end_time
+        return client.futures_income_history(**params)
+
     def get_earn_positions(self, credential):
         """Get Earn positions (flexible + locked)."""
         client = self._get_client(credential)

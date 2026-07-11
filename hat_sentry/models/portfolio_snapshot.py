@@ -40,6 +40,23 @@ class HatSentryPortfolioSnapshot(models.Model):
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
     )
 
+    sync_status = fields.Selection(
+        [
+            ("complete", "Complete"),
+            ("partial", "Partial"),
+            ("failed", "Failed"),
+        ],
+        string="Sync Status",
+        default="complete",
+        readonly=True,
+        tracking=True,
+    )
+    data_age_minutes = fields.Integer(
+        string="Data Age (minutes)",
+        compute="_compute_data_age",
+        store=True,
+    )
+
     balance_ids = fields.One2many("hat_sentry.balance", "snapshot_id", string="Balances")
     futures_position_ids = fields.One2many("hat_sentry.futures.position", "snapshot_id", string="Futures Positions")
     earn_position_ids = fields.One2many("hat_sentry.earn.position", "snapshot_id", string="Earn Positions")
@@ -72,6 +89,16 @@ class HatSentryPortfolioSnapshot(models.Model):
                 if record.passive_income_value and record.passive_income_value > 0:
                     score += 10
             record.health_score = max(0, min(100, score))
+
+    @api.depends("snapshot_datetime")
+    def _compute_data_age(self):
+        now = fields.Datetime.now()
+        for record in self:
+            if record.snapshot_datetime:
+                delta = now - record.snapshot_datetime
+                record.data_age_minutes = int(delta.total_seconds() / 60)
+            else:
+                record.data_age_minutes = 0
 
     # ---------------------------------------------------------------------------
     # P&L Fields

@@ -99,6 +99,8 @@ class HatSentryCollector(models.AbstractModel):
         api = self.env["hat_sentry_binance.api"]
 
         balances = []
+        spot_ok = False
+        futures_ok = False
 
         # Batch fetch all prices
         all_prices = {}
@@ -129,6 +131,7 @@ class HatSentryCollector(models.AbstractModel):
                         "value_usdt": (bal["free"] + bal["locked"]) * price,
                     }
                 )
+            spot_ok = True
         except Exception as e:
             _logger.error("Spot collection failed: %s", str(e))
             self._create_alert(credential, f"Spot data collection failed: {e}", "critical")
@@ -150,25 +153,39 @@ class HatSentryCollector(models.AbstractModel):
                         "value_usdt": pos["margin"],
                     }
                 )
+            futures_ok = True
         except Exception as e:
             _logger.error("Futures collection failed: %s", str(e))
             self._create_alert(credential, f"Futures data collection failed: {e}", "warning")
 
-        # 3. Create snapshot
+        # 3. Determine sync status
+        if not spot_ok and not futures_ok:
+            _logger.error(
+                "Both spot and futures collection failed for %s — skipping snapshot",
+                credential.name,
+            )
+            return False
+
+        if spot_ok and futures_ok:
+            sync_status = "complete"
+        else:
+            sync_status = "partial"
+
+        # 4. Create snapshot
         if balances:
             snapshot = self._create_snapshot_from_balances(credential, balances)
+            snapshot.sync_status = sync_status
             if futures_positions:
                 self._create_futures_positions(credential, futures_positions, snapshot)
 
         return True
 
     def collect_funding_events(self, credential):
-        """Collect recent funding events."""
+        """Collect funding events from Binance income history."""
         api = self.env["hat_sentry_binance.api"]
         try:
-            rates_data = api.get_funding_rates(credential, limit=50)
+            income_data = api.get_funding_income(credential, limit=100)
 
-            # Get the most recent snapshot to link positions
             snapshot = self.env["hat_sentry.portfolio.snapshot"].search(
                 [
                     ("company_id", "=", credential.company_id.id),
@@ -177,26 +194,23 @@ class HatSentryCollector(models.AbstractModel):
                 limit=1,
             )
 
-            for rate in rates_data:
-                symbol = rate.get("symbol", "")
-                funding_rate = float(rate.get("fundingRate", 0))
-                funding_time_ts = int(rate.get("fundingTime", 0))
-                if funding_time_ts <= 0:
-                    continue  # Skip invalid funding time
-                funding_time = datetime.fromtimestamp(funding_time_ts / 1000)
+            for item in income_data:
+                symbol = item.get("symbol", "")
+                amount = float(item.get("income", 0))
+                tran_id = str(item.get("tranId", ""))
+                income_time_ts = int(item.get("time", 0))
+                if income_time_ts <= 0:
+                    continue
+                income_time = datetime.fromtimestamp(income_time_ts / 1000)
 
-                # Check for existing event
-                existing = self.env["hat_sentry.funding.event"].search(
-                    [
-                        ("symbol", "=", symbol),
-                        ("event_datetime", "=", funding_time),
-                    ],
-                    limit=1,
-                )
-                if existing:
-                    continue  # Skip duplicate
+                if tran_id:
+                    existing = self.env["hat_sentry.funding.event"].search(
+                        [("transaction_id", "=", tran_id)],
+                        limit=1,
+                    )
+                    if existing:
+                        continue
 
-                # Find related position if snapshot exists
                 position = False
                 if snapshot:
                     position = self.env["hat_sentry.futures.position"].search(
@@ -207,15 +221,20 @@ class HatSentryCollector(models.AbstractModel):
                         limit=1,
                     )
 
+                funding_direction = "neutral"
+                if amount > 0:
+                    funding_direction = "received"
+                elif amount < 0:
+                    funding_direction = "paid"
+
                 self.env["hat_sentry.funding.event"].create(
                     {
                         "position_id": position.id if position else False,
                         "symbol": symbol,
-                        "funding_rate": funding_rate * 100,  # convert to percentage
-                        "funding_direction": "paid"
-                        if funding_rate > 0
-                        else ("received" if funding_rate < 0 else "neutral"),
-                        "event_datetime": funding_time,
+                        "funding_amount": amount,
+                        "funding_direction": funding_direction,
+                        "transaction_id": tran_id,
+                        "event_datetime": income_time,
                     }
                 )
         except Exception as e:
