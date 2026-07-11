@@ -43,7 +43,7 @@ class HatSentryRiskEngine(models.AbstractModel):
             "max_daily_loss": self._get_daily_pnl(snapshot),
             "max_position_size": snapshot.futures_notional_value,
             "max_leverage": self._get_max_leverage(snapshot),
-            "max_allocation_pct": None,
+            "max_allocation_pct": self._get_max_asset_allocation(snapshot),
             "max_speculative_pct": (
                 (snapshot.experimental_value or 0.0) / (snapshot.total_value or 1.0) * 100
                 if snapshot.total_value
@@ -60,15 +60,19 @@ class HatSentryRiskEngine(models.AbstractModel):
                 if snapshot.total_value
                 else 0.0
             ),
-            "max_concentration_pct": None,
+            "max_concentration_pct": self._get_max_bucket_concentration(snapshot),
         }
         return mapping.get(limit_type)
 
     def _get_daily_pnl(self, snapshot):
-        """Get today's P&L from trades."""
+        """Get today's P&L from closed trades."""
         today = fields.Date.today()
         trades = self.env["hat_sentry.trade"].search(
-            [("entry_date", ">=", today), ("company_id", "=", snapshot.company_id.id)]
+            [
+                ("exit_date", ">=", today),
+                ("state", "=", "closed"),
+                ("company_id", "=", snapshot.company_id.id),
+            ]
         )
         return sum(trades.mapped("realized_pnl") or [0.0])
 

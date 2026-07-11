@@ -13,6 +13,11 @@ class HatSentryAsset(models.Model):
     _rec_name = "symbol"
     _order = "watchlist_status, conviction desc, symbol"
 
+    _sql_constraints = [
+        ("unique_symbol_company", "unique(symbol, company_id)", "Asset already exists for this company!"),
+        ("positive_values", "CHECK(value_usdt >= 0)", "Value must be non-negative!"),
+    ]
+
     symbol = fields.Char(string="Symbol", required=True, index=True, tracking=True)
     name = fields.Char(string="Name", tracking=True)
     asset_type = fields.Selection(
@@ -49,6 +54,7 @@ class HatSentryAsset(models.Model):
         if self.env.ref("base.USD", raise_if_not_found=False)
         else False,
         help="All crypto values denominated in USD",
+        check_company=True,
     )
     active = fields.Boolean(string="Active", default=True)
     color = fields.Integer(string="Color Index")
@@ -57,7 +63,8 @@ class HatSentryAsset(models.Model):
         compute="_compute_open_position_count",
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
+        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True,
+        check_company=True,
     )
 
     # Watchlist fields
@@ -66,6 +73,7 @@ class HatSentryAsset(models.Model):
         string="Watchlist Group",
         index=True,
         tracking=True,
+        check_company=True,
     )
     thesis = fields.Text(string="Investment Thesis", help="Why this asset is in your portfolio")
     invalidation_level = fields.Text(string="Invalidation Level", help="Conditions that would trigger an exit")

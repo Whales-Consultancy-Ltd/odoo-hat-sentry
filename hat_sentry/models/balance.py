@@ -8,8 +8,13 @@ class HatSentryBalance(models.Model):
     _rec_name = "display_name"
     _order = "value_usdt desc"
 
+    _sql_constraints = [
+        ("unique_balance", "unique(snapshot_id, asset_id, account_type)", "Balance already exists for this snapshot and asset!"),
+    ]
+
     snapshot_id = fields.Many2one(
-        "hat_sentry.portfolio.snapshot", string="Snapshot", required=True, ondelete="cascade", index=True
+        "hat_sentry.portfolio.snapshot", string="Snapshot", required=True, ondelete="cascade", index=True,
+        check_company=True,
     )
     exchange = fields.Selection([("binance", "Binance")], string="Exchange", default="binance", required=True)
     account_type = fields.Selection(
@@ -22,7 +27,7 @@ class HatSentryBalance(models.Model):
         required=True,
         default="spot",
     )
-    asset_id = fields.Many2one("hat_sentry.asset", string="Asset", required=True, index=True)
+    asset_id = fields.Many2one("hat_sentry.asset", string="Asset", required=True, index=True, check_company=True)
     free_amount = fields.Float(string="Free Amount", digits=(16, 8), default=0.0)
     locked_amount = fields.Float(string="Locked Amount", digits=(16, 8), default=0.0)
     total_amount = fields.Float(string="Total Amount", digits=(16, 8), compute="_compute_total", store=True)
