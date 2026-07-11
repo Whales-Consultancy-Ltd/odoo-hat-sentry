@@ -13,6 +13,7 @@ class HatSentryMarketPrice(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.ref('base.USD'))
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company, check_company=True)
 
-    _sql_constraints = [
-        ('unique_price', 'unique(instrument_id, date, source)', 'Price already recorded for this instrument and date!')
-    ]
+    _unique_price = models.Constraint(
+        'unique(instrument_id, date, source)',
+        'Price already recorded for this instrument and date!',
+    )

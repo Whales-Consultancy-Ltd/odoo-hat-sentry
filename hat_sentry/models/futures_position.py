@@ -8,9 +8,10 @@ class HatSentryFuturesPosition(models.Model):
     _rec_name = "display_name"
     _order = "snapshot_id desc, symbol"
 
-    _sql_constraints = [
-        ("unique_position", "unique(snapshot_id, symbol, side)", "Position already exists for this snapshot!"),
-    ]
+    _unique_position = models.Constraint(
+        "unique(snapshot_id, symbol, side)",
+        "Position already exists for this snapshot!",
+    )
 
     snapshot_id = fields.Many2one(
         "hat_sentry.portfolio.snapshot", string="Snapshot", required=True, ondelete="cascade", index=True,

@@ -13,10 +13,14 @@ class HatSentryAsset(models.Model):
     _rec_name = "symbol"
     _order = "watchlist_status, conviction desc, symbol"
 
-    _sql_constraints = [
-        ("unique_symbol_company", "unique(symbol, company_id)", "Asset already exists for this company!"),
-        ("positive_values", "CHECK(value_usdt >= 0)", "Value must be non-negative!"),
-    ]
+    _unique_symbol_company = models.Constraint(
+        "unique(symbol, company_id)",
+        "Asset already exists for this company!",
+    )
+    _positive_values = models.Constraint(
+        "CHECK(value_usdt >= 0)",
+        "Value must be non-negative!",
+    )
 
     symbol = fields.Char(string="Symbol", required=True, index=True, tracking=True)
     name = fields.Char(string="Name", tracking=True)
@@ -54,7 +58,6 @@ class HatSentryAsset(models.Model):
         if self.env.ref("base.USD", raise_if_not_found=False)
         else False,
         help="All crypto values denominated in USD",
-        check_company=True,
     )
     active = fields.Boolean(string="Active", default=True)
     color = fields.Integer(string="Color Index")

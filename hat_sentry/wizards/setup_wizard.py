@@ -10,7 +10,7 @@ class HatSentrySetupWizard(models.TransientModel):
     )
     exchange = fields.Selection([("binance", "Binance")], string="Exchange", required=True, default="binance")
     api_key = fields.Char(string="API Key", required=True)
-    api_secret = fields.Char(string="API Secret", required=True, password=True)
+    api_secret = fields.Char(string="API Secret", required=True)
     test_result = fields.Char(string="Test Result", readonly=True)
     test_success = fields.Boolean(string="Test Success", readonly=True)
 

@@ -8,9 +8,10 @@ class HatSentryBalance(models.Model):
     _rec_name = "display_name"
     _order = "value_usdt desc"
 
-    _sql_constraints = [
-        ("unique_balance", "unique(snapshot_id, asset_id, account_type)", "Balance already exists for this snapshot and asset!"),
-    ]
+    _unique_balance = models.Constraint(
+        "unique(snapshot_id, asset_id, account_type)",
+        "Balance already exists for this snapshot and asset!",
+    )
 
     snapshot_id = fields.Many2one(
         "hat_sentry.portfolio.snapshot", string="Snapshot", required=True, ondelete="cascade", index=True,
