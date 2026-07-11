@@ -35,9 +35,11 @@ class HatSentryPortfolioSnapshot(models.Model):
         default=lambda self: self.env.ref("base.USD", raise_if_not_found=False).id
         if self.env.ref("base.USD", raise_if_not_found=False)
         else False,
+        check_company=True,
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
+        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True,
+        check_company=True,
     )
 
     sync_status = fields.Selection(

@@ -7,12 +7,12 @@ class HatSentryInstrument(models.Model):
 
     name = fields.Char(string='Name', required=True)
     symbol = fields.Char(string='Symbol', required=True)
-    base_asset_id = fields.Many2one('hat_sentry.asset', string='Base Asset', required=True)
-    quote_asset_id = fields.Many2one('hat_sentry.asset', string='Quote Asset', required=True)
+    base_asset_id = fields.Many2one('hat_sentry.asset', string='Base Asset', required=True, check_company=True)
+    quote_asset_id = fields.Many2one('hat_sentry.asset', string='Quote Asset', required=True, check_company=True)
     market_type = fields.Selection([
         ('spot', 'Spot'),
         ('futures_usdm', 'USD-M Futures'),
         ('futures_coinm', 'COIN-M Futures'),
     ], string='Market Type', required=True, default='spot')
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company, check_company=True)

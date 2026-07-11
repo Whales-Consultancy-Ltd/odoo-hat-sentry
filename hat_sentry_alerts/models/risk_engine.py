@@ -83,6 +83,48 @@ class HatSentryRiskEngine(models.AbstractModel):
             return 0.0
         return max(positions.mapped("leverage") or [0.0])
 
+    def _get_max_asset_allocation(self, snapshot):
+        """Get the maximum allocation percentage of any single asset.
+
+        Returns the highest (asset_value / total_value) * 100 across all balances.
+        """
+        total = snapshot.total_value or 0.0
+        if total <= 0:
+            return 0.0
+        balances = snapshot.balance_ids
+        if not balances:
+            return 0.0
+        max_pct = 0.0
+        for balance in balances:
+            pct = (balance.value_usdt or 0.0) / total * 100
+            if pct > max_pct:
+                max_pct = pct
+        return max_pct
+
+    def _get_max_bucket_concentration(self, snapshot):
+        """Get the maximum concentration percentage across portfolio buckets.
+
+        Groups asset values by bucket (core, stablecoin, trading, passive_income,
+        futures, experimental) and returns the highest bucket's share of total value.
+        """
+        total = snapshot.total_value or 0.0
+        if total <= 0:
+            return 0.0
+        buckets = [
+            snapshot.core_value,
+            snapshot.stablecoin_value,
+            snapshot.trading_value,
+            snapshot.passive_income_value,
+            snapshot.experimental_value,
+            snapshot.futures_notional_value,
+        ]
+        max_pct = 0.0
+        for bucket_value in buckets:
+            pct = (bucket_value or 0.0) / total * 100
+            if pct > max_pct:
+                max_pct = pct
+        return max_pct
+
     def _get_trades_today(self, snapshot):
         """Count trades today."""
         today = fields.Date.today()

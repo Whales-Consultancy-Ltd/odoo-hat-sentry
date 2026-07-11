@@ -8,7 +8,7 @@ class HatSentryFundingEvent(models.Model):
     _rec_name = "display_name"
     _order = "event_datetime desc"
 
-    position_id = fields.Many2one("hat_sentry.futures.position", string="Position", ondelete="cascade", index=True)
+    position_id = fields.Many2one("hat_sentry.futures.position", string="Position", ondelete="cascade", index=True, check_company=True)
     symbol = fields.Char(string="Symbol", index=True)
     funding_rate = fields.Float(string="Funding Rate", digits=(16, 6))
     funding_amount = fields.Monetary(string="Funding Amount", currency_field="currency_id")

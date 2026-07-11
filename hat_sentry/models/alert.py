@@ -32,7 +32,7 @@ class HatSentryAlert(models.Model):
         default="portfolio",
     )
 
-    related_position_id = fields.Many2one("hat_sentry.futures.position", string="Related Position")
+    related_position_id = fields.Many2one("hat_sentry.futures.position", string="Related Position", check_company=True)
     title = fields.Char(string="Title", required=True, tracking=True)
     message = fields.Text(string="Message")
     recommended_action = fields.Text(string="Recommended Action", required=True)
@@ -51,5 +51,6 @@ class HatSentryAlert(models.Model):
     )
 
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
+        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True,
+        check_company=True,
     )

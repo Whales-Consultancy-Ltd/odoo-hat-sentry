@@ -12,5 +12,6 @@ class HatSentryWatchlistGroup(models.Model):
     sequence = fields.Integer(string="Sequence", default=10)
     active = fields.Boolean(string="Active", default=True)
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
+        "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True,
+        check_company=True,
     )

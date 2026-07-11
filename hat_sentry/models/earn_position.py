@@ -9,9 +9,10 @@ class HatSentryEarnPosition(models.Model):
     _order = "snapshot_id desc"
 
     snapshot_id = fields.Many2one(
-        "hat_sentry.portfolio.snapshot", string="Snapshot", required=True, ondelete="cascade", index=True
+        "hat_sentry.portfolio.snapshot", string="Snapshot", required=True, ondelete="cascade", index=True,
+        check_company=True,
     )
-    asset_id = fields.Many2one("hat_sentry.asset", string="Asset", required=True, index=True)
+    asset_id = fields.Many2one("hat_sentry.asset", string="Asset", required=True, index=True, check_company=True)
     product_type = fields.Selection(
         [
             ("flexible", "Flexible"),
