@@ -155,6 +155,101 @@ class BinanceAPI(models.AbstractModel):
             kwargs["symbol"] = symbol
         return client.futures_get_open_orders(**kwargs)
 
+    def get_best_earn_rates(self, credential, limit=10):
+        """Get the best earn rates of the day from Binance.
+
+        Returns dict with two keys:
+        - 'flexible': list of top flexible products sorted by APY desc
+        - 'locked': list of top locked products sorted by APY desc
+
+        Each item: {
+            'asset': str,
+            'type': 'flexible' or 'locked',
+            'apy': float (percentage),
+            'daily_rate': float,
+            'min_amount': float or None,
+            'duration_days': int or None (locked only),
+            'is_upgradeable': bool,
+        }
+        """
+        client = self._get_client(credential)
+
+        flexible = []
+        locked = []
+
+        # Flexible earn products
+        try:
+            resp = client._request(
+                "get", "/sapi/v1/simple-earn/flexible/list", params={"size": 100}
+            )
+            for product in resp.get("rows", []):
+                apy = float(product.get("latestAnnualPercentageRate", 0)) * 100
+                daily_rate = float(product.get("dailyInterestRate", 0))
+                flexible.append(
+                    {
+                        "asset": product.get("asset", ""),
+                        "type": "flexible",
+                        "apy": apy,
+                        "daily_rate": daily_rate * 100,
+                        "min_amount": (
+                            float(product.get("minPurchaseAmount", 0))
+                            if product.get("minPurchaseAmount")
+                            else None
+                        ),
+                        "duration_days": None,
+                        "is_upgradeable": product.get("isUpsell", False),
+                    }
+                )
+            flexible.sort(key=lambda x: x["apy"], reverse=True)
+            flexible = flexible[:limit]
+        except Exception as e:
+            _logger.warning("Failed to fetch flexible earn rates: %s", e)
+
+        # Locked earn products
+        try:
+            resp = client._request(
+                "get", "/sapi/v1/simple-earn/locked/list", params={"size": 100}
+            )
+            for product in resp.get("rows", []):
+                apy = float(product.get("annualPercentageRate", 0)) * 100
+                duration = int(product.get("duration", 0))
+                locked.append(
+                    {
+                        "asset": product.get("asset", ""),
+                        "type": "locked",
+                        "apy": apy,
+                        "daily_rate": apy / 365,
+                        "min_amount": (
+                            float(product.get("minPurchaseAmount", 0))
+                            if product.get("minPurchaseAmount")
+                            else None
+                        ),
+                        "duration_days": duration,
+                        "is_upgradeable": False,
+                    }
+                )
+            locked.sort(key=lambda x: x["apy"], reverse=True)
+            locked = locked[:limit]
+        except Exception as e:
+            _logger.warning("Failed to fetch locked earn rates: %s", e)
+
+        return {"flexible": flexible, "locked": locked}
+
+    def format_best_earn_rates(self, rates_data, limit=5):
+        """Format best earn rates into a readable report."""
+        lines = ["Best Earn Rates Today\n"]
+
+        lines.append("Flexible (no lock):")
+        for i, p in enumerate(rates_data["flexible"][:limit], 1):
+            lines.append(f"  {i}. {p['asset']}: {p['apy']:.2f}% APY")
+
+        lines.append("\nLocked:")
+        for i, p in enumerate(rates_data["locked"][:limit], 1):
+            days = p["duration_days"]
+            lines.append(f"  {i}. {p['asset']}: {p['apy']:.2f}% APY ({days}d lock)")
+
+        return "\n".join(lines)
+
     def validate_credentials(self, credential):
         """Test if credentials are valid and read-only."""
         try:
