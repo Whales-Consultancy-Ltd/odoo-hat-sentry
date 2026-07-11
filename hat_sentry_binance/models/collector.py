@@ -177,6 +177,11 @@ class HatSentryCollector(models.AbstractModel):
             snapshot = self._create_snapshot_from_balances(credential, balances)
             snapshot.sync_status = sync_status
             if futures_positions:
+                old_positions = self.env["hat_sentry.futures.position"].search(
+                    [("state", "=", "open"), ("company_id", "=", credential.company_id.id)]
+                )
+                if old_positions:
+                    old_positions.write({"state": "closed"})
                 self._create_futures_positions(credential, futures_positions, snapshot)
 
         return True
