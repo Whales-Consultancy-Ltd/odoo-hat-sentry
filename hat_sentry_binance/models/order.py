@@ -1,6 +1,22 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+BINANCE_STATUS_MAP = {
+    "NEW": "new",
+    "PARTIALLY_FILLED": "partially_filled",
+    "FILLED": "filled",
+    "CANCELED": "cancelled",
+    "CANCELLED": "cancelled",
+    "PENDING_CANCEL": "cancelled",
+    "REJECTED": "rejected",
+    "EXPIRED": "expired",
+}
+
+
+def _normalize_status(binance_status):
+    """Map a Binance API status string to the internal Odoo selection value."""
+    return BINANCE_STATUS_MAP.get(binance_status.upper(), "new")
+
 
 class HatSentryOrder(models.Model):
     _name = "hat_sentry.order"

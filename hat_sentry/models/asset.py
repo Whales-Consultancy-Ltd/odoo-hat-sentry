@@ -53,15 +53,6 @@ class HatSentryAsset(models.Model):
         string="Open Positions",
         compute="_compute_open_position_count",
     )
-    trade_count = fields.Integer(
-        string="Trade Count",
-        compute="_compute_trade_stats",
-    )
-    total_trade_pnl = fields.Monetary(
-        string="Total Trade P&L",
-        currency_field="currency_id",
-        compute="_compute_trade_stats",
-    )
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company, required=True, index=True
     )
