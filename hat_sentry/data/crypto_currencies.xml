@@ -1,56 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <!--
-    Crypto pseudo-currencies for Hat Sentry.
-
-    NOTE: name field has size=3 (ISO 4217), so 4-char tickers like USDT/USDC are NOT stored as res.currency.
-    They link to USD instead (stablecoins at 1:1 peg).
+    Crypto pseudo-currencies REMOVED (issue #24).
+    Crypto assets are now represented by hat_sentry.asset records only.
+    All monetary values use USD as the single reference currency.
     -->
-    <record id="crypto_btc" model="res.currency">
-        <field name="name">BTC</field>
-        <field name="symbol">₿</field>
-        <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
-
-    <record id="crypto_eth" model="res.currency">
-        <field name="name">ETH</field>
-        <field name="symbol">Ξ</field>
-        <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
-
-    <record id="crypto_bnb" model="res.currency">
-        <field name="name">BNB</field>
-        <field name="symbol">BNB</field>
-        <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
-
-    <record id="crypto_sol" model="res.currency">
-        <field name="name">SOL</field>
-        <field name="symbol">SOL</field>
-        <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
-
-    <record id="crypto_ada" model="res.currency">
-        <field name="name">ADA</field>
-        <field name="symbol">ADA</field>
-        <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
-
-    <record id="crypto_xrp" model="res.currency">
-        <field name="name">XRP</field>
-        <field name="symbol">XRP</field>
-        <field name="rounding" eval="0.000001"/>
-        <field name="active" eval="True"/>
-        <field name="position">after</field>
-    </record>
 </odoo>

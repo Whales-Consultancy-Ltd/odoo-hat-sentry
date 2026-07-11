@@ -73,23 +73,6 @@ class TestAsset(TransactionCase):
         )
         self.assertEqual(asset.open_position_count, 0)
 
-    def test_ensure_currency_usdt_maps_to_usd(self):
-        currency = self.Asset._ensure_currency("USDT")
-        self.assertEqual(currency, self.USD)
-
-    def test_ensure_currency_usdc_maps_to_usd(self):
-        currency = self.Asset._ensure_currency("USDC")
-        self.assertEqual(currency, self.USD)
-
-    def test_ensure_currency_creates_new(self):
-        currency = self.Asset._ensure_currency("BTC")
-        self.assertEqual(currency.name, "BTC")
-        self.assertTrue(currency.active)
-
-    def test_ensure_currency_truncates_long_symbols(self):
-        currency = self.Asset._ensure_currency("SOLANA")
-        self.assertEqual(currency.name, "SOL")
-
     def test_active_toggle(self):
         asset = self.Asset.create(
             {

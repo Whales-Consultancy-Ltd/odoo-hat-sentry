@@ -1,7 +1,9 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import fields, models
+
+from .order import _normalize_status
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +52,6 @@ class HatSentryCollector(models.AbstractModel):
                         "name": symbol,
                         "asset_type": "stablecoin" if symbol in ("USDT", "USDC", "BUSD", "DAI") else "crypto",
                         "bucket": "stable_reserve" if symbol in ("USDT", "USDC", "BUSD", "DAI") else "core",
-                        "currency_id": self.env["hat_sentry.asset"]._ensure_currency(symbol).id,
                         "company_id": credential.company_id.id,
                     }
                 )
@@ -260,24 +261,49 @@ class HatSentryCollector(models.AbstractModel):
 
         symbols = list(set(symbols))
 
+        since_ts = int((datetime.utcnow() - timedelta(days=days_back)).timestamp() * 1000)
+
         created_count = 0
+        PAGE_SIZE = 50
         for symbol in symbols:
             try:
-                try:
-                    orders_data = api.get_all_orders(credential, symbol, limit=50)
+                # Spot orders — paginated
+                offset = 0
+                while True:
+                    try:
+                        orders_data = api.get_all_orders(credential, symbol, limit=PAGE_SIZE, offset=offset)
+                    except Exception:
+                        break
+                    if not orders_data:
+                        break
                     for order_data in orders_data:
+                        order_ts = order_data.get("time", 0) or order_data.get("transactTime", 0)
+                        if order_ts and order_ts < since_ts:
+                            continue
                         if self._create_or_update_order(credential, order_data, "spot"):
                             created_count += 1
-                except Exception as e:
-                    _logger.debug("No spot orders for %s: %s", symbol, str(e))
+                    if len(orders_data) < PAGE_SIZE:
+                        break
+                    offset += PAGE_SIZE
 
-                try:
-                    futures_orders = api.get_futures_all_orders(credential, symbol, limit=50)
+                # Futures orders — paginated
+                offset = 0
+                while True:
+                    try:
+                        futures_orders = api.get_futures_all_orders(credential, symbol, limit=PAGE_SIZE, offset=offset)
+                    except Exception:
+                        break
+                    if not futures_orders:
+                        break
                     for order_data in futures_orders:
-                        if self._create_or_update_order(credential, order_data, "futures"):
+                        order_ts = order_data.get("time", 0) or order_data.get("transactTime", 0)
+                        if order_ts and order_ts < since_ts:
+                            continue
+                        if self._create_or_update_order(credential, order_data, "futures_usdm"):
                             created_count += 1
-                except Exception as e:
-                    _logger.debug("No futures orders for %s: %s", symbol, str(e))
+                    if len(futures_orders) < PAGE_SIZE:
+                        break
+                    offset += PAGE_SIZE
 
             except Exception as e:
                 _logger.error("Order sync failed for %s: %s", symbol, str(e))
@@ -291,7 +317,7 @@ class HatSentryCollector(models.AbstractModel):
 
     def _create_or_update_order(self, credential, order_data, market_type="spot"):
         """Create or update an order record from Binance API data."""
-        order_id = str(order_data.get("orderId", order_data.get("orderId", "")))
+        order_id = str(order_data.get("orderId", ""))
         if not order_id:
             return False
 
@@ -299,6 +325,7 @@ class HatSentryCollector(models.AbstractModel):
             [
                 ("order_id_binance", "=", order_id),
                 ("credential_id", "=", credential.id),
+                ("market_type", "=", market_type),
             ],
             limit=1,
         )
@@ -306,7 +333,7 @@ class HatSentryCollector(models.AbstractModel):
         if existing:
             existing.write(
                 {
-                    "status": order_data.get("status", existing.status).lower(),
+                    "status": _normalize_status(order_data.get("status", existing.status.upper())),
                     "executed_qty": float(order_data.get("executedQty", existing.executed_qty)),
                     "cummulative_quote_qty": float(
                         order_data.get(
@@ -319,7 +346,6 @@ class HatSentryCollector(models.AbstractModel):
             )
             return False
 
-        status = order_data.get("status", "new").lower()
         order_time = order_data.get("time", 0) or order_data.get("transactTime", 0)
         order_datetime = fields.Datetime.fromtimestamp(order_time / 1000) if order_time > 0 else fields.Datetime.now()
 
@@ -334,11 +360,12 @@ class HatSentryCollector(models.AbstractModel):
                 "orig_qty": float(order_data.get("origQty", 0)),
                 "executed_qty": float(order_data.get("executedQty", 0)),
                 "cummulative_quote_qty": float(order_data.get("cummulativeQuoteQty", 0)),
-                "status": status,
+                "status": _normalize_status(order_data.get("status", "NEW")),
                 "time_in_force": order_data.get("timeInForce", ""),
                 "order_datetime": order_datetime,
                 "update_datetime": fields.Datetime.now(),
                 "credential_id": credential.id,
+                "market_type": market_type,
             }
         )
         return True

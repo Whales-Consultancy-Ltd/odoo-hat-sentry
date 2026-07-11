@@ -45,7 +45,10 @@ class HatSentryAsset(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         string="Reference Currency",
-        help="Linked pseudo-currency for this asset",
+        default=lambda self: self.env.ref("base.USD", raise_if_not_found=False).id
+        if self.env.ref("base.USD", raise_if_not_found=False)
+        else False,
+        help="All crypto values denominated in USD",
     )
     active = fields.Boolean(string="Active", default=True)
     color = fields.Integer(string="Color Index")
@@ -123,50 +126,11 @@ class HatSentryAsset(models.Model):
                 ]
             )
 
-    @api.depends()
-    def _compute_trade_stats(self):
-        for record in self:
-            try:
-                trades = self.env["hat_sentry.trade"].search([("asset_id", "=", record.id)])
-                record.trade_count = len(trades)
-                record.total_trade_pnl = sum(trades.mapped("realized_pnl"))
-            except KeyError:
-                record.trade_count = 0
-                record.total_trade_pnl = 0.0
-
     @api.constrains("bucket")
     def _check_bucket_consistency(self):
         for record in self:
             if record.bucket not in dict(self._fields["bucket"].selection):
                 raise ValidationError(_("Invalid bucket: %s") % record.bucket)
-
-    @api.model
-    def _ensure_currency(self, symbol):
-        """Ensure a res.currency exists for the given symbol. Auto-create if missing.
-
-        Note: res.currency.name has size=3 (ISO 4217). Symbols longer than 3 chars
-        are truncated. USDT/USDC are mapped to USD (stablecoins at 1:1 peg).
-        """
-        # Stablecoins map to USD
-        if symbol in ("USDT", "USDC"):
-            return self.env.ref("base.USD", raise_if_not_found=False) or self.env["res.currency"].search(
-                [("name", "=", "USD")], limit=1
-            )
-
-        currency = self.env["res.currency"].search([("name", "=", symbol)], limit=1)
-        if not currency:
-            name = symbol[:3] if len(symbol) > 3 else symbol
-            currency = self.env["res.currency"].create(
-                {
-                    "name": name,
-                    "symbol": symbol,
-                    "rounding": 0.01,
-                    "active": True,
-                    "position": "after",
-                }
-            )
-            _logger.info("Auto-created res.currency for %s (name=%s)", symbol, name)
-        return currency
 
     @api.depends("review_date")
     def _compute_review_overdue(self):
