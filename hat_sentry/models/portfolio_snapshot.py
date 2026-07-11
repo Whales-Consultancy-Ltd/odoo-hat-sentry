@@ -211,23 +211,14 @@ class HatSentryPortfolioSnapshot(models.Model):
             record.total_unrealized_pnl = unrealized
             record.total_pnl = realized + unrealized
 
-    @api.depends("snapshot_datetime", "total_value", "company_id", "currency_id")
+    @api.depends("snapshot_datetime", "total_value", "company_id", "currency_id", "previous_snapshot_id")
     def _compute_pnl_since_last(self):
         for record in self:
             if not record.snapshot_datetime:
                 record.pnl_since_last = 0.0
                 record.pnl_pct_since_last = 0.0
                 continue
-            previous = self.search(
-                [
-                    ("snapshot_datetime", "<", record.snapshot_datetime),
-                    ("company_id", "=", record.company_id.id),
-                    ("currency_id", "=", record.currency_id.id),
-                ],
-                limit=1,
-                order="snapshot_datetime desc",
-            )
-            record.previous_snapshot_id = previous.id if previous else False
+            previous = record.previous_snapshot_id
             if previous and previous.total_value and previous.total_value > 0:
                 diff = (record.total_value or 0.0) - previous.total_value
                 record.pnl_since_last = diff
