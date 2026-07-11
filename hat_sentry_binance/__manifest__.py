@@ -20,5 +20,5 @@
     "installable": True,
     "application": False,
     "auto_install": False,
-    "external_dependencies": {"python": ["requests"]},
+    "external_dependencies": {"python": ["python-binance"]},
 }

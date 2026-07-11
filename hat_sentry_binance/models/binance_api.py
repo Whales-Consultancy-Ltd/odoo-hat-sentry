@@ -1,11 +1,8 @@
-import hashlib
-import hmac
-import json
 import logging
-import time
 from datetime import datetime, timedelta
 
-import requests
+from binance.client import Client
+from binance.exceptions import BinanceAPIException
 from odoo import models
 
 _logger = logging.getLogger(__name__)
@@ -15,56 +12,22 @@ class BinanceAPI(models.AbstractModel):
     _name = "hat_sentry_binance.api"
     _description = "Binance API Client"
 
-    BASE_URL = "https://api.binance.com"
-    FUTURES_URL = "https://fapi.binance.com"
-
-    def _get_headers(self, credential):
-        """Generate headers for Binance API call."""
-        return {
-            "X-MBX-APIKEY": credential.api_key,
-            "Content-Type": "application/json",
-        }
-
-    def _sign_request(self, credential, params):
-        """Sign params with HMAC-SHA256."""
-        query_string = "&".join([f"{k}={v}" for k, v in sorted(params.items())])
-        signature = hmac.new(
-            credential.api_secret.encode("utf-8"), query_string.encode("utf-8"), hashlib.sha256
-        ).hexdigest()
-        return signature
-
-    def _call_api(self, credential, endpoint, params=None, base_url=None):
-        """Make a signed GET request to Binance API."""
-        if base_url is None:
-            base_url = self.BASE_URL
-        if params is None:
-            params = {}
-        params["timestamp"] = int(time.time() * 1000)
-        params["signature"] = self._sign_request(credential, params)
-
-        url = f"{base_url}{endpoint}"
-        headers = self._get_headers(credential)
-
-        try:
-            response = requests.get(url, headers=headers, params=params, timeout=30)
-            response.raise_for_status()
-            _logger.info("Binance API call: %s (status %s)", endpoint, response.status_code)
-            return response.json()
-        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
-            _logger.error("Binance API error: %s - %s", endpoint, str(e))
-            raise
+    def _get_client(self, credential):
+        """Create a python-binance Client for this credential."""
+        return Client(credential.api_key, credential.api_secret)
 
     def get_spot_balances(self, credential):
         """Get all spot balances. Returns list of dicts."""
-        data = self._call_api(credential, "/api/v3/account")
+        client = self._get_client(credential)
+        account = client.get_account()
         balances = []
-        for balance in data.get("balances", []):
-            free = float(balance.get("free", 0))
-            locked = float(balance.get("locked", 0))
+        for bal in account.get("balances", []):
+            free = float(bal.get("free", 0))
+            locked = float(bal.get("locked", 0))
             if free > 0 or locked > 0:
                 balances.append(
                     {
-                        "asset": balance["asset"],
+                        "asset": bal["asset"],
                         "free": free,
                         "locked": locked,
                     }
@@ -73,9 +36,10 @@ class BinanceAPI(models.AbstractModel):
 
     def get_futures_positions(self, credential):
         """Get all open futures positions. Returns list of dicts."""
-        data = self._call_api(credential, "/fapi/v2/account", base_url=self.FUTURES_URL)
+        client = self._get_client(credential)
+        account = client.futures_account()
         positions = []
-        for pos in data.get("positions", []):
+        for pos in account.get("positions", []):
             position_size = float(pos.get("positionAmt", 0))
             if position_size != 0:
                 entry_price = float(pos.get("entryPrice", 0))
@@ -108,18 +72,17 @@ class BinanceAPI(models.AbstractModel):
 
     def get_funding_rates(self, credential, symbol=None, limit=100):
         """Get recent funding rates."""
-        params = {"limit": limit}
-        if symbol:
-            params["symbol"] = symbol
-        data = self._call_api(credential, "/fapi/v1/fundingRate", params=params, base_url=self.FUTURES_URL)
-        return data
+        client = self._get_client(credential)
+        return client.futures_funding_rate(symbol=symbol, limit=limit)
 
     def get_earn_positions(self, credential):
         """Get Earn positions (flexible + locked)."""
+        client = self._get_client(credential)
         earn_positions = []
+
         # Flexible products
         try:
-            flexible = self._call_api(credential, "/sapi/v1/simple-earn/account")
+            flexible = client.simple_earn_account()
             for pos in flexible.get("positionAmountVos", []):
                 earn_positions.append(
                     {
@@ -130,12 +93,12 @@ class BinanceAPI(models.AbstractModel):
                         "interest_24h": float(pos.get("dailyInterestRate", 0)),
                     }
                 )
-        except Exception as e:
+        except BinanceAPIException as e:
             _logger.warning("Earn flexible API error: %s", str(e))
 
         # Locked products
         try:
-            locked = self._call_api(credential, "/sapi/v1/simple-earn/locked/position")
+            locked = client.simple_earn_locked_position()
             for pos in locked.get("rows", []):
                 earn_positions.append(
                     {
@@ -150,61 +113,56 @@ class BinanceAPI(models.AbstractModel):
                         ),
                     }
                 )
-        except Exception as e:
+        except BinanceAPIException as e:
             _logger.warning("Earn locked API error: %s", str(e))
 
         return earn_positions
 
     def get_all_prices(self, credential):
         """Get all prices in a single API call."""
-        return self._call_api(credential, "/api/v3/ticker/price")
+        client = self._get_client(credential)
+        return client.get_all_tickers()
 
     def get_price_ticker(self, credential, symbol):
         """Get current price for a symbol."""
-        data = self._call_api(credential, "/api/v3/ticker/price", params={"symbol": symbol})
+        client = self._get_client(credential)
+        data = client.get_symbol_ticker(symbol=symbol)
         return float(data.get("price", 0))
 
     def get_all_orders(self, credential, symbol, limit=50):
         """Get all spot orders for a symbol."""
-        params = {"symbol": symbol, "limit": limit}
-        return self._call_api(credential, "/api/v3/allOrders", params=params)
+        client = self._get_client(credential)
+        return client.get_all_orders(symbol=symbol, limit=limit)
 
     def get_open_orders(self, credential, symbol=None):
         """Get open spot orders."""
-        params = {}
+        client = self._get_client(credential)
+        kwargs = {}
         if symbol:
-            params["symbol"] = symbol
-        return self._call_api(credential, "/api/v3/openOrders", params=params)
+            kwargs["symbol"] = symbol
+        return client.get_open_orders(**kwargs)
 
     def get_futures_all_orders(self, credential, symbol, limit=50):
         """Get all futures orders for a symbol."""
-        params = {"symbol": symbol, "limit": limit}
-        return self._call_api(
-            credential,
-            "/fapi/v1/allOrders",
-            params=params,
-            base_url=self.FUTURES_URL,
-        )
+        client = self._get_client(credential)
+        return client.futures_account_trades(symbol=symbol, limit=limit)
 
     def get_futures_open_orders(self, credential, symbol=None):
         """Get open futures orders."""
-        params = {}
+        client = self._get_client(credential)
+        kwargs = {}
         if symbol:
-            params["symbol"] = symbol
-        return self._call_api(
-            credential,
-            "/fapi/v1/openOrders",
-            params=params,
-            base_url=self.FUTURES_URL,
-        )
+            kwargs["symbol"] = symbol
+        return client.futures_get_open_orders(**kwargs)
 
     def validate_credentials(self, credential):
         """Test if credentials are valid and read-only."""
         try:
-            data = self._call_api(credential, "/api/v3/account")
-            can_trade = data.get("canTrade", True)
+            client = self._get_client(credential)
+            account = client.get_account()
+            can_trade = account.get("canTrade", True)
             if can_trade:
                 _logger.warning("API key %s has trading enabled - checking permissions", credential.api_key[:8])
             return True, "Credentials valid"
-        except Exception as e:
+        except BinanceAPIException as e:
             return False, str(e)
