@@ -115,6 +115,29 @@
         </field>
     </record>
 
+    <record id="view_hat_sentry_futures_exposure_graph" model="ir.ui.view">
+        <field name="name">hat_sentry.futures.position.exposure.graph</field>
+        <field name="model">hat_sentry.futures.position</field>
+        <field name="arch" type="xml">
+            <graph type="bar" stacked="True">
+                <field name="symbol" type="row"/>
+                <field name="notional_value" type="measure"/>
+                <field name="margin" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_futures_pnl_graph" model="ir.ui.view">
+        <field name="name">hat_sentry.futures.position.pnl.graph</field>
+        <field name="model">hat_sentry.futures.position</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="symbol" type="row"/>
+                <field name="unrealized_pnl" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
     <record id="view_hat_sentry_futures_position_search" model="ir.ui.view">
         <field name="name">hat_sentry.futures.position.search</field>
         <field name="model">hat_sentry.futures.position</field>
@@ -140,7 +163,7 @@
     <record id="action_hat_sentry_futures_position" model="ir.actions.act_window">
         <field name="name">Futures Positions</field>
         <field name="res_model">hat_sentry.futures.position</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">kanban,list,form,graph</field>
         <field name="help" type="html">
             <p>Monitor your futures positions.</p>
         </field>

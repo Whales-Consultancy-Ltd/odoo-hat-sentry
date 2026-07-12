@@ -75,9 +75,12 @@
         <field name="name">hat_sentry.portfolio.snapshot.graph</field>
         <field name="model">hat_sentry.portfolio.snapshot</field>
         <field name="arch" type="xml">
-            <graph type="line">
-                <field name="snapshot_datetime" interval="day"/>
-                <field name="total_value" type="measure"/>
+            <graph type="line" stacked="True">
+                <field name="snapshot_datetime" interval="day" type="row"/>
+                <field name="spot_value" type="measure"/>
+                <field name="futures_margin_value" type="measure"/>
+                <field name="passive_income_value" type="measure"/>
+                <field name="experimental_value" type="measure"/>
             </graph>
         </field>
     </record>
@@ -86,14 +89,36 @@
         <field name="name">hat_sentry.portfolio.snapshot.allocation.graph</field>
         <field name="model">hat_sentry.portfolio.snapshot</field>
         <field name="arch" type="xml">
-            <graph type="bar" stacked="True">
-                <field name="snapshot_datetime" interval="day"/>
-                <field name="allocation_core_pct" type="measure"/>
-                <field name="allocation_stable_pct" type="measure"/>
-                <field name="allocation_trading_pct" type="measure"/>
-                <field name="allocation_passive_pct" type="measure"/>
-                <field name="allocation_futures_pct" type="measure"/>
-                <field name="allocation_experimental_pct" type="measure"/>
+            <graph type="pie">
+                <field name="snapshot_datetime" type="row"/>
+                <field name="core_value" type="measure"/>
+                <field name="stablecoin_value" type="measure"/>
+                <field name="trading_value" type="measure"/>
+                <field name="passive_income_value" type="measure"/>
+                <field name="experimental_value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_portfolio_snapshot_health_graph" model="ir.ui.view">
+        <field name="name">hat_sentry.portfolio.snapshot.health.graph</field>
+        <field name="model">hat_sentry.portfolio.snapshot</field>
+        <field name="arch" type="xml">
+            <graph type="line">
+                <field name="snapshot_datetime" interval="day" type="row"/>
+                <field name="health_score" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_hat_sentry_portfolio_snapshot_pnl_graph" model="ir.ui.view">
+        <field name="name">hat_sentry.portfolio.snapshot.pnl.graph</field>
+        <field name="model">hat_sentry.portfolio.snapshot</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="snapshot_datetime" interval="day" type="row"/>
+                <field name="period_pnl" type="measure"/>
+                <field name="pnl_since_last" type="measure"/>
             </graph>
         </field>
     </record>

@@ -8,16 +8,16 @@
             <form string="Hat Sentry Dashboard">
                 <board style="2-2-1">
                     <column>
-                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Portfolio Over Time" view_mode="graph"/>
-                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Portfolio Breakdown" view_mode="pivot"/>
+                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Portfolio Evolution" view_mode="graph"/>
+                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Asset Allocation" view_mode="graph" context="{'search_default_allocation_pie': 1}" search_view_id="%(view_hat_sentry_portfolio_snapshot_allocation_graph)d"/>
                     </column>
                     <column>
-                        <action name="%(action_hat_sentry_futures_position)d" string="Open Positions" view_mode="kanban" context="{'search_default_filter_open': 1}"/>
-                        <action name="%(action_hat_sentry_alert)d" string="Active Alerts" view_mode="kanban" domain="[('state', 'in', ('new','sent','acknowledged'))]"/>
+                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="P&amp;L Evolution" view_mode="graph" context="{'search_default_pnl_view': 1}" search_view_id="%(view_hat_sentry_portfolio_snapshot_pnl_graph)d"/>
+                        <action name="%(action_hat_sentry_futures_position)d" string="Futures Exposure" view_mode="graph" context="{'search_default_filter_open': 1}" search_view_id="%(view_hat_sentry_futures_exposure_graph)d"/>
                     </column>
                     <column>
+                        <action name="%(action_hat_sentry_portfolio_snapshot)d" string="Health Score" view_mode="graph" context="{'search_default_health_view': 1}" search_view_id="%(view_hat_sentry_portfolio_snapshot_health_graph)d"/>
                         <action name="%(action_hat_sentry_balance)d" string="Balances" view_mode="list"/>
-                        <action name="%(action_hat_sentry_earn_position)d" string="Earn Positions" view_mode="list"/>
                     </column>
                 </board>
             </form>
