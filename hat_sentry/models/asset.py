@@ -17,10 +17,6 @@ class HatSentryAsset(models.Model):
         "unique(symbol, company_id)",
         "Asset already exists for this company!",
     )
-    _positive_values = models.Constraint(
-        "CHECK(value_usdt >= 0)",
-        "Value must be non-negative!",
-    )
 
     symbol = fields.Char(string="Symbol", required=True, index=True, tracking=True)
     name = fields.Char(string="Name", tracking=True)
