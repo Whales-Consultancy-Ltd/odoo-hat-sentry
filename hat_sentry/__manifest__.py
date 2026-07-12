@@ -9,13 +9,14 @@
     "author": "Business Solutions For Africa",
     "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
-    "depends": ["base", "mail", "digest", "board", "base_automation", "web_tour"],
+    "depends": ["base", "mail", "digest", "board", "web_tour"],
     "external_dependencies": {"python": ["requests", "markupsafe"]},
     "data": [
         "security/hat_sentry_groups.xml",
         "security/hat_sentry_security.xml",
         "security/ir.model.access.csv",
         "data/crypto_currencies.xml",
+        "data/tour_data.xml",
         "data/crypto_rates_cron.xml",
         "data/digest_data.xml",
         "data/watchlist_groups_data.xml",
@@ -43,9 +44,11 @@
     "demo": [],
     "assets": {
         "web.assets_backend": [
-            "hat_sentry/static/src/js/tours/**/*",
+            "hat_sentry/static/src/js/tours/installation_tour.js",
+            "hat_sentry/static/src/js/tours/demo_tour.js",
         ],
         "web.assets_tests": [
+            "hat_sentry/static/src/js/tours/smoke_tours.js",
             "hat_sentry/static/tests/tours/**/*",
         ],
     },

@@ -11,7 +11,9 @@ class HatSentryCredential(models.Model):
 
     exchange = fields.Selection([("binance", "Binance")], string="Exchange", required=True, default="binance")
     api_key = fields.Char(string="API Key", required=True, copy=False, groups="hat_sentry.group_hat_sentry_manager")
-    api_secret = fields.Char(string="API Secret", required=True, copy=False, groups="hat_sentry.group_hat_sentry_manager")
+    api_secret = fields.Char(
+        string="API Secret", required=True, copy=False, groups="hat_sentry.group_hat_sentry_manager"
+    )
     permissions = fields.Selection(
         [
             ("read_only", "Read Only"),
@@ -47,10 +49,14 @@ class HatSentryCredential(models.Model):
     )
     last_successful_sync_at = fields.Datetime(string="Last Successful Sync")
 
-    @api.depends("exchange")
+    @api.depends("exchange", "environment")
     def _compute_display_name(self):
         for record in self:
-            record.display_name = record.exchange or "???"
+            exchange = dict(record._fields["exchange"].selection).get(record.exchange, record.exchange or "???")
+            environment = dict(record._fields["environment"].selection).get(
+                record.environment, record.environment or "???"
+            )
+            record.display_name = _("%(exchange)s (%(environment)s)", exchange=exchange, environment=environment)
 
     @api.constrains("permissions")
     def _check_read_only(self):
