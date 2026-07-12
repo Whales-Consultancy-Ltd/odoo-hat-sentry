@@ -38,9 +38,12 @@ class BinanceAPI(models.AbstractModel):
         """Get all open futures positions. Returns list of dicts."""
         client = self._get_client(credential)
         risk_positions = client.futures_position_information()
+        _logger.info("Binance returned %d position records", len(risk_positions))
         positions = []
         for pos in risk_positions:
             position_size = float(pos.get("positionAmt", 0))
+            symbol = pos.get("symbol", "???")
+            _logger.debug("Position %s: positionAmt=%s", symbol, position_size)
             if position_size != 0:
                 entry_price = float(pos.get("entryPrice", 0))
                 mark_price = float(pos.get("markPrice", 0))
@@ -55,7 +58,7 @@ class BinanceAPI(models.AbstractModel):
                 )
                 positions.append(
                     {
-                        "symbol": pos["symbol"],
+                        "symbol": symbol,
                         "side": side,
                         "entry_price": entry_price,
                         "mark_price": mark_price,
@@ -69,6 +72,7 @@ class BinanceAPI(models.AbstractModel):
                         "unrealized_pnl_pct": (unrealized_pnl / margin * 100) if margin > 0 else 0,
                     }
                 )
+        _logger.info("Collected %d open futures positions", len(positions))
         return positions
 
     def get_funding_rates(self, credential, symbol=None, limit=100):
