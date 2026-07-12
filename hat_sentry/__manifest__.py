@@ -18,7 +18,6 @@
         "data/crypto_currencies.xml",
         "data/crypto_rates_cron.xml",
         "data/digest_data.xml",
-        "data/tour_data.xml",
         "data/watchlist_groups_data.xml",
         "data/review_cron.xml",
         "views/settings_views.xml",
@@ -45,7 +44,9 @@
     "assets": {
         "web.assets_backend": [
             "hat_sentry/static/src/js/tours/**/*",
-            "hat_sentry/static/tests/tours/hat_sentry_smoke.js",
+        ],
+        "web.assets_tests": [
+            "hat_sentry/static/tests/tours/**/*",
         ],
     },
     "installable": True,
