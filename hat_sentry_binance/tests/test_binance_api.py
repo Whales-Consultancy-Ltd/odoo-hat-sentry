@@ -4,7 +4,7 @@ from odoo.tests import TransactionCase
 
 
 class TestBinanceAPI(TransactionCase):
-    @patch("binance.client.Client")
+    @patch("hat_sentry_binance.models.binance_api.Client")
     def test_get_spot_balances(self, mock_client_class):
         mock_client = MagicMock()
         mock_client_class.return_value = mock_client
@@ -27,7 +27,7 @@ class TestBinanceAPI(TransactionCase):
         self.assertEqual(balances[0]["asset"], "BTC")
         self.assertEqual(balances[0]["free"], 1.5)
 
-    @patch("binance.client.Client")
+    @patch("hat_sentry_binance.models.binance_api.Client")
     def test_get_spot_balances_filters_zero(self, mock_client_class):
         mock_client = MagicMock()
         mock_client_class.return_value = mock_client
@@ -49,7 +49,7 @@ class TestBinanceAPI(TransactionCase):
         self.assertEqual(len(balances), 1)
         self.assertEqual(balances[0]["asset"], "BTC")
 
-    @patch("binance.client.Client")
+    @patch("hat_sentry_binance.models.binance_api.Client")
     def test_get_futures_positions(self, mock_client_class):
         mock_client = MagicMock()
         mock_client_class.return_value = mock_client
@@ -82,7 +82,7 @@ class TestBinanceAPI(TransactionCase):
         self.assertEqual(positions[0]["side"], "long")
         self.assertEqual(positions[0]["leverage"], 10.0)
 
-    @patch("binance.client.Client")
+    @patch("hat_sentry_binance.models.binance_api.Client")
     def test_validate_credentials_success(self, mock_client_class):
         mock_client = MagicMock()
         mock_client_class.return_value = mock_client
