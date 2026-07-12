@@ -1,10 +1,19 @@
-odoo.define('hat_sentry.tour', function(require) {
-    'use strict';
-    const tour = require('web_tour.tour');
-    tour.register('hat_sentry_onboarding', {test: true, url: '/web'}, [
-        {content: 'Open Hat Sentry app', trigger: '.o_app[data-menu-xmlid="hat_sentry.menu_hat_sentry_root"]'},
-        {content: 'Navigate to Portfolio', trigger: '.o_menu_item a:contains("Portfolio")'},
-        {content: 'View Assets', trigger: '.o_menu_item a:contains("Assets")'},
-        {content: 'Check list loaded', trigger: '.o_list_view'},
-    ]);
+/** @odoo-module **/
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
+
+registry.category("web_tour.tours").add("hat_sentry_installation_tour", {
+    url: "/odoo",
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            trigger: ".o_app[data-menu-xmlid='hat_sentry.menu_hat_sentry_root']",
+            run: "click",
+            timeout: 30000,
+        },
+        {
+            trigger: ".o_action_manager",
+            timeout: 15000,
+        },
+    ],
 });

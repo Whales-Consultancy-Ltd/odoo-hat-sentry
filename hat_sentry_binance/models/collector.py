@@ -163,7 +163,7 @@ class HatSentryCollector(models.AbstractModel):
         if not spot_ok and not futures_ok:
             _logger.error(
                 "Both spot and futures collection failed for %s — skipping snapshot",
-                credential.name,
+                credential.display_name,
             )
             return False
 
@@ -269,14 +269,14 @@ class HatSentryCollector(models.AbstractModel):
         since_ts = int((datetime.utcnow() - timedelta(days=days_back)).timestamp() * 1000)
 
         created_count = 0
-        PAGE_SIZE = 50
+        page_size = 50
         for symbol in symbols:
             try:
                 # Spot orders — paginated
                 offset = 0
                 while True:
                     try:
-                        orders_data = api.get_all_orders(credential, symbol, limit=PAGE_SIZE, offset=offset)
+                        orders_data = api.get_all_orders(credential, symbol, limit=page_size, offset=offset)
                     except Exception:
                         break
                     if not orders_data:
@@ -287,15 +287,15 @@ class HatSentryCollector(models.AbstractModel):
                             continue
                         if self._create_or_update_order(credential, order_data, "spot"):
                             created_count += 1
-                    if len(orders_data) < PAGE_SIZE:
+                    if len(orders_data) < page_size:
                         break
-                    offset += PAGE_SIZE
+                    offset += page_size
 
                 # Futures orders — paginated
                 offset = 0
                 while True:
                     try:
-                        futures_orders = api.get_futures_all_orders(credential, symbol, limit=PAGE_SIZE, offset=offset)
+                        futures_orders = api.get_futures_all_orders(credential, symbol, limit=page_size, offset=offset)
                     except Exception:
                         break
                     if not futures_orders:
@@ -306,9 +306,9 @@ class HatSentryCollector(models.AbstractModel):
                             continue
                         if self._create_or_update_order(credential, order_data, "futures_usdm"):
                             created_count += 1
-                    if len(futures_orders) < PAGE_SIZE:
+                    if len(futures_orders) < page_size:
                         break
-                    offset += PAGE_SIZE
+                    offset += page_size
 
             except Exception as e:
                 _logger.error("Order sync failed for %s: %s", symbol, str(e))
@@ -316,7 +316,7 @@ class HatSentryCollector(models.AbstractModel):
         _logger.info(
             "Order sync complete: %d new/updated orders for %s",
             created_count,
-            credential.name,
+            credential.display_name,
         )
         return created_count
 
@@ -396,7 +396,7 @@ class HatSentryCollector(models.AbstractModel):
             try:
                 self.with_company(credential.company_id).sync_orders(credential)
             except Exception as e:
-                _logger.error("Order sync failed for %s: %s", credential.name, str(e))
+                _logger.error("Order sync failed for %s: %s", credential.display_name, str(e))
 
     def _create_alert(self, credential, message, severity="warning"):
         """Create an alert for a collection issue."""
@@ -419,9 +419,9 @@ class HatSentryCollector(models.AbstractModel):
         for credential in credentials:
             try:
                 self.with_company(credential.company_id).collect_snapshot(credential)
-                _logger.info("Snapshot collected for %s", credential.name)
+                _logger.info("Snapshot collected for %s", credential.display_name)
             except Exception as e:
-                _logger.error("Snapshot collection failed for %s: %s", credential.name, str(e))
+                _logger.error("Snapshot collection failed for %s: %s", credential.display_name, str(e))
 
     def cron_collect_funding(self):
         """Scheduled: collect funding events for all companies and accounts."""
@@ -430,4 +430,4 @@ class HatSentryCollector(models.AbstractModel):
             try:
                 self.with_company(credential.company_id).collect_funding_events(credential)
             except Exception as e:
-                _logger.error("Funding collection failed for %s: %s", credential.name, str(e))
+                _logger.error("Funding collection failed for %s: %s", credential.display_name, str(e))

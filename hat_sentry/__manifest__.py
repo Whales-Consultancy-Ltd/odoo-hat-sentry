@@ -9,7 +9,7 @@
     "author": "Business Solutions For Africa",
     "website": "https://www.biz-africa.com/",
     "license": "LGPL-3",
-    "depends": ["base", "mail", "digest", "board", "base_automation"],
+    "depends": ["base", "mail", "digest", "board", "base_automation", "web_tour"],
     "external_dependencies": {"python": ["requests", "markupsafe"]},
     "data": [
         "security/hat_sentry_groups.xml",
