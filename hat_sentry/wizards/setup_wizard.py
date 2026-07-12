@@ -46,7 +46,6 @@ class HatSentrySetupWizard(models.TransientModel):
         """Save the credentials."""
         self.ensure_one()
         self.env["hat_sentry.credential"].create({
-            "name": f"{self.exchange} Account",
             "exchange": self.exchange,
             "api_key": self.api_key,
             "api_secret": self.api_secret,
