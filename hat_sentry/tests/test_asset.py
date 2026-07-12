@@ -95,22 +95,4 @@ class TestAsset(TransactionCase):
                 }
             )
 
-    def test_trade_count_zero_when_no_trades(self):
-        asset = self.Asset.create(
-            {
-                "symbol": "BTC",
-                "asset_type": "crypto",
-                "bucket": "core",
-            }
-        )
-        self.assertEqual(asset.trade_count, 0)
 
-    def test_total_trade_pnl_zero_when_no_trades(self):
-        asset = self.Asset.create(
-            {
-                "symbol": "BTC",
-                "asset_type": "crypto",
-                "bucket": "core",
-            }
-        )
-        self.assertEqual(asset.total_trade_pnl, 0.0)

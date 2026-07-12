@@ -33,3 +33,4 @@ access_hat_sentry_instrument_manager,hat_sentry.instrument.manager,model_hat_sen
 access_hat_sentry_market_price_user,hat_sentry.market.price.user,model_hat_sentry_market_price,hat_sentry.group_hat_sentry_user,1,0,0,0
 access_hat_sentry_market_price_trader,hat_sentry.market.price.trader,model_hat_sentry_market_price,hat_sentry.group_hat_sentry_trader,1,0,0,0
 access_hat_sentry_market_price_manager,hat_sentry.market.price.manager,model_hat_sentry_market_price,hat_sentry.group_hat_sentry_manager,1,1,1,1
+access_hat_sentry_setup_wizard,access_hat_sentry_setup_wizard,model_hat_sentry_setup_wizard,base.group_user,1,1,1,0

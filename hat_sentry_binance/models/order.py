@@ -136,13 +136,19 @@ class HatSentryOrder(models.Model):
         compute="_compute_display_name",
     )
 
-    _sql_constraints = [
-        (
-            "unique_exchange_order",
-            "unique(credential_id, market_type, order_id_binance)",
-            "Order already exists for this exchange account and market type!",
-        ),
-    ]
+    @api.constrains("credential_id", "market_type", "order_id_binance")
+    def _check_unique_exchange_order(self):
+        for record in self:
+            domain = [
+                ("credential_id", "=", record.credential_id.id),
+                ("market_type", "=", record.market_type),
+                ("order_id_binance", "=", record.order_id_binance),
+                ("id", "!=", record.id),
+            ]
+            if self.search_count(domain):
+                raise ValidationError(
+                    _("Order already exists for this exchange account and market type!")
+                )
 
     @api.depends("order_id_binance", "symbol")
     def _compute_display_name(self):

@@ -16,7 +16,6 @@ class TestBinanceAPI(TransactionCase):
         }
         credential = self.env["hat_sentry.credential"].create(
             {
-                "name": "Test",
                 "exchange": "binance",
                 "api_key": "test_key",
                 "api_secret": "test_secret",
@@ -40,7 +39,6 @@ class TestBinanceAPI(TransactionCase):
         }
         credential = self.env["hat_sentry.credential"].create(
             {
-                "name": "Test",
                 "exchange": "binance",
                 "api_key": "test_key",
                 "api_secret": "test_secret",
@@ -72,7 +70,6 @@ class TestBinanceAPI(TransactionCase):
         }
         credential = self.env["hat_sentry.credential"].create(
             {
-                "name": "Test",
                 "exchange": "binance",
                 "api_key": "test_key",
                 "api_secret": "test_secret",
@@ -92,7 +89,6 @@ class TestBinanceAPI(TransactionCase):
         mock_client.get_account.return_value = {"canTrade": False}
         credential = self.env["hat_sentry.credential"].create(
             {
-                "name": "Test",
                 "exchange": "binance",
                 "api_key": "test_key",
                 "api_secret": "test_secret",

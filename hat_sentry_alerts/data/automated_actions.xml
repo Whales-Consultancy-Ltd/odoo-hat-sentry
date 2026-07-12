@@ -4,7 +4,6 @@
         <field name="name">Futures > 5% Portfolio</field>
         <field name="model_id" ref="hat_sentry.model_hat_sentry_futures_position"/>
         <field name="trigger">on_create_or_write</field>
-        <field name="state">code</field>
         <field name="code">
 if record.snapshot_id.futures_notional_value > 0.05 * record.snapshot_id.total_value:
     env['hat_sentry.alert'].create({
