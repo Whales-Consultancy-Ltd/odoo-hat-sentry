@@ -5,7 +5,7 @@
         <field name="model_id" ref="model_hat_sentry_binance_collector"/>
         <field name="state">code</field>
         <field name="code">model.cron_collect_snapshot()</field>
-        <field name="interval_number">5</field>
+        <field name="interval_number">1</field>
         <field name="interval_type">minutes</field>
 
         <field name="active" eval="True"/>
@@ -17,7 +17,7 @@
         <field name="model_id" ref="model_hat_sentry_binance_collector"/>
         <field name="state">code</field>
         <field name="code">model.cron_collect_funding()</field>
-        <field name="interval_number">15</field>
+        <field name="interval_number">1</field>
         <field name="interval_type">minutes</field>
 
         <field name="active" eval="True"/>
