@@ -41,8 +41,8 @@
                         <field name="experimental_value"/>
                     </group>
                     <notebook>
-                        <page string="Analysis">
-                            <group string="Exposure">
+                        <page string="Analysis" name="page_analysis">
+                            <group string="Exposure" name="group_exposure">
                                 <field name="pnl_since_last"/>
                                 <field name="pnl_pct_since_last"/>
                                 <field name="total_exposure"/>

@@ -17,10 +17,10 @@
         <field name="model">hat_sentry.portfolio.snapshot</field>
         <field name="inherit_id" ref="hat_sentry.view_hat_sentry_portfolio_snapshot_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@string='Analysis']" position="attributes">
+            <xpath expr="//page[@name='page_analysis']" position="attributes">
                 <attribute name="string">P&amp;L Analysis</attribute>
             </xpath>
-            <xpath expr="//group[@string='Exposure']" position="before">
+            <xpath expr="//group[@name='group_exposure']" position="before">
                 <group string="Profit &amp; Loss">
                     <field name="total_realized_pnl"/>
                     <field name="total_unrealized_pnl"/>
