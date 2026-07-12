@@ -37,19 +37,20 @@ class BinanceAPI(models.AbstractModel):
     def get_futures_positions(self, credential):
         """Get all open futures positions. Returns list of dicts."""
         client = self._get_client(credential)
-        account = client.futures_account()
+        risk_positions = client.futures_position_information()
         positions = []
-        for pos in account.get("positions", []):
+        for pos in risk_positions:
             position_size = float(pos.get("positionAmt", 0))
             if position_size != 0:
                 entry_price = float(pos.get("entryPrice", 0))
                 mark_price = float(pos.get("markPrice", 0))
                 leverage = float(pos.get("leverage", 1))
                 side = "long" if position_size > 0 else "short"
-                unrealized_pnl = float(pos.get("unrealizedProfit", 0))
+                unrealized_pnl = float(pos.get("unRealizedProfit", 0))
+                is_isolated = pos.get("marginType", "cross") == "isolated"
                 margin = (
-                    float(pos.get("isolatedWallet", 0))
-                    if pos.get("isolated")
+                    float(pos.get("isolatedMargin", 0))
+                    if is_isolated
                     else float(pos.get("positionInitialMargin", 0))
                 )
                 positions.append(
@@ -62,7 +63,7 @@ class BinanceAPI(models.AbstractModel):
                         "notional_value": abs(position_size) * mark_price,
                         "margin": margin,
                         "leverage": leverage,
-                        "margin_mode": "isolated" if pos.get("isolated") else "cross",
+                        "margin_mode": "isolated" if is_isolated else "cross",
                         "liquidation_price": float(pos.get("liquidationPrice", 0)),
                         "unrealized_pnl": unrealized_pnl,
                         "unrealized_pnl_pct": (unrealized_pnl / margin * 100) if margin > 0 else 0,

@@ -51,27 +51,27 @@ class TestBinanceAPI(TransactionCase):
         credential = self._make_credential()
         api = self._get_api()
         mock_client = MagicMock()
-        mock_client.futures_account.return_value = {
-            "positions": [
-                {
-                    "symbol": "BTCUSDT",
-                    "positionAmt": "0.5",
-                    "entryPrice": "50000.0",
-                    "markPrice": "55000.0",
-                    "leverage": "10",
-                    "unrealizedProfit": "2500.0",
-                    "isolated": True,
-                    "isolatedWallet": "5000.0",
-                    "liquidationPrice": "45000.0",
-                },
-            ]
-        }
+        mock_client.futures_position_information.return_value = [
+            {
+                "symbol": "BTCUSDT",
+                "positionAmt": "0.5",
+                "entryPrice": "50000.0",
+                "markPrice": "55000.0",
+                "leverage": "10",
+                "unRealizedProfit": "2500.0",
+                "marginType": "isolated",
+                "isolatedMargin": "5000.0",
+                "liquidationPrice": "45000.0",
+            },
+        ]
         with patch.object(type(api), "_get_client", return_value=mock_client):
             positions = api.get_futures_positions(credential)
         self.assertEqual(len(positions), 1)
         self.assertEqual(positions[0]["symbol"], "BTCUSDT")
         self.assertEqual(positions[0]["side"], "long")
         self.assertEqual(positions[0]["leverage"], 10.0)
+        self.assertEqual(positions[0]["mark_price"], 55000.0)
+        self.assertEqual(positions[0]["liquidation_price"], 45000.0)
 
     def test_validate_credentials_success(self):
         credential = self._make_credential()
