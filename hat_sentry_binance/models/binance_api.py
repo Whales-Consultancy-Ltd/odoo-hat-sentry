@@ -281,7 +281,7 @@ class BinanceAPI(models.AbstractModel):
             account = client.get_account()
             can_trade = account.get("canTrade", True)
             if can_trade:
-                _logger.warning("API key %s has trading enabled - checking permissions", credential.api_key[:8])
+                _logger.warning("Credential %s has trading enabled - checking permissions", credential.display_name)
             return True, "Credentials valid"
         except BinanceAPIException as e:
             return False, str(e)

@@ -16,7 +16,7 @@ jobs:
       - run: pip install ruff pylint-odoo bandit
       - run: ruff check .
       - run: pylint-odoo hat_sentry hat_sentry_binance hat_sentry_alerts hat_sentry_journal hat_sentry_dashboard hat_sentry_reports
-      - run: bandit -r hat_sentry/ hat_sentry_binance/ hat_sentry_alerts/ hat_sentry_journal/
+      - run: bandit -r hat_sentry/ hat_sentry_binance/ hat_sentry_alerts/ hat_sentry_journal/ hat_sentry_dashboard/ hat_sentry_reports/
 
   validate:
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
           python-version: '3.12'
       - name: Validate XML
         run: |
-          find . -name "*.xml" -path "*/views/*" -o -path "*/data/*" -o -path "*/security/*" | while read f; do
+          find . -name "*.xml" \( -path "*/views/*" -o -path "*/data/*" -o -path "*/security/*" \) | while read f; do
             python3 -c "import xml.etree.ElementTree as ET; ET.parse('$f')" || exit 1
           done
       - name: Validate Python
@@ -35,3 +35,75 @@ jobs:
           find . -name "*.py" | while read f; do
             python3 -c "import ast; ast.parse(open('$f').read())" || exit 1
           done
+
+  odoo-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PGHOST: localhost
+      PGUSER: odoo
+      PGPASSWORD: odoo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Clone Odoo 19.0
+        run: git clone --depth 1 --branch 19.0 https://github.com/odoo/odoo.git /tmp/odoo
+      - name: Install Python dependencies
+        run: pip install -r /tmp/odoo/requirements.txt -r requirements.txt
+      - name: Run Odoo module tests
+        run: |
+          /tmp/odoo/odoo-bin -d hat_sentry_test --addons-path=/tmp/odoo/addons,. \
+            -i hat_sentry,hat_sentry_binance,hat_sentry_alerts,hat_sentry_journal,hat_sentry_dashboard,hat_sentry_reports \
+            --test-enable --stop-after-init --log-level=test 2>&1 | tee odoo-test.log
+          ! grep -E "(ERROR|FAIL|CRITICAL)" odoo-test.log
+
+  web-tours:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PGHOST: localhost
+      PGUSER: odoo
+      PGPASSWORD: odoo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Clone Odoo 19.0
+        run: git clone --depth 1 --branch 19.0 https://github.com/odoo/odoo.git /tmp/odoo
+      - name: Install Python dependencies
+        run: pip install -r /tmp/odoo/requirements.txt -r requirements.txt
+      - name: Run Hat Sentry web tours
+        run: |
+          /tmp/odoo/odoo-bin -d hat_sentry_tours --addons-path=/tmp/odoo/addons,. \
+            -i hat_sentry,hat_sentry_binance,hat_sentry_alerts,hat_sentry_journal \
+            --test-enable --test-tags '/hat_sentry:post_install' --stop-after-init --log-level=test 2>&1 | tee web-tour.log
+          ! grep -E "(ERROR|FAIL|CRITICAL)" web-tour.log
