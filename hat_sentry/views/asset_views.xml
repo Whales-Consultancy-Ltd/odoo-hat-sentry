@@ -37,6 +37,12 @@
                     </div>
                     <group>
                         <group>
+                            <field name="symbol" placeholder="e.g. BTC, ETH, BNB"/>
+                            <field name="name" placeholder="e.g. Bitcoin, Ethereum"/>
+                            <field name="asset_type"/>
+                            <field name="bucket"/>
+                        </group>
+                        <group>
                             <field name="is_stablecoin"/>
                             <field name="is_core_asset"/>
                             <field name="currency_id" groups="hat_sentry.group_hat_sentry_manager"/>
@@ -120,7 +126,22 @@
         <field name="res_model">hat_sentry.asset</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
-            <p>Configure your crypto assets here.</p>
+            <p class="o_view_nocontent_smiling_face">
+                Configure your crypto assets here
+            </p>
+            <p>
+                <b>How to get started:</b>
+            </p>
+            <ol>
+                <li>Click <b>New</b> to add an asset (e.g. BTC, ETH, BNB)</li>
+                <li>Set the <b>Symbol</b> (required) and optionally a <b>Name</b></li>
+                <li>Choose the <b>Asset Type</b> (Crypto, Stablecoin, or Fiat)</li>
+                <li>Assign it to a <b>Bucket</b> (Core, Stable Reserve, Trading, etc.)</li>
+                <li>Optionally add it to a <b>Watchlist Group</b> for tracking</li>
+            </ol>
+            <p>
+                <b>Watchlist Groups:</b> Create groups in <i>Portfolio → Watchlist → Watchlist Groups</i> to organize your assets (e.g. "Core Holdings", "Trading", "Experimental")
+            </p>
         </field>
     </record>
 </odoo>
