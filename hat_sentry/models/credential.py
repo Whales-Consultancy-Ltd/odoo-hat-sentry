@@ -68,3 +68,53 @@ class HatSentryCredential(models.Model):
                         "Trading/withdrawal permissions are not supported."
                     )
                 )
+
+    def action_test_connection(self):
+        """Test the API connection and update validation fields."""
+        self.ensure_one()
+        try:
+            api = self.env["hat_sentry_binance.api"]
+            success, message = api.validate_credentials(self)
+            self.write({
+                "last_validation_at": fields.Datetime.now(),
+                "last_validation_status": "success" if success else "failed",
+                "last_validation_message": message,
+            })
+            if success:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": _("Connection Successful"),
+                        "message": message,
+                        "type": "success",
+                        "sticky": False,
+                    },
+                }
+            else:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": _("Connection Failed"),
+                        "message": message,
+                        "type": "danger",
+                        "sticky": True,
+                    },
+                }
+        except Exception as e:
+            self.write({
+                "last_validation_at": fields.Datetime.now(),
+                "last_validation_status": "failed",
+                "last_validation_message": str(e),
+            })
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "title": _("Connection Error"),
+                    "message": str(e),
+                    "type": "danger",
+                    "sticky": True,
+                },
+            }

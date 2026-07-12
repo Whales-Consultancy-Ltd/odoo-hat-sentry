@@ -19,7 +19,6 @@ class HatSentrySetupWizard(models.TransientModel):
         self.ensure_one()
         try:
             credential = self.env["hat_sentry.credential"].create({
-                "name": f"{self.exchange} Test",
                 "exchange": self.exchange,
                 "api_key": self.api_key,
                 "api_secret": self.api_secret,
@@ -33,6 +32,15 @@ class HatSentrySetupWizard(models.TransientModel):
         except Exception as e:
             self.test_result = str(e)
             self.test_success = False
+        # Return action to reload the wizard and keep it open
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "hat_sentry.setup.wizard",
+            "view_mode": "form",
+            "res_id": self.id,
+            "views": [(False, "form")],
+            "target": "new",
+        }
 
     def action_save(self):
         """Save the credentials."""

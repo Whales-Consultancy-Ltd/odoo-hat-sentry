@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="hat_sentry_demo_walkthrough_tour" model="web_tour.tour">
-        <field name="name">hat_sentry_demo_walkthrough</field>
-        <field name="sequence">20</field>
-        <field name="rainbow_man_message">Hat Sentry tour complete. You are ready to monitor your portfolio.</field>
-    </record>
+    <!-- Tours are registered via JS registry in static/src/js/tours/ -->
+    <!-- No need for XML records - they cause duplicate key errors -->
 </odoo>
