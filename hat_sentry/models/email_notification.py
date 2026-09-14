@@ -44,7 +44,7 @@ class HatSentryEmailNotification(models.AbstractModel):
                 </div>
             """,
             "email_to": user.email,
-            "email_from": self.env.company.email or self.env.user.email or "noreply@example.com",
+            "email_from": self.env.company.email or self.env.user.email or "no-reply@biz-4-africa.com",
         }
         try:
             mail = self.env["mail.mail"].sudo().create(mail_values)
